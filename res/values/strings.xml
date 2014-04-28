@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">贴吧签到助手</string>
+    <string name="copyright">Copyright © 2011 - 2014 Zulwi Studio. All Rights Reserved.</string>
+    <string name="action_settings">设置</string>
+    <string name="edit_site">站点域名</string>
+    <string name="edit_username">助手账号</string>
+    <string name="edit_password">助手密码</string>
+    <string name="login">登录</string>
+    <string name="title_activity_edit_sites">站点管理</string>
+    <string name="sites_list">站点列表</string>
+    <string name="del_list">清空列表</string>
+    <string name="add_site">添加站点</string>
+    <string name="site_name">站点名称</string>
+    <string name="site_domain">站点域名</string>
+    <string name="delete">删除</string>
+
+</resources>
