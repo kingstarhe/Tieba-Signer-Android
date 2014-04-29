@@ -14,8 +14,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
-import android.widget.Toast;
-
 import android.content.Context;
 import com.zulwi.tiebasigner.exception.StatusCodeException;
 
@@ -38,16 +36,13 @@ public class InternetUtil {
 		get.addHeader("Client-Version", "1.0.0");
 		get.addHeader("Content-Type", "application/json");
 		get.addHeader("User-Agent", "Android Client For Tieba Signer");
-		Toast.makeText(context, "1" ,Toast.LENGTH_SHORT).show();
 		HttpResponse response = client.execute(get);
-		Toast.makeText(context, "2",Toast.LENGTH_SHORT).show();
 		int statusCode = response.getStatusLine().getStatusCode();
 		if (statusCode != 200) {
 			throw new StatusCodeException("HTTP状态码错误！", statusCode);
 		} else {
 			HttpEntity entity = response.getEntity();// 响应数据的内容
 			result = EntityUtils.toString(entity, "utf-8");
-			Toast.makeText(context, result, 1000).show();
 		}
 	}
 

@@ -3,7 +3,6 @@ package com.zulwi.tiebasigner.activity;
 import java.io.IOException;
 
 import org.apache.http.client.ClientProtocolException;
-
 import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.adapter.SiteListAdapter;
 import com.zulwi.tiebasigner.beans.SiteBean;
@@ -19,8 +18,6 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,35 +35,27 @@ public class EditSitesActivity extends ActionBarActivity {
 	private final static int STATUS_ERROR = 1;
 	private final static int UNSUPPORTTED = 2;
 	private final static int PARSE_ERROR = 3;
-	private final static int UNKNOWN_ERROR = 4;
+	private final static int OTHER_ERROR = 4;
 	private final static int SUCCESSED = 5;
 
 	private Handler handler = new Handler() {
 		@Override
 		public void handleMessage(android.os.Message msg) {
 			super.handleMessage(msg);
+			String tips = null;
 			switch (msg.what) {
 			case NETWORK_FAIL:
-				Toast.makeText(EditSitesActivity.this, "网络错误",
-						Toast.LENGTH_SHORT).show();
-				progressDialog.dismiss();
+				tips = "网络错误";
 				break;
 			case STATUS_ERROR:
 				StatusCodeException e = (StatusCodeException) msg.obj;
-				Toast.makeText(EditSitesActivity.this,
-						e.getMessage() + "状态码：" + String.valueOf(e.getCode()),
-						Toast.LENGTH_SHORT).show();
-				progressDialog.dismiss();
+				tips = e.getMessage() + "状态码：" + String.valueOf(e.getCode());
 				break;
 			case UNSUPPORTTED:
-				Toast.makeText(EditSitesActivity.this, "该站点不支持客户端",
-						Toast.LENGTH_SHORT).show();
-				progressDialog.dismiss();
+				tips = "该站点不支持客户端";
 				break;
 			case PARSE_ERROR:
-				Toast.makeText(EditSitesActivity.this, "JSON解析错误",
-						Toast.LENGTH_SHORT).show();
-				progressDialog.dismiss();
+				tips = "JSON解析错误";
 				break;
 			case SUCCESSED:
 				SiteBean site = (SiteBean) msg.obj;
@@ -78,28 +67,22 @@ public class EditSitesActivity extends ActionBarActivity {
 					hasChanged = true;
 					LoginActivity.siteListAdapter.addItem(id, site.name,
 							site.url);
+					tips = "添加成功";
 				} else {
-					Toast.makeText(EditSitesActivity.this, "添加失败",
-							Toast.LENGTH_SHORT).show();
+					tips = "添加失败";
 				}
-				progressDialog.dismiss();
 				break;
 			default:
 				Throwable t = (Throwable) msg.obj;
-				Toast.makeText(EditSitesActivity.this, t.getMessage(),
-						Toast.LENGTH_SHORT).show();
+				tips = t.getMessage();
 				break;
 			}
-
+			progressDialog.dismiss();
+			Toast.makeText(EditSitesActivity.this, tips, Toast.LENGTH_SHORT)
+					.show();
 		}
 	};
 	public static boolean hasChanged = false;
-
-	public void addSite(View v) {
-		progressDialog.show();
-		new Thread(new addSiteThread(nameTextView.getText().toString().trim(),
-				urlTextView.getText().toString().trim())).start();
-	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +97,7 @@ public class EditSitesActivity extends ActionBarActivity {
 		progressDialog = new ProgressDialog(EditSitesActivity.this);
 		progressDialog.setTitle("请稍后...");
 		progressDialog.setMessage("正在添加,请稍后...");
+		progressDialog.setCancelable(false);
 	}
 
 	@Override
@@ -161,44 +145,41 @@ public class EditSitesActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	class addSiteThread implements Runnable {
-		private String name;
-		private String url;
-
-		public addSiteThread(String name, String url) {
-			this.name = name;
-			this.url = url;
-		}
-
-		@Override
-		public void run() {
-			Looper.prepare();
-			try {
-				if (TextUtils.isEmpty(name) || TextUtils.isEmpty(url))
-					throw new Exception("站点名称和站点域名不能为空！");
-				int countName = LoginActivity.sitesDBHelper
-						.rawQuery(
-								"select * from sites where name=\'" + name
-										+ "\'", null).getCount();
-				int countUrl = LoginActivity.sitesDBHelper.rawQuery(
-						"select * from sites where url=\'" + url + "\'", null)
-						.getCount();
-				if (countName != 0 || countUrl != 0)
-					throw new Exception("添加失败！请检查是否已有重复名称或URL");
-				InternetUtil site = new InternetUtil(EditSitesActivity.this,
-						url + "/plugin.php?id=zw_client_api&a=get_api_info");
-				site.get();
-				String result = site.getResult();
-				handler.obtainMessage(SUCCESSED, new SiteBean(name, url)).sendToTarget();
-			} catch (StatusCodeException e) {
-				handler.obtainMessage(STATUS_ERROR, e).sendToTarget();
-			} catch (ClientProtocolException e) {
-				handler.obtainMessage(NETWORK_FAIL, e).sendToTarget();
-			} catch (IOException e) {
-				handler.obtainMessage(NETWORK_FAIL, e).sendToTarget();
-			} catch (Exception e) {
-				handler.obtainMessage(UNKNOWN_ERROR, e).sendToTarget();
+	public void addSite(View v) {
+		progressDialog.show();
+		final String name = nameTextView.getText().toString().trim();
+		final String url = urlTextView.getText().toString().trim();
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					if (TextUtils.isEmpty(name) || TextUtils.isEmpty(url))
+						throw new Exception("站点名称和站点域名不能为空！");
+					int countName = LoginActivity.sitesDBHelper.rawQuery(
+							"select * from sites where name=\'" + name + "\'",
+							null).getCount();
+					int countUrl = LoginActivity.sitesDBHelper.rawQuery(
+							"select * from sites where url=\'" + url + "\'",
+							null).getCount();
+					if (countName != 0 || countUrl != 0)
+						throw new Exception("添加失败！请检查是否已有重复名称或URL");
+					InternetUtil site = new InternetUtil(
+							EditSitesActivity.this,
+							url + "/plugin.php?id=zw_client_api&a=get_api_info");
+					site.get();
+					String result = site.getResult();
+					handler.obtainMessage(SUCCESSED, new SiteBean(name, url))
+							.sendToTarget();
+				} catch (StatusCodeException e) {
+					handler.obtainMessage(STATUS_ERROR, e).sendToTarget();
+				} catch (ClientProtocolException e) {
+					handler.obtainMessage(NETWORK_FAIL, e).sendToTarget();
+				} catch (IOException e) {
+					handler.obtainMessage(NETWORK_FAIL, e).sendToTarget();
+				} catch (Exception e) {
+					handler.obtainMessage(OTHER_ERROR, e).sendToTarget();
+				}
 			}
-		}
+		}).start();
 	}
 }
