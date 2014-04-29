@@ -1,0 +1,76 @@
+package com.zulwi.tiebasigner.utils;
+
+import java.io.IOException;
+import java.util.List;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+
+import android.widget.Toast;
+
+import android.content.Context;
+import com.zulwi.tiebasigner.exception.StatusCodeException;
+
+public class InternetUtil {
+	private String url;
+	private HttpGet get;
+	private HttpPost post;
+	private HttpClient client;
+	private Context context;
+	private String result = "ÎÞ·µ»Ø";;
+
+	public InternetUtil(Context context,String url) {
+		this.context = context;
+		this.url = url;
+	}
+
+	public void get() throws StatusCodeException, IOException,ClientProtocolException,Exception {
+		get = new HttpGet(url);
+		client = new DefaultHttpClient();
+		get.addHeader("Client-Version", "1.0.0");
+		get.addHeader("Content-Type", "application/json");
+		get.addHeader("User-Agent", "Android Client For Tieba Signer");
+		Toast.makeText(context, "1" ,Toast.LENGTH_SHORT).show();
+		HttpResponse response = client.execute(get);
+		Toast.makeText(context, "2",Toast.LENGTH_SHORT).show();
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode != 200) {
+			throw new StatusCodeException("HTTP×´Ì¬Âë´íÎó£¡", statusCode);
+		} else {
+			HttpEntity entity = response.getEntity();// ÏìÓ¦Êý¾ÝµÄÄÚÈÝ
+			result = EntityUtils.toString(entity, "utf-8");
+			Toast.makeText(context, result, 1000).show();
+		}
+	}
+
+	public void post(List<? extends BasicNameValuePair> params)
+			throws StatusCodeException, ClientProtocolException, IOException,Exception {
+		post = new HttpPost(url);
+		client = new DefaultHttpClient();
+		post.addHeader("Client-Version", "1.0.0");
+		post.addHeader("Content-Type", "application/json");
+		post.addHeader("User-Agent", "Android Client For Tieba Signer");
+		HttpEntity entity = new UrlEncodedFormEntity(params);
+		post.setEntity(entity);
+		HttpResponse response = client.execute(post);
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode != 200) {
+			throw new StatusCodeException("HTTP×´Ì¬Âë´íÎó£¡", statusCode);
+		} else {
+			HttpEntity responseEntity = response.getEntity();
+			result = EntityUtils.toString(responseEntity, "utf-8");
+		}
+	}
+
+	public String getResult() {
+		return result;
+	}
+}

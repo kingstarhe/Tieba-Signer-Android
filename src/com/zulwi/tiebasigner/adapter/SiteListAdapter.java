@@ -78,7 +78,7 @@ public class SiteListAdapter extends BaseAdapter {
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
-								int del = LoginActivity.sitesDBHelper.delete(list.get(position).id);
+								int del = LoginActivity.sitesDBHelper.delete("sites",list.get(position).id);
 								if (del != 0) {
 									list.remove(position);
 									EditSitesActivity.hasChanged = true;

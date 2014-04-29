@@ -32,7 +32,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 	public void createListAdapter() {
 		List<SiteBean> list = new ArrayList<SiteBean>();
 		sitesDBHelper = new SitesDBHelper(this);
-		Cursor cursor = sitesDBHelper.query();
+		Cursor cursor = sitesDBHelper.query("sites");
 		int count = cursor.getCount();
 		if (count > 0) {
 			for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor
