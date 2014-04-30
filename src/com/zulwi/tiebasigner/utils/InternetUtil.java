@@ -8,6 +8,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -15,6 +16,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 import android.content.Context;
+
 import com.zulwi.tiebasigner.exception.StatusCodeException;
 
 public class InternetUtil {
@@ -29,10 +31,10 @@ public class InternetUtil {
 		this.context = context;
 		this.url = url;
 	}
-
-	public void get() throws StatusCodeException, IOException,ClientProtocolException,Exception {
-		get = new HttpGet(url);
+	
+	public String get() throws StatusCodeException, IOException, ClientProtocolException, Exception {
 		client = new DefaultHttpClient();
+		get = new HttpGet(url);
 		get.addHeader("Client-Version", "1.0.0");
 		get.addHeader("Content-Type", "application/json");
 		get.addHeader("User-Agent", "Android Client For Tieba Signer");
@@ -41,13 +43,13 @@ public class InternetUtil {
 		if (statusCode != 200) {
 			throw new StatusCodeException("HTTP状态码错误！", statusCode);
 		} else {
-			HttpEntity entity = response.getEntity();// 响应数据的内容
+			HttpEntity entity = response.getEntity();
 			result = EntityUtils.toString(entity, "utf-8");
+			return result;
 		}
 	}
 
-	public void post(List<? extends BasicNameValuePair> params)
-			throws StatusCodeException, ClientProtocolException, IOException,Exception {
+	public String post(List<? extends BasicNameValuePair> params) throws StatusCodeException, ClientProtocolException, IOException, Exception {
 		post = new HttpPost(url);
 		client = new DefaultHttpClient();
 		post.addHeader("Client-Version", "1.0.0");
@@ -62,6 +64,7 @@ public class InternetUtil {
 		} else {
 			HttpEntity responseEntity = response.getEntity();
 			result = EntityUtils.toString(responseEntity, "utf-8");
+			return result;
 		}
 	}
 

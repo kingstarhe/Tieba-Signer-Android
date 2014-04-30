@@ -3,6 +3,9 @@ package com.zulwi.tiebasigner.activity;
 import java.io.IOException;
 
 import org.apache.http.client.ClientProtocolException;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.adapter.SiteListAdapter;
 import com.zulwi.tiebasigner.beans.SiteBean;
@@ -55,7 +58,8 @@ public class EditSitesActivity extends ActionBarActivity {
 				tips = "该站点不支持客户端";
 				break;
 			case PARSE_ERROR:
-				tips = "JSON解析错误";
+				JSONException j = (JSONException) msg.obj;
+				tips = "JSON解析错误：" + j.getMessage();
 				break;
 			case SUCCESSED:
 				SiteBean site = (SiteBean) msg.obj;
@@ -166,10 +170,13 @@ public class EditSitesActivity extends ActionBarActivity {
 					InternetUtil site = new InternetUtil(
 							EditSitesActivity.this,
 							url + "/plugin.php?id=zw_client_api&a=get_api_info");
-					site.get();
-					String result = site.getResult();
-					handler.obtainMessage(SUCCESSED, new SiteBean(name, url))
-							.sendToTarget();
+					String result = site.get();
+					JSONObject jsonObject = new JSONObject(result);
+					int status = jsonObject.getInt("status");
+					if (status == -1) throw new JSONException("状态码错误！");
+					handler.obtainMessage(SUCCESSED, new SiteBean(name, url)).sendToTarget();
+				} catch (JSONException e) {
+					handler.obtainMessage(PARSE_ERROR, e).sendToTarget();
 				} catch (StatusCodeException e) {
 					handler.obtainMessage(STATUS_ERROR, e).sendToTarget();
 				} catch (ClientProtocolException e) {
