@@ -2,36 +2,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="horizontal" >
+    android:background="@drawable/site_list_item"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="horizontal"
+    android:paddingTop="2dp" 
+    android:paddingBottom="2dp" 
+    android:paddingLeft="5dp" 
+    android:paddingRight="5dp" >
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:textColor="@drawable/site_list_text"
         android:textSize="22sp" />
 
     <TextView
         android:id="@+id/url"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:layout_below="@id/title"
+        android:textColor="@drawable/site_list_text"
         android:textSize="13sp" />
-
-    <Button
-        android:id="@+id/del_btn"
-        android:layout_width="25sp"
-        android:layout_height="25sp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:background="@drawable/list_close_button" />
-
-    <Button
-        android:id="@+id/edit_btn"
-        android:layout_width="25sp"
-        android:layout_height="25sp"
-        android:visibility="invisible"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@id/del_btn"
-        android:background="@drawable/list_close_button" />
 
 </RelativeLayout>

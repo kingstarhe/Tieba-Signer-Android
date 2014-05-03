@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.zulwi.tiebasigner.EditSitesActivity" >
+	<item
+        android:id="@+id/edit_site"
+        android:title="@string/edit"/>
+	
+    <item
+        android:id="@+id/del_site"
+        android:title="@string/delete"/>
+
+</menu>

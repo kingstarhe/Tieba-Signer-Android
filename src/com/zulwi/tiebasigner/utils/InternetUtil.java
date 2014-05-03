@@ -8,7 +8,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -24,6 +23,7 @@ public class InternetUtil {
 	private HttpGet get;
 	private HttpPost post;
 	private HttpClient client;
+	@SuppressWarnings("unused")
 	private Context context;
 	private String result = "ÎÞ·µ»Ø";;
 

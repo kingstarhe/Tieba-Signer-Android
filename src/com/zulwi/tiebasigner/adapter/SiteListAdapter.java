@@ -2,36 +2,30 @@ package com.zulwi.tiebasigner.adapter;
 
 import java.util.List;
 
-import com.zulwi.tiebasigner.activity.EditSitesActivity;
-import com.zulwi.tiebasigner.activity.LoginActivity;
 import com.zulwi.tiebasigner.R;
+import com.zulwi.tiebasigner.activity.LoginActivity;
 import com.zulwi.tiebasigner.beans.SiteBean;
+import com.zulwi.tiebasigner.db.SitesDBHelper;
 
-import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class SiteListAdapter extends BaseAdapter {
 	private Context context;
 	private LayoutInflater inflater;
-	private List<SiteBean> list;
-
-	public void removeAll() {
-		list.removeAll(list);
-		notifyDataSetChanged();
-	}
+	public List<SiteBean> list;
+	private SitesDBHelper sitesDBHelper;
 
 	public SiteListAdapter(Context context, List<SiteBean> data) {
 		this.context = context;
 		this.inflater = LayoutInflater.from(context);
 		this.list = data;
+		sitesDBHelper = new SitesDBHelper(this.context);
 	}
 
 	@Override
@@ -39,19 +33,44 @@ public class SiteListAdapter extends BaseAdapter {
 		return list.size();
 	}
 
-	public void addItem(long id, String name, String url) {
-		list.add(new SiteBean(id, name, url));
-		notifyDataSetChanged();
+	public boolean addItem(String name, String url) {
+		ContentValues value = new ContentValues();
+		value.put("name", name);
+		value.put("url", url);
+		long id = sitesDBHelper.insert("sites", value);
+		if (id != 0) {
+			list.add(new SiteBean(id, name, url));
+			notifyDataSetChanged();
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
-	public Object getItem(int position) {
+	public SiteBean getItem(int position) {
 		return this.list.get(position);
 	}
 
 	@Override
 	public long getItemId(int position) {
-		return 0;
+		return this.list.get(position).id;
+	}
+
+	public int remove(int position) {
+		int del = LoginActivity.sitesDBHelper.delete("sites",
+				LoginActivity.siteListAdapter.list.get(position).id);
+		if (del != 0) {
+			list.remove(position);
+			notifyDataSetChanged();
+		}
+		return del;
+	}
+
+	public void removeAll() {
+		sitesDBHelper.deleteAll("sites");
+		list.removeAll(list);
+		notifyDataSetChanged();
 	}
 
 	@Override
@@ -68,35 +87,6 @@ public class SiteListAdapter extends BaseAdapter {
 		}
 		viewHolder.title.setText(list.get(position).name);
 		viewHolder.url.setText(list.get(position).url);
-		Button delBotton = (Button) convertView.findViewById(R.id.del_btn);
-		delBotton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				AlertDialog.Builder confirm = new AlertDialog.Builder(context);
-				confirm.setTitle("确定要删除该站点吗？该站点下的所有账号数据将均被删除");
-				confirm.setPositiveButton("确定",
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								int del = LoginActivity.sitesDBHelper.delete("sites",list.get(position).id);
-								if (del != 0) {
-									list.remove(position);
-									EditSitesActivity.hasChanged = true;
-									SiteListAdapter.this.notifyDataSetChanged();
-								} else {
-									Toast.makeText(context, "删除失败！",Toast.LENGTH_SHORT).show();
-								}
-							}
-						})
-						.setNegativeButton("取消",
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog, int which) {
-										dialog.dismiss();
-									}
-								}).create().show();
-			}
-		});
 		return convertView;
 	}
 

@@ -16,7 +16,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".activity.SplashActivity"
+            android:name="com.zulwi.tiebasigner.activity.SplashActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,11 +25,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.LoginActivity"
+            android:name="com.zulwi.tiebasigner.activity.LoginActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".activity.EditSitesActivity"
+            android:name="com.zulwi.tiebasigner.activity.EditSitesActivity"
             android:label="@string/title_activity_edit_sites" >
         </activity>
     </application>

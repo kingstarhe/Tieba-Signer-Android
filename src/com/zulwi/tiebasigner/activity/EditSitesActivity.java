@@ -17,13 +17,15 @@ import android.text.TextUtils;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,14 +65,8 @@ public class EditSitesActivity extends ActionBarActivity {
 				break;
 			case SUCCESSED:
 				SiteBean site = (SiteBean) msg.obj;
-				ContentValues value = new ContentValues();
-				value.put("name", site.name);
-				value.put("url", site.url);
-				long id = LoginActivity.sitesDBHelper.insert("sites", value);
-				if (id != 0) {
+				if (LoginActivity.siteListAdapter.addItem(site.name, site.url)) {
 					hasChanged = true;
-					LoginActivity.siteListAdapter.addItem(id, site.name,
-							site.url);
 					tips = "添加成功";
 				} else {
 					tips = "添加失败";
@@ -82,8 +78,7 @@ public class EditSitesActivity extends ActionBarActivity {
 				break;
 			}
 			progressDialog.dismiss();
-			Toast.makeText(EditSitesActivity.this, tips, Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(EditSitesActivity.this, tips, Toast.LENGTH_SHORT).show();
 		}
 	};
 	public static boolean hasChanged = false;
@@ -95,9 +90,9 @@ public class EditSitesActivity extends ActionBarActivity {
 		urlTextView = (TextView) findViewById(R.id.addSiteUrl);
 		nameTextView = (TextView) findViewById(R.id.addSiteName);
 		siteList = (ListView) findViewById(R.id.siteList);
-		LoginActivity.siteListAdapter = new SiteListAdapter(this,
-				LoginActivity.siteMapList);
+		LoginActivity.siteListAdapter = new SiteListAdapter(this,LoginActivity.siteMapList);
 		siteList.setAdapter(LoginActivity.siteListAdapter);
+		registerForContextMenu(siteList);
 		progressDialog = new ProgressDialog(EditSitesActivity.this);
 		progressDialog.setTitle("请稍后...");
 		progressDialog.setMessage("正在添加,请稍后...");
@@ -122,6 +117,45 @@ public class EditSitesActivity extends ActionBarActivity {
 	}
 
 	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		getMenuInflater().inflate(R.menu.sites_context, menu);
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		final AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+		switch (item.getItemId()) {
+		case R.id.edit_site:
+			break;
+		case R.id.del_site:
+			AlertDialog.Builder confirm = new AlertDialog.Builder(this);
+			confirm.setTitle("确定要删除该站点吗？该站点下的所有账号数据将均被删除");
+			confirm.setPositiveButton("确定",
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							int del = LoginActivity.siteListAdapter.remove(menuInfo.position);
+							if (del != 0) {
+								hasChanged = true;
+							} else {
+								Toast.makeText(EditSitesActivity.this, "删除失败！", Toast.LENGTH_SHORT).show();
+							}
+						}
+					})
+					.setNegativeButton("取消",
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									dialog.dismiss();
+								}
+							}).create().show();
+			break;
+		}
+		return super.onContextItemSelected(item);
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.del_list) {
 			AlertDialog.Builder confirm = new AlertDialog.Builder(this);
@@ -131,17 +165,14 @@ public class EditSitesActivity extends ActionBarActivity {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							LoginActivity.siteListAdapter.removeAll();
-							LoginActivity.sitesDBHelper.deleteAll("sites");
 							hasChanged = true;
-							Toast.makeText(EditSitesActivity.this, "已经全部清空！",
-									Toast.LENGTH_SHORT).show();
+							Toast.makeText(EditSitesActivity.this, "已经全部清空！", Toast.LENGTH_SHORT).show();
 						}
 					})
 					.setNegativeButton("取消",
 							new DialogInterface.OnClickListener() {
 								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
+								public void onClick(DialogInterface dialog, int which) {
 									dialog.dismiss();
 								}
 							}).create().show();
@@ -152,28 +183,24 @@ public class EditSitesActivity extends ActionBarActivity {
 	public void addSite(View v) {
 		progressDialog.show();
 		final String name = nameTextView.getText().toString().trim();
-		final String url = urlTextView.getText().toString().trim();
+		String inputUrl = urlTextView.getText().toString().trim();
+		final String url = inputUrl.startsWith("http://") || inputUrl.startsWith("https://") ? inputUrl : "http://" + inputUrl;
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
 					if (TextUtils.isEmpty(name) || TextUtils.isEmpty(url))
 						throw new Exception("站点名称和站点域名不能为空！");
-					int countName = LoginActivity.sitesDBHelper.rawQuery(
-							"select * from sites where name=\'" + name + "\'",
-							null).getCount();
-					int countUrl = LoginActivity.sitesDBHelper.rawQuery(
-							"select * from sites where url=\'" + url + "\'",
-							null).getCount();
+					int countName = LoginActivity.sitesDBHelper.rawQuery("select * from sites where name=\'" + name + "\'", null).getCount();
+					int countUrl = LoginActivity.sitesDBHelper.rawQuery("select * from sites where url=\'" + url + "\'", null).getCount();
 					if (countName != 0 || countUrl != 0)
 						throw new Exception("添加失败！请检查是否已有重复名称或URL");
-					InternetUtil site = new InternetUtil(
-							EditSitesActivity.this,
-							url + "/plugin.php?id=zw_client_api&a=get_api_info");
+					InternetUtil site = new InternetUtil(EditSitesActivity.this, url + "/plugin.php?id=zw_client_api&a=get_api_info");
 					String result = site.get();
 					JSONObject jsonObject = new JSONObject(result);
 					int status = jsonObject.getInt("status");
-					if (status == -1) throw new JSONException("状态码错误！");
+					if (status == -1)
+						throw new ClientProtocolException("状态码错误！");
 					handler.obtainMessage(SUCCESSED, new SiteBean(name, url)).sendToTarget();
 				} catch (JSONException e) {
 					handler.obtainMessage(PARSE_ERROR, e).sendToTarget();
