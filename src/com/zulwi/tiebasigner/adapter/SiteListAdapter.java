@@ -1,10 +1,10 @@
 package com.zulwi.tiebasigner.adapter;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.zulwi.tiebasigner.R;
-import com.zulwi.tiebasigner.activity.LoginActivity;
-import com.zulwi.tiebasigner.beans.SiteBean;
+import com.zulwi.tiebasigner.bean.SiteBean;
 import com.zulwi.tiebasigner.db.SitesDBHelper;
 
 import android.content.ContentValues;
@@ -15,7 +15,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class SiteListAdapter extends BaseAdapter {
+@SuppressWarnings("serial")
+public class SiteListAdapter extends BaseAdapter implements Serializable {
 	private Context context;
 	private LayoutInflater inflater;
 	public List<SiteBean> list;
@@ -47,6 +48,21 @@ public class SiteListAdapter extends BaseAdapter {
 		}
 	}
 
+	public boolean updateItem(int position, String name, String url) {
+		SiteBean oldSite = getItem(position);
+		ContentValues value = new ContentValues();
+		value.put("name", name);
+		value.put("url", url);
+		int count = sitesDBHelper.update("sites", value, "id=" + String.valueOf(oldSite.id));
+		if (count != 0) {
+			SiteBean site = new SiteBean(oldSite.id, name, url);
+			list.set(position, site);
+			notifyDataSetChanged();
+			return true;
+		}
+		return false;
+	}
+
 	@Override
 	public SiteBean getItem(int position) {
 		return this.list.get(position);
@@ -58,8 +74,7 @@ public class SiteListAdapter extends BaseAdapter {
 	}
 
 	public int remove(int position) {
-		int del = LoginActivity.sitesDBHelper.delete("sites",
-				LoginActivity.siteListAdapter.list.get(position).id);
+		int del = sitesDBHelper.delete("sites", list.get(position).id);
 		if (del != 0) {
 			list.remove(position);
 			notifyDataSetChanged();

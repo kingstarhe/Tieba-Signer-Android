@@ -1,4 +1,4 @@
-package com.zulwi.tiebasigner.utils;
+package com.zulwi.tiebasigner.util;
 
 import java.io.IOException;
 import java.util.List;
@@ -27,11 +27,11 @@ public class InternetUtil {
 	private Context context;
 	private String result = "ÎÞ·µ»Ø";;
 
-	public InternetUtil(Context context,String url) {
+	public InternetUtil(Context context, String url) {
 		this.context = context;
 		this.url = url;
 	}
-	
+
 	public String get() throws StatusCodeException, IOException, ClientProtocolException, Exception {
 		client = new DefaultHttpClient();
 		get = new HttpGet(url);

@@ -15,14 +15,12 @@ public class SplashActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-				WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_splash);
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				Intent intent = new Intent(SplashActivity.this,
-						LoginActivity.class);
+				Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
 				SplashActivity.this.startActivity(intent);
 				SplashActivity.this.finish();
 			}

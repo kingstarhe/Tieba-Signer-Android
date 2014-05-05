@@ -8,7 +8,7 @@ public class StatusCodeException extends Exception {
 		return code;
 	}
 
-	public StatusCodeException(String message,int code){
+	public StatusCodeException(String message, int code) {
 		super(message);
 		this.code = code;
 	}

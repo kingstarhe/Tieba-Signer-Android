@@ -9,9 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class SitesDBHelper extends SQLiteOpenHelper {
 	private final static String DB_NAME = "database.db";
 	private final static int VERSION = 1;
-	private final static String CREATE_SQL = "create table if not exists sites("
-			+ "id integer primary key autoincrement,name varchar(20) unique,"
-			+ "url varchar(60) unique)";
+	private final static String CREATE_SQL = "create table if not exists sites(" + "id integer primary key autoincrement,name varchar(20) unique," + "url varchar(60) unique)";
 	private SQLiteDatabase db;
 
 	public SitesDBHelper(Context context) {
@@ -38,8 +36,7 @@ public class SitesDBHelper extends SQLiteOpenHelper {
 		return db.update(tableName, values, whereClause, null);
 	}
 
-	public int update(String tableName, ContentValues values,
-			String whereClause, String[] whereArgs) {
+	public int update(String tableName, ContentValues values, String whereClause, String[] whereArgs) {
 		return db.update(tableName, values, whereClause, whereArgs);
 	}
 
@@ -61,10 +58,8 @@ public class SitesDBHelper extends SQLiteOpenHelper {
 	}
 
 	public int delete(String tableName, long id) {
-		if (db == null)
-			db = getWritableDatabase();
-		return db
-				.delete(tableName, "id=?", new String[] { String.valueOf(id) });
+		if (db == null) db = getWritableDatabase();
+		return db.delete(tableName, "id=?", new String[] { String.valueOf(id) });
 	}
 
 	public void deleteAll(String tableName) {
@@ -74,7 +69,6 @@ public class SitesDBHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void close() {
-		if (db != null)
-			db.close();
+		if (db != null) db.close();
 	}
 }
