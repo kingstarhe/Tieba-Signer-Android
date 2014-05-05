@@ -111,7 +111,6 @@ public class EditSitesActivity extends ActionBarActivity {
 		nameTextView = (TextView) findViewById(R.id.addSiteName);
 		siteList = (ListView) findViewById(R.id.siteList);
 		Intent intent = getIntent();
-		siteListAdapter = (SiteListAdapter) intent.getSerializableExtra("siteListAdapter");
 		siteMapList = (List<SiteBean>) intent.getSerializableExtra("siteMapList");
 		siteListAdapter = new SiteListAdapter(this, siteMapList);
 		siteList.setAdapter(siteListAdapter);
@@ -233,6 +232,7 @@ public class EditSitesActivity extends ActionBarActivity {
 	@Override
 	protected void onDestroy() {
 		sitesDBHelper.close();
+		siteListAdapter.closeDB();
 		super.onDestroy();
 	}
 

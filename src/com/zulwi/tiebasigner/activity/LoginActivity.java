@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.zulwi.tiebasigner.R;
-import com.zulwi.tiebasigner.adapter.SiteListAdapter;
 import com.zulwi.tiebasigner.bean.SiteBean;
 import com.zulwi.tiebasigner.db.SitesDBHelper;
 
@@ -23,39 +22,41 @@ import android.widget.Toast;
 
 public class LoginActivity extends Activity implements OnItemSelectedListener {
 	private Spinner siteSpinner;
-	private int lastSelectedPosition;
-	private ArrayAdapter<String> siteSpinnerAdapter;
-	private String[] siteList;
+	private String[] siteUrlList;
+	private String[] siteNameList;
 	private List<SiteBean> siteMapList;
-	private SiteListAdapter siteListAdapter;
-	private SitesDBHelper sitesDBHelper = new SitesDBHelper(this);;
+	private SitesDBHelper sitesDBHelper = new SitesDBHelper(this);
+	private int lastSelectedPosition;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_login);
-		createListAdapter();
+		flushSiteList();
 	}
 
-	public void createListAdapter() {
-		List<SiteBean> list = new ArrayList<SiteBean>();
+	public void flushSiteList() {
+		// 查询已有列表并保存到 siteMapList 中
+		siteMapList = new ArrayList<SiteBean>();
 		Cursor cursor = sitesDBHelper.query("sites");
-		int count = cursor.getCount();
-		if (count > 0) {
+		if (cursor.getCount() > 0) {
 			for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
-				list.add(new SiteBean(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2)));
+				siteMapList.add(new SiteBean(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2)));
 			}
 		}
-		siteMapList = list;
+		// 创建 Spinner 所需数据
 		int size = siteMapList.size();
-		siteList = new String[size + 1];
+		siteNameList = new String[size + 1];
+		siteUrlList = new String[size];
 		for (int i = 0; i < size; i++) {
-			siteList[i] = siteMapList.get(i).name;
+			siteNameList[i] = siteMapList.get(i).name;
+			siteUrlList[i] = siteMapList.get(i).url;
 		}
-		siteList[size] = "管理站点";
+		siteNameList[size] = "管理站点";
 		siteSpinner = (Spinner) findViewById(R.id.site);
-		siteSpinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, siteList);
+		// 为Spinner 添加适配器和选择事件
+		ArrayAdapter<String> siteSpinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, siteNameList);
 		siteSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		siteSpinner.setAdapter(siteSpinnerAdapter);
 		siteSpinner.setOnItemSelectedListener(this);
@@ -66,7 +67,6 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 
 	public void startEditSiteActivity() {
 		Intent intent = new Intent(LoginActivity.this, EditSitesActivity.class);
-		intent.putExtra("siteListAdapter", siteListAdapter);
 		intent.putExtra("siteMapList", (Serializable) siteMapList);
 		this.startActivityForResult(intent, 1);
 	}
@@ -77,7 +77,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 			case 0:
 				break;
 			case 1:
-				createListAdapter();
+				flushSiteList();
 				break;
 			default:
 				Toast.makeText(this, "站点管理活动异常结束", Toast.LENGTH_LONG).show();
@@ -92,7 +92,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 
 	@Override
 	public void onItemSelected(AdapterView<?> adapter, View v, int which, long arg3) {
-		if (which == siteList.length - 1) {
+		if (which == siteUrlList.length) {
 			startEditSiteActivity();
 			siteSpinner.setSelection(lastSelectedPosition);
 			return;

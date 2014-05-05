@@ -105,6 +105,10 @@ public class SiteListAdapter extends BaseAdapter implements Serializable {
 		return convertView;
 	}
 
+	public void closeDB() {
+		if (sitesDBHelper != null) sitesDBHelper.close();
+	}
+
 	private static class ViewHolder {
 		TextView title;
 		TextView url;
