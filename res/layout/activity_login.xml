@@ -56,6 +56,7 @@
             android:layout_marginLeft="20sp"
             android:layout_marginRight="20sp"
             android:background="@drawable/blue_button"
+            android:onClick="doLogin"
             android:text="@string/login"
             android:textColor="#fff" />
     </LinearLayout>

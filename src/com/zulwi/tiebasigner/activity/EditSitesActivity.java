@@ -15,7 +15,6 @@ import com.zulwi.tiebasigner.exception.StatusCodeException;
 import com.zulwi.tiebasigner.util.InternetUtil;
 
 import android.support.v7.app.ActionBarActivity;
-import android.text.TextUtils;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -23,6 +22,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,60 +36,46 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-@SuppressLint("HandlerLeak")
 public class EditSitesActivity extends ActionBarActivity {
 	private ListView siteList;
 	private TextView nameTextView;
 	private TextView urlTextView;
 	private ProgressDialog progressDialog;
+	private AlertDialog EditDialog;
 	private List<SiteBean> siteMapList;
 	private SiteListAdapter siteListAdapter;
-	private SitesDBHelper sitesDBHelper = new SitesDBHelper(this);;
-	private final static int NETWORK_FAIL = 0;
-	private final static int STATUS_ERROR = 1;
-	private final static int UNSUPPORTTED = 2;
-	private final static int PARSE_ERROR = 3;
-	private final static int OTHER_ERROR = 4;
-	private final static int ADD_SITE = 5;
-	private final static int EDIT_SITE = 6;
+	private SitesDBHelper sitesDBHelper = new SitesDBHelper(this);
 	public static boolean hasChanged = false;
 
+	@SuppressLint("HandlerLeak")
 	private Handler handler = new Handler() {
 		@Override
 		public void handleMessage(android.os.Message msg) {
 			super.handleMessage(msg);
 			String tips = null;
+			if (msg.what != InternetUtil.SUCCESSED && msg.arg1 == InternetUtil.EDIT_SITE) EditDialog.show();
 			switch (msg.what) {
-				case NETWORK_FAIL:
+				case InternetUtil.NETWORK_FAIL:
 					tips = "网络错误";
 					break;
-				case STATUS_ERROR:
+				case InternetUtil.STATUS_ERROR:
 					StatusCodeException e = (StatusCodeException) msg.obj;
-					tips = e.getMessage() + "状态码：" + String.valueOf(e.getCode());
+					tips = e.getMessage() + String.valueOf(e.getCode()) + "错误";
 					break;
-				case UNSUPPORTTED:
-					tips = "该站点不支持客户端";
+				case InternetUtil.PARSE_ERROR:
+					tips = "JSON解析错误，请确认该站点是否支持客户端";
 					break;
-				case PARSE_ERROR:
-					JSONException j = (JSONException) msg.obj;
-					tips = "JSON解析错误：" + j.getMessage();
-					break;
-				case ADD_SITE:
-					SiteBean addingSite = (SiteBean) msg.obj;
-					if (siteListAdapter.addItem(addingSite.name, addingSite.url)) {
-						hasChanged = true;
-						tips = "添加成功";
-					} else {
-						tips = "添加失败";
-					}
-					break;
-				case EDIT_SITE:
-					SiteBean editingSite = (SiteBean) msg.obj;
-					if (siteListAdapter.updateItem(editingSite.position, editingSite.name, editingSite.url)) {
-						hasChanged = true;
-						tips = "编辑成功";
-					} else {
-						tips = "编辑失败";
+				case InternetUtil.SUCCESSED:
+					if (msg.arg1 == InternetUtil.ADD_SITE) {
+						SiteBean addingSite = (SiteBean) msg.obj;
+						boolean successed = siteListAdapter.addItem(addingSite.name, addingSite.url);
+						if (successed) hasChanged = true;
+						tips = successed ? "添加成功" : "添加失败";
+					} else if (msg.arg1 == InternetUtil.EDIT_SITE) {
+						SiteBean editingSite = (SiteBean) msg.obj;
+						boolean successed = siteListAdapter.updateItem(editingSite.position, editingSite.name, editingSite.url);
+						if (successed) hasChanged = true;
+						tips = successed ? "编辑成功" : "编辑失败";
 					}
 					break;
 				default:
@@ -115,7 +101,7 @@ public class EditSitesActivity extends ActionBarActivity {
 		siteListAdapter = new SiteListAdapter(this, siteMapList);
 		siteList.setAdapter(siteListAdapter);
 		registerForContextMenu(siteList);
-		progressDialog = new ProgressDialog(EditSitesActivity.this);
+		progressDialog = new ProgressDialog(this);
 		progressDialog.setTitle("请稍后...");
 		progressDialog.setMessage("正在检查站点,请稍后...");
 		progressDialog.setCancelable(false);
@@ -131,7 +117,7 @@ public class EditSitesActivity extends ActionBarActivity {
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		getMenuInflater().inflate(R.menu.sites_context, menu);
-		menu.setHeaderTitle("站点操作");
+		menu.setHeaderTitle("操作");
 	}
 
 	@Override
@@ -140,28 +126,7 @@ public class EditSitesActivity extends ActionBarActivity {
 		switch (item.getItemId()) {
 			case R.id.edit_site:
 				SiteBean site = siteListAdapter.getItem(menuInfo.position);
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				LayoutInflater inflater = getLayoutInflater();
-				View layout = inflater.inflate(R.layout.dialog_edit_sites, (ViewGroup) findViewById(R.layout.dialog_edit_sites));
-				final EditText siteEditor = (EditText) layout.findViewById(R.id.nameEditor);
-				final EditText urlEditor = (EditText) layout.findViewById(R.id.urlEditor);
-				siteEditor.setText(site.name);
-				urlEditor.setText(site.url);
-				builder.setTitle("编辑站点").setView(layout).setPositiveButton("确定", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						progressDialog.show();
-						final String name = siteEditor.getText().toString().trim();
-						String inputUrl = urlEditor.getText().toString().trim();
-						final String url = inputUrl.startsWith("http://") || inputUrl.startsWith("https://") ? inputUrl : "http://" + inputUrl;
-						new Thread(new EditSiteThread(menuInfo.position, name, url)).start();
-					}
-				}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-					}
-				}).create().show();
+				createEditDialog(site, menuInfo.position);
 				break;
 			case R.id.del_site:
 				AlertDialog.Builder confirm = new AlertDialog.Builder(this);
@@ -187,6 +152,31 @@ public class EditSitesActivity extends ActionBarActivity {
 		return super.onContextItemSelected(item);
 	}
 
+	public void createEditDialog(SiteBean site, final int position) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		LayoutInflater inflater = getLayoutInflater();
+		View layout = inflater.inflate(R.layout.dialog_edit_sites, (ViewGroup) findViewById(R.layout.dialog_edit_sites));
+		final EditText siteEditor = (EditText) layout.findViewById(R.id.nameEditor);
+		final EditText urlEditor = (EditText) layout.findViewById(R.id.urlEditor);
+		siteEditor.setText(site.name);
+		urlEditor.setText(site.url);
+		EditDialog = builder.setTitle("编辑站点").setView(layout).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				progressDialog.show();
+				final String name = siteEditor.getText().toString().trim();
+				final String url = formatUrl(urlEditor.getText().toString().trim());
+				new Thread(new EditSiteThread(position, name, url)).start();
+			}
+		}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		}).create();
+		EditDialog.show();
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.del_list) {
@@ -209,11 +199,16 @@ public class EditSitesActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	private String formatUrl(String url) {
+		url = url.startsWith("http://") || url.startsWith("https://") ? url : "http://" + url;
+		url = url.endsWith("/") && !url.equals("http://") ? url.substring(0, url.length() - 1) : url;
+		return url;
+	}
+
 	public void addSite(View v) {
 		progressDialog.show();
 		final String name = nameTextView.getText().toString().trim();
-		String inputUrl = urlTextView.getText().toString().trim();
-		final String url = inputUrl.startsWith("http://") || inputUrl.startsWith("https://") ? inputUrl : "http://" + inputUrl;
+		final String url = formatUrl(urlTextView.getText().toString().trim());
 		new Thread(new EditSiteThread(name, url)).start();
 	}
 
@@ -254,7 +249,8 @@ public class EditSitesActivity extends ActionBarActivity {
 		@Override
 		public void run() {
 			try {
-				if (TextUtils.isEmpty(name) || TextUtils.isEmpty(url)) throw new Exception("站点名称和站点域名不能为空！");
+				if (name.equals("") || url.equals("http://")) throw new Exception("站点名称或站点域名不能为空！");
+				Log.i("url", url);
 				if (position == -1) {
 					int countName = sitesDBHelper.rawQuery("select * from sites where name=\'" + name + "\'", null).getCount();
 					int countUrl = sitesDBHelper.rawQuery("select * from sites where url=\'" + url + "\'", null).getCount();
@@ -265,21 +261,17 @@ public class EditSitesActivity extends ActionBarActivity {
 				JSONObject jsonObject = new JSONObject(result);
 				int status = jsonObject.getInt("status");
 				if (status == -1) throw new ClientProtocolException("状态码错误！");
-				if (position == -1) {
-					handler.obtainMessage(ADD_SITE, new SiteBean(name, url)).sendToTarget();
-				} else {
-					handler.obtainMessage(EDIT_SITE, new SiteBean(name, url, position)).sendToTarget();
-				}
+				handler.obtainMessage(InternetUtil.SUCCESSED, position == -1 ? InternetUtil.ADD_SITE : InternetUtil.EDIT_SITE, 0, position == -1 ? new SiteBean(name, url) : new SiteBean(name, url, position)).sendToTarget();
 			} catch (JSONException e) {
-				handler.obtainMessage(PARSE_ERROR, e).sendToTarget();
+				handler.obtainMessage(InternetUtil.PARSE_ERROR, position == -1 ? InternetUtil.ADD_SITE : InternetUtil.EDIT_SITE, 0, e).sendToTarget();
 			} catch (StatusCodeException e) {
-				handler.obtainMessage(STATUS_ERROR, e).sendToTarget();
+				handler.obtainMessage(InternetUtil.STATUS_ERROR, position == -1 ? InternetUtil.ADD_SITE : InternetUtil.EDIT_SITE, 0, e).sendToTarget();
 			} catch (ClientProtocolException e) {
-				handler.obtainMessage(NETWORK_FAIL, e).sendToTarget();
+				handler.obtainMessage(InternetUtil.NETWORK_FAIL, position == -1 ? InternetUtil.ADD_SITE : InternetUtil.EDIT_SITE, 0, e).sendToTarget();
 			} catch (IOException e) {
-				handler.obtainMessage(NETWORK_FAIL, e).sendToTarget();
+				handler.obtainMessage(InternetUtil.NETWORK_FAIL, position == -1 ? InternetUtil.ADD_SITE : InternetUtil.EDIT_SITE, 0, e).sendToTarget();
 			} catch (Exception e) {
-				handler.obtainMessage(OTHER_ERROR, e).sendToTarget();
+				handler.obtainMessage(InternetUtil.OTHER_ERROR, position == -1 ? InternetUtil.ADD_SITE : InternetUtil.EDIT_SITE, 0, e).sendToTarget();
 			}
 		}
 	}
