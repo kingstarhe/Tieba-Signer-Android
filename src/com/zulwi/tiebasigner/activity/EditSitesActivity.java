@@ -163,9 +163,13 @@ public class EditSitesActivity extends ActionBarActivity {
 		EditDialog = builder.setTitle("编辑站点").setView(layout).setPositiveButton("确定", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				progressDialog.show();
 				final String name = siteEditor.getText().toString().trim();
 				final String url = formatUrl(urlEditor.getText().toString().trim());
+				if (name.equals("") || url.equals("http://")) {
+					Toast.makeText(EditSitesActivity.this, "站点名称或站点域名不能为空！", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				progressDialog.show();
 				new Thread(new EditSiteThread(position, name, url)).start();
 			}
 		}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -206,20 +210,39 @@ public class EditSitesActivity extends ActionBarActivity {
 	}
 
 	public void addSite(View v) {
-		progressDialog.show();
 		final String name = nameTextView.getText().toString().trim();
 		final String url = formatUrl(urlTextView.getText().toString().trim());
+		if (name.equals("") || url.equals("http://")) {
+			Toast.makeText(EditSitesActivity.this, "站点名称或站点域名不能为空！", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		progressDialog.show();
 		new Thread(new EditSiteThread(name, url)).start();
 	}
 
 	@Override
 	public void onBackPressed() {
 		if (siteList.getCount() == 0) {
-			Toast.makeText(this, "至少应添加一个站点以供登录", Toast.LENGTH_SHORT).show();
+			AlertDialog.Builder confirm = new AlertDialog.Builder(this);
+			confirm.setTitle("您尚未添加站点，无法返回登录界面，确定退出客户端吗？");
+			confirm.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					Intent intent = new Intent(Intent.ACTION_MAIN);  
+                    intent.addCategory(Intent.CATEGORY_HOME);  
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);  
+                    startActivity(intent);  
+                    android.os.Process.killProcess(android.os.Process.myPid());
+				}
+			}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
+			}).create().show();
 			return;
 		} else {
-			Intent data = new Intent(EditSitesActivity.this, LoginActivity.class);
-			setResult(hasChanged ? 1 : 0, data);
+			setResult(hasChanged ? 1 : 0, new Intent());
 		}
 		super.onBackPressed();
 	}
@@ -249,7 +272,6 @@ public class EditSitesActivity extends ActionBarActivity {
 		@Override
 		public void run() {
 			try {
-				if (name.equals("") || url.equals("http://")) throw new Exception("站点名称或站点域名不能为空！");
 				Log.i("url", url);
 				if (position == -1) {
 					int countName = sitesDBHelper.rawQuery("select * from sites where name=\'" + name + "\'", null).getCount();

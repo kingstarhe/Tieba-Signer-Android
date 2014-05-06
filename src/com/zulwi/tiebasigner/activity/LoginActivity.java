@@ -132,8 +132,6 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 			case 1:
 				flushSiteList();
 				break;
-			default:
-				Toast.makeText(this, "站点管理活动异常结束", Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -159,8 +157,14 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 	}
 
 	public void doLogin(View v) {
+		String username = usernameEditor.getText().toString().trim();
+		String password = passwordEditor.getText().toString().trim();
+		if (username.equals("") || password.equals("")) {
+			Toast.makeText(this, "助手账号或助手密码不能为空！", Toast.LENGTH_SHORT).show();
+			return;
+		}
 		progressDialog.show();
-		new Thread(new LoginThread(usernameEditor.getText().toString().trim(), passwordEditor.getText().toString().trim(), siteUrlList[lastSelectedPosition])).start();
+		new Thread(new LoginThread(username, password, siteUrlList[lastSelectedPosition])).start();
 	}
 
 	class LoginThread implements Runnable {
@@ -177,7 +181,6 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 		@Override
 		public void run() {
 			try {
-				if (username.equals("") || password.equals("")) throw new Exception("助手账号或助手密码不能为空！");
 				InternetUtil site = new InternetUtil(LoginActivity.this, url + "/plugin.php?id=zw_client_api&a=do_login");
 				List<NameValuePair> postParams = new ArrayList<NameValuePair>();
 				NameValuePair pair1 = new BasicNameValuePair("username", username);
