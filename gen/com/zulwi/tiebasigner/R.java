@@ -15,6 +15,7 @@ public final class R {
         public static final int abc_slide_in_top=0x7f040003;
         public static final int abc_slide_out_bottom=0x7f040004;
         public static final int abc_slide_out_top=0x7f040005;
+        public static final int loading=0x7f040006;
     }
     public static final class attr {
         /**  Custom divider drawable to use for elements in the action bar. 
@@ -1090,14 +1091,21 @@ containing a value of this type.
         public static final int drawer_shadow=0x7f02005a;
         public static final int ic_drawer=0x7f02005b;
         public static final int ic_launcher=0x7f02005c;
-        public static final int list_close_button=0x7f02005d;
-        public static final int list_close_normal=0x7f02005e;
-        public static final int list_close_press=0x7f02005f;
-        public static final int login_banner=0x7f020060;
-        public static final int nav_list_item=0x7f020061;
-        public static final int site_list_item=0x7f020062;
-        public static final int site_list_text=0x7f020063;
-        public static final int splash=0x7f020064;
+        public static final int icon_blockid=0x7f02005d;
+        public static final int icon_setting=0x7f02005e;
+        public static final int icon_sign_log=0x7f02005f;
+        public static final int icon_sitepost=0x7f020060;
+        public static final int icon_userinfo=0x7f020061;
+        public static final int list_close_button=0x7f020062;
+        public static final int list_close_normal=0x7f020063;
+        public static final int list_close_press=0x7f020064;
+        public static final int loadding=0x7f020065;
+        public static final int loadding_bg=0x7f020066;
+        public static final int login_banner=0x7f020067;
+        public static final int nav_list_item=0x7f020068;
+        public static final int site_list_item=0x7f020069;
+        public static final int site_list_text=0x7f02006a;
+        public static final int splash=0x7f02006b;
     }
     public static final class id {
         public static final int action_bar=0x7f05001c;
@@ -1111,7 +1119,7 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
-        public static final int action_settings=0x7f05004e;
+        public static final int action_settings=0x7f050051;
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int addSite=0x7f05003f;
         public static final int addSiteName=0x7f05003d;
@@ -1122,14 +1130,15 @@ containing a value of this type.
         public static final int collapseActionView=0x7f05000d;
         public static final int container=0x7f050045;
         public static final int default_activity_button=0x7f050028;
-        public static final int del_list=0x7f05004d;
-        public static final int del_site=0x7f050050;
+        public static final int del_list=0x7f050050;
+        public static final int del_site=0x7f050053;
         public static final int dialog=0x7f05000e;
+        public static final int dialog_view=0x7f05004d;
         public static final int disableHome=0x7f050008;
         public static final int drawer_layout=0x7f050044;
         public static final int dropdown=0x7f05000f;
         public static final int edit_query=0x7f050030;
-        public static final int edit_site=0x7f05004f;
+        public static final int edit_site=0x7f050052;
         public static final int end=0x7f050013;
         public static final int expand_activities_button=0x7f050026;
         public static final int expanded_menu=0x7f05002c;
@@ -1138,6 +1147,7 @@ containing a value of this type.
         public static final int icon=0x7f05002a;
         public static final int ifRoom=0x7f05000a;
         public static final int image=0x7f050027;
+        public static final int img=0x7f05004e;
         public static final int listMode=0x7f050001;
         public static final int list_item=0x7f050029;
         public static final int login=0x7f050043;
@@ -1173,6 +1183,7 @@ containing a value of this type.
         public static final int split_action_bar=0x7f05001e;
         public static final int submit_area=0x7f050039;
         public static final int tabMode=0x7f050002;
+        public static final int tipTextView=0x7f05004f;
         public static final int title=0x7f05002b;
         public static final int top_action_bar=0x7f050020;
         public static final int up=0x7f050021;
@@ -1244,7 +1255,8 @@ containing a value of this type.
         public static final int fragment_userinfo=0x7f030021;
         public static final int list_nav=0x7f030022;
         public static final int list_sites=0x7f030023;
-        public static final int support_simple_spinner_dropdown_item=0x7f030024;
+        public static final int loading_dialog=0x7f030024;
+        public static final int support_simple_spinner_dropdown_item=0x7f030025;
     }
     public static final class menu {
         public static final int edit_sites=0x7f0c0000;
@@ -1294,28 +1306,32 @@ containing a value of this type.
          */
         public static final int abc_shareactionprovider_share_with_application=0x7f0a000b;
         public static final int action_settings=0x7f0a000f;
-        public static final int add_site=0x7f0a0017;
+        public static final int add_site=0x7f0a0018;
         public static final int app_name=0x7f0a000d;
+        public static final int blank=0x7f0a0027;
+        public static final int block_id=0x7f0a0022;
         public static final int copyright=0x7f0a000e;
-        public static final int del_list=0x7f0a0016;
-        public static final int delete=0x7f0a001b;
-        public static final int edit=0x7f0a001a;
-        public static final int edit_password=0x7f0a0012;
-        public static final int edit_site=0x7f0a0010;
-        public static final int edit_username=0x7f0a0011;
-        public static final int hello_world=0x7f0a001d;
-        public static final int icon=0x7f0a0023;
-        public static final int login=0x7f0a0013;
-        public static final int navigation_drawer_close=0x7f0a0022;
-        public static final int navigation_drawer_open=0x7f0a0021;
-        public static final int sign_log=0x7f0a001f;
-        public static final int site_domain=0x7f0a0019;
-        public static final int site_name=0x7f0a0018;
-        public static final int site_post=0x7f0a0020;
-        public static final int sites_list=0x7f0a0015;
-        public static final int title_activity_edit_sites=0x7f0a0014;
-        public static final int title_activity_main=0x7f0a001c;
-        public static final int user_info=0x7f0a001e;
+        public static final int del_list=0x7f0a0017;
+        public static final int delete=0x7f0a001c;
+        public static final int edit=0x7f0a001b;
+        public static final int edit_password=0x7f0a0013;
+        public static final int edit_site=0x7f0a0011;
+        public static final int edit_username=0x7f0a0012;
+        public static final int hello_world=0x7f0a001e;
+        public static final int icon=0x7f0a0025;
+        public static final int loading=0x7f0a0026;
+        public static final int login=0x7f0a0014;
+        public static final int navigation_drawer_close=0x7f0a0024;
+        public static final int navigation_drawer_open=0x7f0a0023;
+        public static final int setting=0x7f0a0010;
+        public static final int sign_log=0x7f0a0020;
+        public static final int site_domain=0x7f0a001a;
+        public static final int site_name=0x7f0a0019;
+        public static final int site_post=0x7f0a0021;
+        public static final int sites_list=0x7f0a0016;
+        public static final int title_activity_edit_sites=0x7f0a0015;
+        public static final int title_activity_main=0x7f0a001d;
+        public static final int user_info=0x7f0a001f;
     }
     public static final class style {
         /** 
@@ -1546,6 +1562,7 @@ containing a value of this type.
         public static final int Widget_AppCompat_ProgressBar=0x7f0b000a;
         public static final int Widget_AppCompat_ProgressBar_Horizontal=0x7f0b0009;
         public static final int Widget_AppCompat_Spinner_DropDown_ActionBar=0x7f0b0022;
+        public static final int loading_dialog=0x7f0b008d;
     }
     public static final class styleable {
         /**  ============================================ 

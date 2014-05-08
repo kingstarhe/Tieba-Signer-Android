@@ -5,6 +5,7 @@ import com.zulwi.tiebasigner.fragment.NavigationDrawerFragment;
 import com.zulwi.tiebasigner.fragment.SettingFragment;
 import com.zulwi.tiebasigner.fragment.SignLogFragment;
 import com.zulwi.tiebasigner.fragment.UserInfoFragment;
+import com.zulwi.tiebasigner.util.Common;
 
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -34,10 +35,11 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	public void onNavigationDrawerItemSelected(int position) {
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		Fragment fragment = null;
-		switch(position){
+		switch (position) {
 			case 0:
 				fragment = new UserInfoFragment();
 				title = getString(R.string.user_info);
+				Common.createLoadingDialog(this, "Мгдижа...", true).show();
 				break;
 			case 1:
 				fragment = new SignLogFragment();

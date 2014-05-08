@@ -25,7 +25,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class NavigationDrawerFragment extends Fragment {
@@ -71,9 +70,11 @@ public class NavigationDrawerFragment extends Fragment {
 			}
 		});
 		List<NavigationBean> icons = new ArrayList<NavigationBean>();
-		icons.add(new NavigationBean(R.drawable.ic_launcher,getString(R.string.user_info)));
-		icons.add(new NavigationBean(R.drawable.ic_launcher,getString(R.string.sign_log)));
-		icons.add(new NavigationBean(R.drawable.ic_launcher,getString(R.string.site_post)));
+		icons.add(new NavigationBean(R.drawable.icon_userinfo,getString(R.string.user_info)));
+		icons.add(new NavigationBean(R.drawable.icon_sign_log,getString(R.string.sign_log)));
+		icons.add(new NavigationBean(R.drawable.icon_blockid,getString(R.string.block_id)));
+		icons.add(new NavigationBean(R.drawable.icon_sitepost,getString(R.string.site_post)));
+		icons.add(new NavigationBean(R.drawable.icon_setting,getString(R.string.setting)));
 		NavListAdapter adapter = new NavListAdapter(getActionBar().getThemedContext(), icons);
 		drawerListView.setAdapter(adapter);
 		//drawerListView.setAdapter(new ArrayAdapter<String>(getActionBar().getThemedContext(), android.R.layout.simple_list_item_1, android.R.id.text1, new String[] { getString(R.string.user_info), getString(R.string.sign_log), getString(R.string.site_post), }));
