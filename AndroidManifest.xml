@@ -33,6 +33,10 @@
             android:name="com.zulwi.tiebasigner.activity.EditSitesActivity"
             android:label="@string/title_activity_edit_sites" >
         </activity>
+        <activity
+            android:name="com.zulwi.tiebasigner.activity.MainActivity"
+            android:label="@string/title_activity_main">
+        </activity>
     </application>
 
 </manifest>

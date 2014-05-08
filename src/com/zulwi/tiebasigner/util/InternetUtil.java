@@ -7,21 +7,16 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.cookie.Cookie;
-import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.zulwi.tiebasigner.exception.StatusCodeException;
 
@@ -32,7 +27,8 @@ public class InternetUtil {
 	private HttpClient client;
 	@SuppressWarnings("unused")
 	private Context context;
-	private String result = "ÎÞ·µ»Ø";;
+	private String result = "ÎÞ·µ»Ø";
+	private List<Cookie> cookies;
 	public final static int NETWORK_FAIL = 0;
 	public final static int STATUS_ERROR = 1;
 	public final static int PARSE_ERROR = 2;
@@ -50,18 +46,12 @@ public class InternetUtil {
 	public String get() throws StatusCodeException, IOException, ClientProtocolException, Exception {
 		client = new DefaultHttpClient();
 		get = new HttpGet(url);
-		CookieStore cookieStore = new BasicCookieStore();
-		HttpContext localContext = new BasicHttpContext();
-		localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
 		get.addHeader("Client-Version", "1.0.0");
 		get.addHeader("Content-Type", "application/json");
 		get.addHeader("User-Agent", "Android Client For Tieba Signer");
-		HttpResponse response = client.execute(get, localContext);
+		HttpResponse response = client.execute(get);
 		int statusCode = response.getStatusLine().getStatusCode();
-		List<Cookie> cookies = cookieStore.getCookies();
-		for (int i = 0; i < cookies.size(); i++) {
-			Log.i("Local cookie: ", cookies.get(i).toString());
-		}
+		cookies = ((AbstractHttpClient) client).getCookieStore().getCookies();
 		if (statusCode != 200) {
 			throw new StatusCodeException("HTTP×´Ì¬Âë´íÎó£¡", statusCode);
 		} else {
@@ -74,19 +64,13 @@ public class InternetUtil {
 	public String post(List<NameValuePair> postParams) throws StatusCodeException, ClientProtocolException, IOException, Exception {
 		post = new HttpPost(url);
 		client = new DefaultHttpClient();
-		CookieStore cookieStore = new BasicCookieStore();
-		HttpContext localContext = new BasicHttpContext();
-		localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
 		post.addHeader("Client-Version", "1.0.0");
 		post.addHeader("User-Agent", "Android Client For Tieba Signer");
 		HttpEntity entity = new UrlEncodedFormEntity(postParams, "UTF-8");
 		post.setEntity(entity);
 		HttpResponse response = client.execute(post);
 		int statusCode = response.getStatusLine().getStatusCode();
-		List<Cookie> cookies = cookieStore.getCookies();
-		for (int i = 0; i < cookies.size(); i++) {
-			Log.i("Local cookie: ", cookies.get(i).toString());
-		}
+		cookies = ((AbstractHttpClient) client).getCookieStore().getCookies();
 		if (statusCode != 200) {
 			throw new StatusCodeException("HTTP×´Ì¬Âë´íÎó£¡", statusCode);
 		} else {
@@ -94,6 +78,10 @@ public class InternetUtil {
 			result = EntityUtils.toString(responseEntity, "utf-8");
 			return result;
 		}
+	}
+	
+	public List<Cookie> getCookies() {
+		return cookies;
 	}
 
 	public String getResult() {

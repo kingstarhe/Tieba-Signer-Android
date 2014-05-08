@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,6 +26,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -64,6 +66,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 					break;
 				case InternetUtil.SUCCESSED:
 					tips = (String) msg.obj;
+					startMainActivity();
 					break;
 				default:
 					Exception t = (Exception) msg.obj;
@@ -121,7 +124,14 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 	public void startEditSiteActivity() {
 		Intent intent = new Intent(LoginActivity.this, EditSitesActivity.class);
 		intent.putExtra("siteMapList", (Serializable) siteMapList);
-		this.startActivityForResult(intent, 1);
+		startActivityForResult(intent, 1);
+	}
+	
+	public void startMainActivity(){
+		Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+		LoginActivity.this.startActivity(intent);
+		System.out.println(5);
+		//LoginActivity.this.finish();
 	}
 
 	@Override
@@ -159,12 +169,15 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 	public void doLogin(View v) {
 		String username = usernameEditor.getText().toString().trim();
 		String password = passwordEditor.getText().toString().trim();
-		if (username.equals("") || password.equals("")) {
+		startMainActivity();
+		return;
+		/*if (username.equals("") || password.equals("")) {
 			Toast.makeText(this, "助手账号或助手密码不能为空！", Toast.LENGTH_SHORT).show();
 			return;
 		}
 		progressDialog.show();
 		new Thread(new LoginThread(username, password, siteUrlList[lastSelectedPosition])).start();
+		*/
 	}
 
 	class LoginThread implements Runnable {
@@ -188,6 +201,10 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 				postParams.add(pair1);
 				postParams.add(pair2);
 				String result = site.post(postParams);
+				List<Cookie> cookies = site.getCookies();
+				for (int i = 0; i < cookies.size(); i++) {
+					Log.i("Local cookie: ", cookies.get(i).toString());
+				}
 				JSONObject jsonObject = new JSONObject(result);
 				int status = jsonObject.getInt("status");
 				String msg = jsonObject.getString("msg");
