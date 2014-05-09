@@ -17,9 +17,7 @@
     <string name="site_domain">站点域名</string>
     <string name="edit">编辑</string>
     <string name="delete">删除</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="user_info">我的资料</string>
+    <string name="user_info">我的账号</string>
     <string name="sign_log">签到记录</string>
     <string name="site_post">站点公告</string>
     <string name="block_id">循环封禁</string>

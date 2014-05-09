@@ -38,8 +38,8 @@ public class NavListAdapter extends BaseAdapter implements Serializable {
 	}
 
 	@Override
-	public Object getItem(int arg0) {
-		return null;
+	public NavigationBean getItem(int position) {
+		return list.get(position);
 	}
 
 	@Override

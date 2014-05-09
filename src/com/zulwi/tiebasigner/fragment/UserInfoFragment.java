@@ -10,7 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class UserInfoFragment extends Fragment {
-	@Override
+	public UserInfoFragment() {
+
+	}
+	
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 

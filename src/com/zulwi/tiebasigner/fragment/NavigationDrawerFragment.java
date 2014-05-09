@@ -35,9 +35,11 @@ public class NavigationDrawerFragment extends Fragment {
 	private DrawerLayout drawerLayout;
 	private ListView drawerListView;
 	private View fragmentContainerView;
+	private NavListAdapter adapter;
 	private int currentSelectedPosition = 0;
 	private boolean fromSavedInstanceState;
 	private boolean userLearnedDrawer;
+
 	public NavigationDrawerFragment() {
 
 	}
@@ -51,6 +53,11 @@ public class NavigationDrawerFragment extends Fragment {
 			currentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
 			fromSavedInstanceState = true;
 		}
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
 		selectItem(currentSelectedPosition);
 	}
 
@@ -69,15 +76,15 @@ public class NavigationDrawerFragment extends Fragment {
 				selectItem(position);
 			}
 		});
-		List<NavigationBean> icons = new ArrayList<NavigationBean>();
-		icons.add(new NavigationBean(R.drawable.icon_userinfo,getString(R.string.user_info)));
-		icons.add(new NavigationBean(R.drawable.icon_sign_log,getString(R.string.sign_log)));
-		icons.add(new NavigationBean(R.drawable.icon_blockid,getString(R.string.block_id)));
-		icons.add(new NavigationBean(R.drawable.icon_sitepost,getString(R.string.site_post)));
-		icons.add(new NavigationBean(R.drawable.icon_setting,getString(R.string.setting)));
-		NavListAdapter adapter = new NavListAdapter(getActionBar().getThemedContext(), icons);
+		List<NavigationBean> navigations = new ArrayList<NavigationBean>();
+		navigations.add(new NavigationBean(R.drawable.icon_userinfo, getString(R.string.user_info), new UserInfoFragment()));
+		navigations.add(new NavigationBean(R.drawable.icon_sign_log, getString(R.string.sign_log), new SignLogFragment()));
+		navigations.add(new NavigationBean(R.drawable.icon_blockid, getString(R.string.block_id)));
+		navigations.add(new NavigationBean(R.drawable.icon_sitepost, getString(R.string.site_post)));
+		navigations.add(new NavigationBean(R.drawable.icon_setting, getString(R.string.setting), new SettingFragment()));
+		System.out.println(navigations.get(0).fragment);
+		adapter = new NavListAdapter(getActionBar().getThemedContext(), navigations);
 		drawerListView.setAdapter(adapter);
-		//drawerListView.setAdapter(new ArrayAdapter<String>(getActionBar().getThemedContext(), android.R.layout.simple_list_item_1, android.R.id.text1, new String[] { getString(R.string.user_info), getString(R.string.sign_log), getString(R.string.site_post), }));
 		drawerListView.setItemChecked(currentSelectedPosition, true);
 		return drawerListView;
 	}
@@ -110,15 +117,12 @@ public class NavigationDrawerFragment extends Fragment {
 					SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
 					sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).commit();
 				}
-
 				getActivity().supportInvalidateOptionsMenu();
 			}
 		};
-
 		if (!userLearnedDrawer && !fromSavedInstanceState) {
 			drawerLayout.openDrawer(fragmentContainerView);
 		}
-
 		drawerLayout.post(new Runnable() {
 			@Override
 			public void run() {
@@ -132,7 +136,10 @@ public class NavigationDrawerFragment extends Fragment {
 		currentSelectedPosition = position;
 		if (drawerListView != null) drawerListView.setItemChecked(position, true);
 		if (drawerLayout != null) drawerLayout.closeDrawer(fragmentContainerView);
-		if (callbacks != null) callbacks.onNavigationDrawerItemSelected(position);
+		if (callbacks != null) {
+			NavigationBean bean = adapter.getItem(position);
+			callbacks.onNavigationDrawerItemSelected(position, bean.title, bean.fragment != null ? bean.fragment : adapter.getItem(0).fragment);
+		}
 	}
 
 	@Override
@@ -174,7 +181,7 @@ public class NavigationDrawerFragment extends Fragment {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (drawerToggle.onOptionsItemSelected(item)) { return true; }
+		if (drawerToggle.onOptionsItemSelected(item)) return true;
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -190,6 +197,6 @@ public class NavigationDrawerFragment extends Fragment {
 	}
 
 	public static interface NavigationDrawerCallbacks {
-		void onNavigationDrawerItemSelected(int position);
+		void onNavigationDrawerItemSelected(int position, CharSequence title, Fragment fragment);
 	}
 }

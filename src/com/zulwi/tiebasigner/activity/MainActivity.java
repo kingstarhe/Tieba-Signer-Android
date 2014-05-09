@@ -2,24 +2,18 @@ package com.zulwi.tiebasigner.activity;
 
 import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.fragment.NavigationDrawerFragment;
-import com.zulwi.tiebasigner.fragment.SettingFragment;
-import com.zulwi.tiebasigner.fragment.SignLogFragment;
-import com.zulwi.tiebasigner.fragment.UserInfoFragment;
 import com.zulwi.tiebasigner.util.Common;
 
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
 
 public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
-
 	private NavigationDrawerFragment navigationDrawerFragment;
-
 	private CharSequence title;
 
 	@Override
@@ -32,25 +26,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	}
 
 	@Override
-	public void onNavigationDrawerItemSelected(int position) {
-		FragmentManager fragmentManager = getSupportFragmentManager();
-		Fragment fragment = null;
-		switch (position) {
-			case 0:
-				fragment = new UserInfoFragment();
-				title = getString(R.string.user_info);
-				Common.createLoadingDialog(this, "加载中...", true).show();
-				break;
-			case 1:
-				fragment = new SignLogFragment();
-				title = getString(R.string.sign_log);
-				break;
-			case 2:
-				fragment = new SettingFragment();
-				title = getString(R.string.site_post);
-				break;
-		}
-		fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+	public void onNavigationDrawerItemSelected(int position, CharSequence title,Fragment fragment) {
+		this.title = title;
+		Common.createLoadingDialog(this, "加载中...", true).show();
+		getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
 	}
 
 	public void restoreActionBar() {

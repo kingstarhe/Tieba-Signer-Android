@@ -1099,8 +1099,8 @@ containing a value of this type.
         public static final int list_close_button=0x7f020062;
         public static final int list_close_normal=0x7f020063;
         public static final int list_close_press=0x7f020064;
-        public static final int loadding=0x7f020065;
-        public static final int loadding_bg=0x7f020066;
+        public static final int loading=0x7f020065;
+        public static final int loading_bg=0x7f020066;
         public static final int login_banner=0x7f020067;
         public static final int nav_list_item=0x7f020068;
         public static final int site_list_item=0x7f020069;
@@ -1308,8 +1308,8 @@ containing a value of this type.
         public static final int action_settings=0x7f0a000f;
         public static final int add_site=0x7f0a0018;
         public static final int app_name=0x7f0a000d;
-        public static final int blank=0x7f0a0027;
-        public static final int block_id=0x7f0a0022;
+        public static final int blank=0x7f0a0025;
+        public static final int block_id=0x7f0a0020;
         public static final int copyright=0x7f0a000e;
         public static final int del_list=0x7f0a0017;
         public static final int delete=0x7f0a001c;
@@ -1317,21 +1317,19 @@ containing a value of this type.
         public static final int edit_password=0x7f0a0013;
         public static final int edit_site=0x7f0a0011;
         public static final int edit_username=0x7f0a0012;
-        public static final int hello_world=0x7f0a001e;
-        public static final int icon=0x7f0a0025;
-        public static final int loading=0x7f0a0026;
+        public static final int icon=0x7f0a0023;
+        public static final int loading=0x7f0a0024;
         public static final int login=0x7f0a0014;
-        public static final int navigation_drawer_close=0x7f0a0024;
-        public static final int navigation_drawer_open=0x7f0a0023;
+        public static final int navigation_drawer_close=0x7f0a0022;
+        public static final int navigation_drawer_open=0x7f0a0021;
         public static final int setting=0x7f0a0010;
-        public static final int sign_log=0x7f0a0020;
+        public static final int sign_log=0x7f0a001e;
         public static final int site_domain=0x7f0a001a;
         public static final int site_name=0x7f0a0019;
-        public static final int site_post=0x7f0a0021;
+        public static final int site_post=0x7f0a001f;
         public static final int sites_list=0x7f0a0016;
         public static final int title_activity_edit_sites=0x7f0a0015;
-        public static final int title_activity_main=0x7f0a001d;
-        public static final int user_info=0x7f0a001f;
+        public static final int user_info=0x7f0a001d;
     }
     public static final class style {
         /** 
