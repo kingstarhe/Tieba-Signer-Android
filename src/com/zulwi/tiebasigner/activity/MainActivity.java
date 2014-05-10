@@ -2,14 +2,19 @@ package com.zulwi.tiebasigner.activity;
 
 import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.fragment.NavigationDrawerFragment;
-import com.zulwi.tiebasigner.util.Common;
+import com.zulwi.tiebasigner.fragment.SettingFragment;
+import com.zulwi.tiebasigner.fragment.SignLogFragment;
+import com.zulwi.tiebasigner.fragment.UserInfoFragment;
 
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.support.v4.widget.DrawerLayout;
 
 public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -26,10 +31,12 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	}
 
 	@Override
-	public void onNavigationDrawerItemSelected(int position, CharSequence title,Fragment fragment) {
+	public void onNavigationDrawerItemSelected(int position, CharSequence title, Fragment from, Fragment to) {
 		this.title = title;
-		Common.createLoadingDialog(this, "Мгдижа...", true).show();
-		getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+		FragmentManager fm = getSupportFragmentManager();
+		FragmentTransaction ft = fm.beginTransaction();
+		ft = to.isAdded() ? ft.hide(from).show(to) : ft.hide(from).add(R.id.container, to);
+		ft.commit();
 	}
 
 	public void restoreActionBar() {

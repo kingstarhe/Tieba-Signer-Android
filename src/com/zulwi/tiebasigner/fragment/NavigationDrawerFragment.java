@@ -12,6 +12,8 @@ import android.app.Activity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.content.SharedPreferences;
@@ -79,8 +81,8 @@ public class NavigationDrawerFragment extends Fragment {
 		List<NavigationBean> navigations = new ArrayList<NavigationBean>();
 		navigations.add(new NavigationBean(R.drawable.icon_userinfo, getString(R.string.user_info), new UserInfoFragment()));
 		navigations.add(new NavigationBean(R.drawable.icon_sign_log, getString(R.string.sign_log), new SignLogFragment()));
-		navigations.add(new NavigationBean(R.drawable.icon_blockid, getString(R.string.block_id)));
-		navigations.add(new NavigationBean(R.drawable.icon_sitepost, getString(R.string.site_post)));
+		navigations.add(new NavigationBean(R.drawable.icon_blockid, getString(R.string.block_id), new SignLogFragment()));
+		navigations.add(new NavigationBean(R.drawable.icon_sitepost, getString(R.string.site_post), new SignLogFragment()));
 		navigations.add(new NavigationBean(R.drawable.icon_setting, getString(R.string.setting), new SettingFragment()));
 		System.out.println(navigations.get(0).fragment);
 		adapter = new NavListAdapter(getActionBar().getThemedContext(), navigations);
@@ -133,13 +135,14 @@ public class NavigationDrawerFragment extends Fragment {
 	}
 
 	private void selectItem(int position) {
-		currentSelectedPosition = position;
 		if (drawerListView != null) drawerListView.setItemChecked(position, true);
 		if (drawerLayout != null) drawerLayout.closeDrawer(fragmentContainerView);
 		if (callbacks != null) {
-			NavigationBean bean = adapter.getItem(position);
-			callbacks.onNavigationDrawerItemSelected(position, bean.title, bean.fragment != null ? bean.fragment : adapter.getItem(0).fragment);
+			NavigationBean oldNav = adapter.getItem(currentSelectedPosition);
+			NavigationBean newNav = adapter.getItem(position);
+			callbacks.onNavigationDrawerItemSelected(position, newNav.title, oldNav.fragment, newNav.fragment);
 		}
+		currentSelectedPosition = position;
 	}
 
 	@Override
@@ -197,6 +200,6 @@ public class NavigationDrawerFragment extends Fragment {
 	}
 
 	public static interface NavigationDrawerCallbacks {
-		void onNavigationDrawerItemSelected(int position, CharSequence title, Fragment fragment);
+		void onNavigationDrawerItemSelected(int position, CharSequence title, Fragment from, Fragment to);
 	}
 }

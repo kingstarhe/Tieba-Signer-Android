@@ -1,20 +1,19 @@
 package com.zulwi.tiebasigner.fragment;
 
 import com.zulwi.tiebasigner.R;
+import com.zulwi.tiebasigner.util.Common;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class SignLogFragment extends Fragment {
-
+public class SignLogFragment extends BaseFragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-
+		Common.createLoadingDialog(getContext(), "正在加载签到记录，请稍后...", true).show();
 	}
 
 	@Override
@@ -24,7 +23,7 @@ public class SignLogFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_userinfo, container, false);
+		return inflater.inflate(R.layout.fragment_sign_log, container, false);
 	}
 
 	@Override
