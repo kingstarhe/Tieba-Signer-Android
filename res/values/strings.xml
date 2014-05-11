@@ -4,7 +4,7 @@
     <string name="app_name">贴吧签到助手</string>
     <string name="copyright">Copyright © 2011 &#8211; 2014 Zulwi Studio. All Rights Reserved.</string>
     <string name="action_settings">设置</string>
-    <string name="setting">系统设置</string>
+    <string name="setting">设置</string>
     <string name="edit_site">站点域名</string>
     <string name="edit_username">助手账号</string>
     <string name="edit_password">助手密码</string>
@@ -17,14 +17,20 @@
     <string name="site_domain">站点域名</string>
     <string name="edit">编辑</string>
     <string name="delete">删除</string>
-    <string name="user_info">我的账号</string>
-    <string name="sign_log">签到记录</string>
+    <string name="user_info">账号</string>
+    <string name="sign_log">记录</string>
     <string name="site_post">站点公告</string>
+    <string name="plugin">插件</string>
     <string name="block_id">循环封禁</string>
     <string name="navigation_drawer_open">打开菜单</string>
     <string name="navigation_drawer_close">关闭菜单</string>
     <string name="icon">图标</string>
     <string name="loading">加载中,请稍后&#8230;</string>
     <string name="blank"></string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

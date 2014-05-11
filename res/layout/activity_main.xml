@@ -1,20 +1,89 @@
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical"
     tools:context="com.zulwi.tiebasigner.activity.MainActivity" >
 
-    <FrameLayout
-        android:id="@+id/container"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/zulwi_blue"
+        android:gravity="left|center_vertical"
+        android:orientation="horizontal" >
 
-    <fragment
-        android:id="@+id/navigation_drawer"
-        android:name="com.zulwi.tiebasigner.fragment.NavigationDrawerFragment"
-        android:layout_width="@dimen/navigation_drawer_width"
-        android:layout_height="match_parent"
-        android:layout_gravity="start" />
+        <TextView
+            android:id="@+id/main_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/app_name"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+    </LinearLayout>
 
-</android.support.v4.widget.DrawerLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bottom_bar"
+        android:gravity="center" >
+
+        <Button
+            android:id="@+id/userinfo_button"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawableTop="@drawable/userinfo_button"
+            android:paddingTop="5dp"
+            android:text="@string/user_info"
+            android:textColor="@drawable/bottom_bar_text"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/signlog_button"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawableTop="@drawable/signlog_button"
+            android:paddingTop="5dp"
+            android:text="@string/sign_log"
+            android:textColor="@drawable/bottom_bar_text"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/plugin_button"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawableTop="@drawable/plugin_button"
+            android:paddingTop="5dp"
+            android:text="@string/plugin"
+            android:textColor="@drawable/bottom_bar_text"
+            android:textSize="12sp" />
+
+
+        <Button
+            android:id="@+id/setting_button"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawableTop="@drawable/setting_button"
+            android:paddingTop="5dp"
+            android:text="@string/setting"
+            android:textColor="@drawable/bottom_bar_text"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+</RelativeLayout>
