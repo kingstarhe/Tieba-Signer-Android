@@ -12,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.bean.FragmentBean;
@@ -23,6 +25,8 @@ import com.zulwi.tiebasigner.fragment.UserInfoFragment;
 public class MainActivity extends FragmentActivity {
 	private FragmentManager fm;
 	private List<FragmentBean> fragmentList = new ArrayList<FragmentBean>();
+	private List<Button> bottonBarButton = new ArrayList<Button>();
+	private TextView titleTextView;
 	private int currentFragmentId = 0;
 
 	@Override
@@ -30,12 +34,17 @@ public class MainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
-		fragmentList.add(new FragmentBean("资料", new UserInfoFragment()));
+		fragmentList.add(new FragmentBean("账号", new UserInfoFragment()));
 		fragmentList.add(new FragmentBean("记录", new SignLogFragment()));
 		fragmentList.add(new FragmentBean("插件", new PluginFragment()));
 		fragmentList.add(new FragmentBean("设置", new SettingFragment()));
 		fm = getSupportFragmentManager();
-		changeFragment(0);
+		titleTextView = (TextView) findViewById(R.id.main_title);
+		bottonBarButton.add((Button) findViewById(R.id.userinfo_button));
+		bottonBarButton.add((Button) findViewById(R.id.signlog_button));
+		bottonBarButton.add((Button) findViewById(R.id.plugin_button));
+		bottonBarButton.add((Button) findViewById(R.id.setting_button));
+		bottonBarButton.get(0).performClick();
 	}
 
 	@Override
@@ -52,28 +61,39 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	private void changeFragment(int position) {
-		Fragment oldFragment = fragmentList.get(currentFragmentId).fragment;
-		Fragment newFragment = fragmentList.get(position).fragment;
+		FragmentBean from = fragmentList.get(currentFragmentId);
+		FragmentBean to = fragmentList.get(position);
 		FragmentTransaction ft = fm.beginTransaction();
 		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		if (oldFragment == newFragment && !newFragment.isAdded()) ft.add(R.id.fragment_container, newFragment);
-		else ft = newFragment.isAdded() ? ft.hide(oldFragment).show(newFragment) : ft.hide(oldFragment).add(R.id.fragment_container, newFragment);
+		if (from == to && !to.fragment.isAdded()) ft.add(R.id.fragment_container, to.fragment);
+		else ft = to.fragment.isAdded() ? ft.hide(from.fragment).show(to.fragment) : ft.hide(from.fragment).add(R.id.fragment_container, to.fragment);
 		ft.commit();
+		titleTextView.setText(to.title);
 		currentFragmentId = position;
+	}
+
+	public void setEnabled(int position) {
+		for (int i = 0; i < bottonBarButton.size(); i++) {
+			bottonBarButton.get(i).setEnabled(position == i ? false : true);
+		}
 	}
 
 	public void bottomBarButtonOnClick(View v) {
 		switch (v.getId()) {
 			case R.id.userinfo_button:
+				setEnabled(0);
 				changeFragment(0);
 				break;
 			case R.id.signlog_button:
+				setEnabled(1);
 				changeFragment(1);
 				break;
 			case R.id.plugin_button:
+				setEnabled(2);
 				changeFragment(2);
 				break;
 			case R.id.setting_button:
+				setEnabled(3);
 				changeFragment(3);
 				break;
 		}

@@ -11,6 +11,7 @@ public class FragmentBean{
 	}
 
 	public FragmentBean(String title, Fragment fragment) {
+		this(title);
 		this.fragment = fragment;
 	}
 }
