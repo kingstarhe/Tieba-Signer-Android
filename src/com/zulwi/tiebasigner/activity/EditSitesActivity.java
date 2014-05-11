@@ -12,12 +12,13 @@ import com.zulwi.tiebasigner.adapter.SiteListAdapter;
 import com.zulwi.tiebasigner.bean.SiteBean;
 import com.zulwi.tiebasigner.db.SitesDBHelper;
 import com.zulwi.tiebasigner.exception.StatusCodeException;
+import com.zulwi.tiebasigner.util.Common;
 import com.zulwi.tiebasigner.util.InternetUtil;
 
 import android.support.v7.app.ActionBarActivity;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,7 +41,7 @@ public class EditSitesActivity extends ActionBarActivity {
 	private ListView siteList;
 	private TextView nameTextView;
 	private TextView urlTextView;
-	private ProgressDialog progressDialog;
+	private Dialog progressDialog;
 	private AlertDialog EditDialog;
 	private List<SiteBean> siteMapList;
 	private SiteListAdapter siteListAdapter;
@@ -101,10 +102,7 @@ public class EditSitesActivity extends ActionBarActivity {
 		siteListAdapter = new SiteListAdapter(this, siteMapList);
 		siteList.setAdapter(siteListAdapter);
 		registerForContextMenu(siteList);
-		progressDialog = new ProgressDialog(this);
-		progressDialog.setTitle("请稍后...");
-		progressDialog.setMessage("正在检查站点,请稍后...");
-		progressDialog.setCancelable(false);
+		progressDialog = Common.createLoadingDialog(this, "正在检查站点,请稍后...", false);
 	}
 
 	@Override
@@ -272,7 +270,6 @@ public class EditSitesActivity extends ActionBarActivity {
 		@Override
 		public void run() {
 			try {
-				Log.i("url", url);
 				if (position == -1) {
 					int countName = sitesDBHelper.rawQuery("select * from sites where name=\'" + name + "\'", null).getCount();
 					int countUrl = sitesDBHelper.rawQuery("select * from sites where url=\'" + url + "\'", null).getCount();

@@ -2,19 +2,18 @@ package com.zulwi.tiebasigner.activity;
 
 import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.fragment.NavigationDrawerFragment;
-import com.zulwi.tiebasigner.fragment.SettingFragment;
-import com.zulwi.tiebasigner.fragment.SignLogFragment;
-import com.zulwi.tiebasigner.fragment.UserInfoFragment;
 
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.support.v4.widget.DrawerLayout;
 
 public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -35,7 +34,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		this.title = title;
 		FragmentManager fm = getSupportFragmentManager();
 		FragmentTransaction ft = fm.beginTransaction();
-		ft = to.isAdded() ? ft.hide(from).show(to) : ft.hide(from).add(R.id.container, to);
+		if (!to.isAdded() && from == to) ft.add(R.id.container, to);
+		else ft = to.isAdded() ? ft.hide(from).show(to) : ft.hide(from).add(R.id.container, to);
 		ft.commit();
 	}
 
@@ -44,6 +44,28 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		actionBar.setDisplayShowTitleEnabled(true);
 		actionBar.setTitle(title);
+	}
+
+	@Override
+	public void onBackPressed() {
+		AlertDialog.Builder confirm = new AlertDialog.Builder(this);
+		confirm.setTitle("确定退出客户端吗？");
+		confirm.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Intent intent = new Intent(Intent.ACTION_MAIN);
+				intent.addCategory(Intent.CATEGORY_HOME);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+				android.os.Process.killProcess(android.os.Process.myPid());
+			}
+		}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		}).create().show();
+		super.onBackPressed();
 	}
 
 	@Override

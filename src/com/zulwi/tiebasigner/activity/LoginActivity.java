@@ -17,11 +17,12 @@ import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.bean.SiteBean;
 import com.zulwi.tiebasigner.db.SitesDBHelper;
 import com.zulwi.tiebasigner.exception.StatusCodeException;
+import com.zulwi.tiebasigner.util.Common;
 import com.zulwi.tiebasigner.util.InternetUtil;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -38,7 +39,7 @@ import android.widget.Toast;
 
 public class LoginActivity extends Activity implements OnItemSelectedListener {
 	private Spinner siteSpinner;
-	private ProgressDialog progressDialog;
+	private Dialog progressDialog;
 	private EditText usernameEditor;
 	private EditText passwordEditor;
 	private String[] siteUrlList;
@@ -85,10 +86,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 		setContentView(R.layout.activity_login);
 		usernameEditor = (EditText) findViewById(R.id.username);
 		passwordEditor = (EditText) findViewById(R.id.password);
-		progressDialog = new ProgressDialog(this);
-		progressDialog.setTitle("请稍后...");
-		progressDialog.setMessage("正在登录,请稍后...");
-		progressDialog.setCancelable(false);
+		progressDialog = Common.createLoadingDialog(this, "正在登录,请稍后...", false);
 		flushSiteList();
 	}
 
@@ -128,10 +126,9 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 	}
 	
 	public void startMainActivity(){
-		Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-		LoginActivity.this.startActivity(intent);
-		System.out.println(5);
-		//LoginActivity.this.finish();
+		Intent intent = new Intent(this, MainActivity.class);
+		startActivity(intent);
+		finish();
 	}
 
 	@Override
@@ -167,11 +164,11 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 	}
 
 	public void doLogin(View v) {
+		startMainActivity();
+		/*
 		String username = usernameEditor.getText().toString().trim();
 		String password = passwordEditor.getText().toString().trim();
-		startMainActivity();
-		return;
-		/*if (username.equals("") || password.equals("")) {
+		if (username.equals("") || password.equals("")) {
 			Toast.makeText(this, "助手账号或助手密码不能为空！", Toast.LENGTH_SHORT).show();
 			return;
 		}
