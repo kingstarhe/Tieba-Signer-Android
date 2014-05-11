@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.zulwi.tiebasigner.R;
-import com.zulwi.tiebasigner.bean.NavigationBean;
+import com.zulwi.tiebasigner.bean.FragmentBean;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -19,9 +19,9 @@ public class NavListAdapter extends BaseAdapter implements Serializable {
 	@SuppressWarnings("unused")
     private Context context;
 	private LayoutInflater inflater;
-	public List<NavigationBean> list;
+	public List<FragmentBean> list;
 
-	public NavListAdapter(Context context, List<NavigationBean> data) {
+	public NavListAdapter(Context context, List<FragmentBean> data) {
 		this.context = context;
 		this.inflater = LayoutInflater.from(context);
 		this.list = data;
@@ -38,7 +38,7 @@ public class NavListAdapter extends BaseAdapter implements Serializable {
 	}
 
 	@Override
-	public NavigationBean getItem(int position) {
+	public FragmentBean getItem(int position) {
 		return list.get(position);
 	}
 
@@ -54,7 +54,6 @@ public class NavListAdapter extends BaseAdapter implements Serializable {
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-		viewHolder.icon.setImageResource(list.get(position).icon);
 		viewHolder.title.setText(list.get(position).title);
 		return convertView;
 	}

@@ -1,6 +1,5 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
@@ -8,9 +7,9 @@
     tools:context="com.zulwi.tiebasigner.activity.MainActivity" >
 
     <LinearLayout
+        android:id="@+id/top_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:background="@color/zulwi_blue"
         android:gravity="left|center_vertical"
         android:orientation="horizontal" >
@@ -25,10 +24,17 @@
             android:textSize="20sp" />
     </LinearLayout>
 
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+    </FrameLayout>
+
     <LinearLayout
+        android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
         android:background="@drawable/bottom_bar"
         android:gravity="center" >
 
@@ -43,6 +49,7 @@
             android:paddingTop="5dp"
             android:text="@string/user_info"
             android:textColor="@drawable/bottom_bar_text"
+            android:onClick="bottomBarButtonOnClick"
             android:textSize="12sp" />
 
         <Button
@@ -56,6 +63,7 @@
             android:paddingTop="5dp"
             android:text="@string/sign_log"
             android:textColor="@drawable/bottom_bar_text"
+            android:onClick="bottomBarButtonOnClick"
             android:textSize="12sp" />
 
         <Button
@@ -69,8 +77,8 @@
             android:paddingTop="5dp"
             android:text="@string/plugin"
             android:textColor="@drawable/bottom_bar_text"
+            android:onClick="bottomBarButtonOnClick"
             android:textSize="12sp" />
-
 
         <Button
             android:id="@+id/setting_button"
@@ -83,7 +91,8 @@
             android:paddingTop="5dp"
             android:text="@string/setting"
             android:textColor="@drawable/bottom_bar_text"
+            android:onClick="bottomBarButtonOnClick"
             android:textSize="12sp" />
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>
