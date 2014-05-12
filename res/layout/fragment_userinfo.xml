@@ -2,62 +2,110 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    android:gravity="center"
     android:orientation="vertical" >
 
+    <ImageView
+        android:id="@+id/userinfo_avatar_bg"
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:adjustViewBounds="true"
+        android:contentDescription="@null"
+        android:src="@drawable/avatar_bg" />
+
     <com.zulwi.tiebasigner.view.CircularImage
-        android:id="@+id/user_avatar"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_centerHorizontal="true" />
+        android:id="@+id/userinfo_avatar"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignLeft="@id/userinfo_avatar_bg"
+        android:layout_alignTop="@id/userinfo_avatar_bg"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp" />
 
     <TextView
-        android:id="@+id/user_name"
+        android:id="@+id/userinfo_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/user_avatar"
-        android:gravity="center"
+        android:layout_alignTop="@id/userinfo_avatar"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@id/userinfo_avatar"
         android:text="@string/app_name"
-        android:textSize="20sp" />
+        android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/user_email"
+        android:id="@+id/userinfo_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/user_name"
-        android:gravity="center"
-        android:layout_marginBottom="5dp"
+        android:layout_alignLeft="@id/userinfo_name"
+        android:layout_below="@id/userinfo_name"
+        android:layout_marginTop="5dp"
         android:text="@string/app_name"
         android:textSize="12sp" />
 
     <TextView
-        android:id="@+id/user_tieba2"
+        android:id="@+id/userinfo_sex"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/user_email"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:text="@string/app_name"
+        android:layout_alignLeft="@id/userinfo_name"
+        android:layout_below="@id/userinfo_email"
+        android:layout_marginTop="5dp"
+        android:text="@string/male"
         android:textSize="12sp" />
 
     <TextView
-        android:id="@+id/user_tieba1"
+        android:id="@+id/userinfo_selfage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/user_email"
-        android:layout_toLeftOf="@id/user_tieba2"
-        android:text="@string/app_name"
+        android:layout_alignTop="@id/userinfo_sex"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/userinfo_sex"
+        android:text="@string/age"
         android:textSize="12sp" />
 
     <TextView
-        android:id="@+id/user_tieba3"
+        android:id="@+id/userinfo_tiebaage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/user_email"
-        android:layout_toRightOf="@id/user_tieba2"
-        android:text="@string/app_name"
+        android:layout_alignTop="@id/userinfo_sex"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/userinfo_selfage"
+        android:text="@string/years"
         android:textSize="12sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/userinfo_avatar_bg"
+        android:layout_marginTop="15dp"
+        android:background="@color/bg_gray"
+        android:orientation="vertical"
+        android:padding="@dimen/activity_vertical_margin" >
+
+        <TextView
+            android:id="@+id/userinfo_tieba_tips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/loading_tiebas" />
+
+        <ListView
+            android:id="@+id/userinfo_tieba_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:cacheColorHint="@android:color/transparent"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0sp"
+            android:scrollbars="vertical" >
+        </ListView>
+
+        <TextView
+            android:id="@+id/userinfo_follow_tips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/loading_follows" />
+    </LinearLayout>
 
 </RelativeLayout>

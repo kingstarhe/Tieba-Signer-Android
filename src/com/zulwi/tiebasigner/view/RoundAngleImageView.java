@@ -13,7 +13,6 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF; 
 import android.util.AttributeSet; 
 import android.widget.ImageView; 
-
 import com.zulwi.tiebasigner.R;
 
 public class RoundAngleImageView extends ImageView {
@@ -37,22 +36,21 @@ public class RoundAngleImageView extends ImageView {
 		init(context, null);
 	}
 
-	private void init(Context context, AttributeSet attrs) {
+    private void init(Context context, AttributeSet attrs) {
 		if (attrs != null) {
 			TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RoundAngleImageView);
 			roundWidth = a.getDimensionPixelSize(R.styleable.RoundAngleImageView_roundWidth, roundWidth);
 			roundHeight = a.getDimensionPixelSize(R.styleable.RoundAngleImageView_roundHeight, roundHeight);
+			a.recycle();
 		} else {
 			float density = context.getResources().getDisplayMetrics().density;
 			roundWidth = (int) (roundWidth * density);
 			roundHeight = (int) (roundHeight * density);
 		}
-
 		paint = new Paint();
 		paint.setColor(Color.WHITE);
 		paint.setAntiAlias(true);
 		paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
-
 		paint2 = new Paint();
 		paint2.setXfermode(null);
 	}

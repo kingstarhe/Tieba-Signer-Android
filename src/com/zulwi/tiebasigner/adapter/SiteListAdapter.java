@@ -93,7 +93,7 @@ public class SiteListAdapter extends BaseAdapter implements Serializable {
 		ViewHolder viewHolder;
 		if (convertView == null) {
 			viewHolder = new ViewHolder();
-			convertView = inflater.inflate(R.layout.list_sites, null);
+			convertView = inflater.inflate(R.layout.list_site, null);
 			viewHolder.title = (TextView) convertView.findViewById(R.id.title);
 			viewHolder.url = (TextView) convertView.findViewById(R.id.url);
 			convertView.setTag(viewHolder);

@@ -1,6 +1,12 @@
 package com.zulwi.tiebasigner.fragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.zulwi.tiebasigner.R;
+import com.zulwi.tiebasigner.adapter.SiteListAdapter;
+import com.zulwi.tiebasigner.adapter.TiebaListAdapter;
+import com.zulwi.tiebasigner.bean.TiebaBean;
 import com.zulwi.tiebasigner.view.CircularImage;
 
 import android.app.Activity;
@@ -9,9 +15,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
-public class UserInfoFragment extends Fragment {
+public class UserInfoFragment extends BaseFragment {
 	private CircularImage userAvatar;
+	private ListView tiebaListView;
+	private List<TiebaBean> tiebaList = new ArrayList<TiebaBean>();
+	private TiebaListAdapter tiebaListAdapter;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -26,8 +36,14 @@ public class UserInfoFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_userinfo, container, false);
-		userAvatar = (CircularImage) view.findViewById(R.id.user_avatar);
+		userAvatar = (CircularImage) view.findViewById(R.id.userinfo_avatar);
 		userAvatar.setImageResource(R.drawable.avatar);
+		tiebaListView = (ListView) view.findViewById(R.id.userinfo_tieba_list);
+		tiebaList.add(new TiebaBean(1, 8, "≤‚ ‘Ã˘∞…1"));
+		tiebaList.add(new TiebaBean(2, 12, "≤‚ ‘Ã˘∞…2"));
+		tiebaList.add(new TiebaBean(3, 11, "≤‚ ‘Ã˘∞…3"));
+		tiebaListAdapter = new TiebaListAdapter(getActivity(), tiebaList);
+		tiebaListView.setAdapter(tiebaListAdapter);
 		return view;
 	}
 

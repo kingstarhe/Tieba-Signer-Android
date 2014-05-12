@@ -7,5 +7,5 @@
     <color name="item_press">#00000020</color>
     <color name="navigation_background_dark">#202020</color>
     <color name="bottom_bar_color">#6c6c6c</color>
-
+	<color name="bg_gray">#eaeaea</color>
 </resources>

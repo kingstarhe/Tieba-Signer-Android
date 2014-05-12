@@ -27,4 +27,14 @@
     <string name="icon">图标</string>
     <string name="loading">加载中,请稍后&#8230;</string>
     <string name="blank"></string>
+    <string name="male">♂</string>
+    <string name="female">♀</string>
+    <string name="age">岁</string>
+    <string name="years">年吧龄</string>
+    <string name="total_count">共有</string>
+    <string name="piece">个</string>
+    <string name="tieba">贴吧</string>
+    <string name="loading_tiebas">共有 0 个贴吧</string>
+    <string name="loading_follows">共关注 0 人</string>
+
 </resources>
