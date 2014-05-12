@@ -1,111 +1,208 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:orientation="vertical" >
+    android:scrollbars="vertical" >
 
-    <ImageView
-        android:id="@+id/userinfo_avatar_bg"
-        android:layout_width="88dp"
-        android:layout_height="88dp"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:adjustViewBounds="true"
-        android:contentDescription="@null"
-        android:src="@drawable/avatar_bg" />
-
-    <com.zulwi.tiebasigner.view.CircularImage
-        android:id="@+id/userinfo_avatar"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_alignLeft="@id/userinfo_avatar_bg"
-        android:layout_alignTop="@id/userinfo_avatar_bg"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="4dp" />
-
-    <TextView
-        android:id="@+id/userinfo_name"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/userinfo_avatar"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="8dp"
-        android:layout_toRightOf="@id/userinfo_avatar"
-        android:text="@string/app_name"
-        android:textSize="18sp" />
+        android:background="@android:color/white"
+        android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/userinfo_email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/userinfo_name"
-        android:layout_below="@id/userinfo_name"
-        android:layout_marginTop="5dp"
-        android:text="@string/app_name"
-        android:textSize="12sp" />
+        <ImageView
+            android:id="@+id/userinfo_avatar_bg"
+            android:layout_width="84dp"
+            android:layout_height="84dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            android:src="@drawable/avatar_bg" />
 
-    <TextView
-        android:id="@+id/userinfo_sex"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/userinfo_name"
-        android:layout_below="@id/userinfo_email"
-        android:layout_marginTop="5dp"
-        android:text="@string/male"
-        android:textSize="12sp" />
-
-    <TextView
-        android:id="@+id/userinfo_selfage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/userinfo_sex"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@id/userinfo_sex"
-        android:text="@string/age"
-        android:textSize="12sp" />
-
-    <TextView
-        android:id="@+id/userinfo_tiebaage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/userinfo_sex"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@id/userinfo_selfage"
-        android:text="@string/years"
-        android:textSize="12sp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/userinfo_avatar_bg"
-        android:layout_marginTop="15dp"
-        android:background="@color/bg_gray"
-        android:orientation="vertical"
-        android:padding="@dimen/activity_vertical_margin" >
+        <com.zulwi.tiebasigner.view.CircularImage
+            android:id="@+id/userinfo_avatar"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignLeft="@id/userinfo_avatar_bg"
+            android:layout_alignTop="@id/userinfo_avatar_bg"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="2dp" />
 
         <TextView
-            android:id="@+id/userinfo_tieba_tips"
+            android:id="@+id/userinfo_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/loading_tiebas" />
-
-        <ListView
-            android:id="@+id/userinfo_tieba_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:cacheColorHint="@android:color/transparent"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="0sp"
-            android:scrollbars="vertical" >
-        </ListView>
+            android:layout_alignTop="@id/userinfo_avatar"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@id/userinfo_avatar"
+            android:text="@string/app_name"
+            android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/userinfo_follow_tips"
+            android:id="@+id/userinfo_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/userinfo_name"
+            android:layout_below="@id/userinfo_name"
             android:layout_marginTop="5dp"
-            android:text="@string/loading_follows" />
-    </LinearLayout>
+            android:text="@string/app_name"
+            android:textSize="12sp" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/userinfo_sex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/userinfo_name"
+            android:layout_below="@id/userinfo_email"
+            android:layout_marginTop="5dp"
+            android:text="@string/male"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/userinfo_selfage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/userinfo_sex"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/userinfo_sex"
+            android:text="@string/age"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/userinfo_tiebaage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/userinfo_sex"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/userinfo_selfage"
+            android:text="@string/years"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/userinfo_avatar_bg"
+            android:layout_marginTop="15dp"
+            android:background="@color/bg_gray"
+            android:orientation="vertical"
+            android:padding="@dimen/activity_vertical_margin" >
+
+            <TextView
+                android:id="@+id/userinfo_tieba_tips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:paddingLeft="5dp"
+                android:text="@string/loading_tiebas" />
+
+            <TableLayout
+                android:id="@+id/userinfo_tieba_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:shrinkColumns="*"
+                android:stretchColumns="*" >
+            </TableLayout>
+
+            <TextView
+                android:id="@+id/userinfo_follow_tips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="5dp"
+                android:text="@string/loading_follows" />
+
+            <LinearLayout
+                android:id="@+id/userinfo_follows"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="@drawable/list_item"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:contentDescription="@null"
+                    android:src="@drawable/avatar" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:contentDescription="@null"
+                    android:src="@drawable/avatar" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:contentDescription="@null"
+                    android:src="@drawable/avatar" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:contentDescription="@null"
+                    android:src="@drawable/avatar" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/userinfo_fans_tips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="5dp"
+                android:text="@string/loading_fans" />
+
+            <LinearLayout
+                android:id="@+id/userinfo_fans"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="@drawable/list_item"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:contentDescription="@null"
+                    android:src="@drawable/avatar" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:contentDescription="@null"
+                    android:src="@drawable/avatar" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:contentDescription="@null"
+                    android:src="@drawable/avatar" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:contentDescription="@null"
+                    android:src="@drawable/avatar" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+</ScrollView>

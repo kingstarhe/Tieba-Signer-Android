@@ -13,7 +13,7 @@
         android:layout_height="fill_parent"
         android:layout_centerVertical="true"
         android:textColor="@drawable/site_list_text"
-        android:textSize="22sp" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/level"

@@ -36,5 +36,6 @@
     <string name="tieba">贴吧</string>
     <string name="loading_tiebas">共有 0 个贴吧</string>
     <string name="loading_follows">共关注 0 人</string>
+    <string name="loading_fans">共有 0 人关注我</string>
 
 </resources>
