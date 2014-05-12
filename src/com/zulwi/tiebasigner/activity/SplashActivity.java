@@ -3,6 +3,8 @@ package com.zulwi.tiebasigner.activity;
 import com.zulwi.tiebasigner.R;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,7 +30,11 @@ public class SplashActivity extends Activity {
 	}
 
 	public void checkLogin() {
-		// TO-DO 未实现的检查登录方法
+		// TODO 未实现的检查登录方法
 	}
 
+	@Override
+	public void onBackPressed() {
+		return;
+	}
 }

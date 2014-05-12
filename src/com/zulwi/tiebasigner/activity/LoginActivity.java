@@ -22,7 +22,9 @@ import com.zulwi.tiebasigner.util.InternetUtil;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -124,8 +126,8 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 		intent.putExtra("siteMapList", (Serializable) siteMapList);
 		startActivityForResult(intent, 1);
 	}
-	
-	public void startMainActivity(){
+
+	public void startMainActivity() {
 		Intent intent = new Intent(this, MainActivity.class);
 		startActivity(intent);
 		finish();
@@ -163,18 +165,37 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 
 	}
 
+	@Override
+	public void onBackPressed() {
+		AlertDialog.Builder confirm = new AlertDialog.Builder(this);
+		confirm.setTitle("确定要退出客户端吗？");
+		confirm.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Intent intent = new Intent(Intent.ACTION_MAIN);
+				intent.addCategory(Intent.CATEGORY_HOME);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+				android.os.Process.killProcess(android.os.Process.myPid());
+			}
+		}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		}).create().show();
+	}
+
 	public void doLogin(View v) {
 		startMainActivity();
 		/*
-		String username = usernameEditor.getText().toString().trim();
-		String password = passwordEditor.getText().toString().trim();
-		if (username.equals("") || password.equals("")) {
-			Toast.makeText(this, "助手账号或助手密码不能为空！", Toast.LENGTH_SHORT).show();
-			return;
-		}
-		progressDialog.show();
-		new Thread(new LoginThread(username, password, siteUrlList[lastSelectedPosition])).start();
-		*/
+		 * String username = usernameEditor.getText().toString().trim(); String
+		 * password = passwordEditor.getText().toString().trim(); if
+		 * (username.equals("") || password.equals("")) { Toast.makeText(this,
+		 * "助手账号或助手密码不能为空！", Toast.LENGTH_SHORT).show(); return; }
+		 * progressDialog.show(); new Thread(new LoginThread(username, password,
+		 * siteUrlList[lastSelectedPosition])).start();
+		 */
 	}
 
 	class LoginThread implements Runnable {
