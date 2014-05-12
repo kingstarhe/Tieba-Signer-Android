@@ -20,7 +20,7 @@ public class TiebaListAdapter extends BaseAdapter implements Serializable {
 
 	public TiebaListAdapter(Context context, List<TiebaBean> data) {
 		this.context = context;
-		this.inflater = LayoutInflater.from(context);
+		this.inflater = LayoutInflater.from(this.context);
 		this.list = data;
 	}
 

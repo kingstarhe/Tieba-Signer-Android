@@ -65,8 +65,7 @@ public abstract class MaskedImage extends ImageView {
 			paramCanvas.restoreToCount(i);
 			return;
 		} catch (Exception localException) {
-			StringBuilder localStringBuilder = new StringBuilder().append("Attempting to draw with recycled bitmap. View ID = ");
-			System.out.println("localStringBuilder==" + localStringBuilder);
+			
 		}
 	}
 }
