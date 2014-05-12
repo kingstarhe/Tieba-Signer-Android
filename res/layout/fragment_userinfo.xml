@@ -2,11 +2,62 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
+    android:gravity="center"
     android:orientation="vertical" >
 
+    <com.zulwi.tiebasigner.view.CircularImage
+        android:id="@+id/user_avatar"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_centerHorizontal="true" />
+
     <TextView
+        android:id="@+id/user_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="0" />
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/user_avatar"
+        android:gravity="center"
+        android:text="@string/app_name"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/user_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/user_name"
+        android:gravity="center"
+        android:layout_marginBottom="5dp"
+        android:text="@string/app_name"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/user_tieba2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/user_email"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:text="@string/app_name"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/user_tieba1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/user_email"
+        android:layout_toLeftOf="@id/user_tieba2"
+        android:text="@string/app_name"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/user_tieba3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/user_email"
+        android:layout_toRightOf="@id/user_tieba2"
+        android:text="@string/app_name"
+        android:textSize="12sp" />
 
 </RelativeLayout>

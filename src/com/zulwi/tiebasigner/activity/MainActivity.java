@@ -78,7 +78,7 @@ public class MainActivity extends FragmentActivity {
 		}
 	}
 
-	public void bottomBarButtonOnClick(View v) {
+	public void onBottomBarButtonClick(View v) {
 		switch (v.getId()) {
 			case R.id.userinfo_button:
 				setEnabled(0);

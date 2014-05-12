@@ -18,7 +18,7 @@
             android:id="@+id/main_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="15dp"
             android:text="@string/app_name"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
@@ -46,10 +46,10 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:drawableTop="@drawable/userinfo_button"
+            android:onClick="onBottomBarButtonClick"
             android:paddingTop="5dp"
             android:text="@string/user_info"
             android:textColor="@drawable/bottom_bar_text"
-            android:onClick="bottomBarButtonOnClick"
             android:textSize="12sp" />
 
         <Button
@@ -60,10 +60,10 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:drawableTop="@drawable/signlog_button"
+            android:onClick="onBottomBarButtonClick"
             android:paddingTop="5dp"
             android:text="@string/sign_log"
             android:textColor="@drawable/bottom_bar_text"
-            android:onClick="bottomBarButtonOnClick"
             android:textSize="12sp" />
 
         <Button
@@ -74,10 +74,10 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:drawableTop="@drawable/plugin_button"
+            android:onClick="onBottomBarButtonClick"
             android:paddingTop="5dp"
             android:text="@string/plugin"
             android:textColor="@drawable/bottom_bar_text"
-            android:onClick="bottomBarButtonOnClick"
             android:textSize="12sp" />
 
         <Button
@@ -88,10 +88,10 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:drawableTop="@drawable/setting_button"
+            android:onClick="onBottomBarButtonClick"
             android:paddingTop="5dp"
             android:text="@string/setting"
             android:textColor="@drawable/bottom_bar_text"
-            android:onClick="bottomBarButtonOnClick"
             android:textSize="12sp" />
     </LinearLayout>
 

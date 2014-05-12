@@ -8,9 +8,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 public class SignLogFragment extends Fragment {
-
+	private TextView signLogStatusTextView;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -24,7 +25,10 @@ public class SignLogFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_signlog, container, false);
+		View view = inflater.inflate(R.layout.fragment_signlog, container, false);
+		signLogStatusTextView = (TextView) view.findViewById(R.id.sign_log_status);
+		signLogStatusTextView.setText("总计 79 个贴吧，其中 1 个贴吧签到失败");
+		return view;
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.zulwi.tiebasigner.fragment;
 
 import com.zulwi.tiebasigner.R;
+import com.zulwi.tiebasigner.view.CircularImage;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -10,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class UserInfoFragment extends Fragment {
-
+	private CircularImage userAvatar;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -24,7 +25,10 @@ public class UserInfoFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_userinfo, container, false);
+		View view = inflater.inflate(R.layout.fragment_userinfo, container, false);
+		userAvatar = (CircularImage) view.findViewById(R.id.user_avatar);
+		userAvatar.setImageResource(R.drawable.avatar);
+		return view;
 	}
 
 	@Override
