@@ -17,11 +17,13 @@
 
     <TextView
         android:id="@+id/level"
-        android:layout_width="wrap_content"
+        android:layout_width="20dp"
         android:layout_height="fill_parent"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:textColor="@drawable/site_list_text"
+        android:gravity="center"
+        android:background="@color/zulwi_blue"
+        android:textColor="@android:color/white"
         android:textSize="13sp" />
 
 </RelativeLayout>

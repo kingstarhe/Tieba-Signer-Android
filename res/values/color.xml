@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="white">#ffffff</color>
     <color name="zulwi_blue">#00b4fd</color>
-    <color name="black">#000000</color>
     <color name="item_press">#00000020</color>
     <color name="navigation_background_dark">#202020</color>
     <color name="bottom_bar_color">#6c6c6c</color>
