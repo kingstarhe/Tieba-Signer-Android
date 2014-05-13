@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">贴吧签到助手</string>
+    <string name="app_name">JerryLocke</string>
     <string name="copyright">Copyright © 2011 &#8211; 2014 Zulwi Studio. All Rights Reserved.</string>
     <string name="action_settings">设置</string>
     <string name="setting">设置</string>
@@ -29,8 +29,8 @@
     <string name="blank"></string>
     <string name="male">♂</string>
     <string name="female">♀</string>
-    <string name="age">岁</string>
-    <string name="years">年吧龄</string>
+    <string name="age">0岁</string>
+    <string name="years">0年吧龄</string>
     <string name="total_count">共有</string>
     <string name="piece">个</string>
     <string name="tieba">贴吧</string>

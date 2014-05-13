@@ -49,6 +49,12 @@ public class UserInfoFragment extends BaseFragment {
 		view.findViewById(R.id.userinfo_follows).setOnClickListener(emptyOnClickListener);
 		view.findViewById(R.id.userinfo_fans).setOnClickListener(emptyOnClickListener);
 		tiebaTable.setAdapter(tiebaListAdapter);
+		tiebaTable.setOnClickListener(new ListTableView.onClickListener() {
+			@Override
+			public void onClick(View v, int which) {
+				System.out.println(which);
+			}
+		});
 		return view;
 	}
 
