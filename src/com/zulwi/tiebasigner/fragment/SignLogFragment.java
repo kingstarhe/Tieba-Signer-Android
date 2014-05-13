@@ -2,7 +2,6 @@ package com.zulwi.tiebasigner.fragment;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.bean.FragmentBean;
