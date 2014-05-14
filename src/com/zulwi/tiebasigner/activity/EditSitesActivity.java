@@ -10,7 +10,7 @@ import org.json.JSONObject;
 import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.adapter.SiteListAdapter;
 import com.zulwi.tiebasigner.bean.SiteBean;
-import com.zulwi.tiebasigner.db.SitesDBHelper;
+import com.zulwi.tiebasigner.db.BaseDBHelper;
 import com.zulwi.tiebasigner.exception.StatusCodeException;
 import com.zulwi.tiebasigner.util.DialogUtil;
 import com.zulwi.tiebasigner.util.InternetUtil;
@@ -44,7 +44,7 @@ public class EditSitesActivity extends ActionBarActivity {
 	private AlertDialog EditDialog;
 	private List<SiteBean> siteMapList;
 	private SiteListAdapter siteListAdapter;
-	private SitesDBHelper sitesDBHelper = new SitesDBHelper(this);
+	private BaseDBHelper sitesDBHelper = new BaseDBHelper(this);
 	public static boolean hasChanged = false;
 
 	@SuppressLint("HandlerLeak")

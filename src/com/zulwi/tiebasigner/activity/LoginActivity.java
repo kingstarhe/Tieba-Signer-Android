@@ -11,7 +11,7 @@ import org.json.JSONException;
 import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.bean.SiteBean;
-import com.zulwi.tiebasigner.db.SitesDBHelper;
+import com.zulwi.tiebasigner.db.BaseDBHelper;
 import com.zulwi.tiebasigner.exception.StatusCodeException;
 import com.zulwi.tiebasigner.util.AccountUtil;
 import com.zulwi.tiebasigner.util.DialogUtil;
@@ -21,6 +21,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -43,7 +44,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 	private String[] siteUrlList;
 	private String[] siteNameList;
 	private List<SiteBean> siteMapList;
-	private SitesDBHelper sitesDBHelper = new SitesDBHelper(this);
+	private BaseDBHelper sitesDBHelper = new BaseDBHelper(this);
 	private int lastSelectedPosition;
 
 	@SuppressLint("HandlerLeak")
@@ -66,6 +67,15 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 				case InternetUtil.SUCCESSED:
 					AccountBean accountBean = (AccountBean) msg.obj;
 					tips = "ª∂”≠ªÿ¿¥£¨" + accountBean.username + "£°";
+					BaseDBHelper dbHelper = new BaseDBHelper(LoginActivity.this);
+					dbHelper.execSQL("delete from accounts where username=\'" + accountBean.username + "\'");
+					ContentValues value = new ContentValues();
+					value.put("sid", siteMapList.get(lastSelectedPosition).id);
+					value.put("username", accountBean.username);
+					value.put("cookie", accountBean.cookieString);
+					value.put("current", 1);
+					dbHelper.insert("accounts", value);
+					dbHelper.close();
 					startMainActivity(accountBean);
 					break;
 				default:

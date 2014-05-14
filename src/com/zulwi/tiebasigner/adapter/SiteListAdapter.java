@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.bean.SiteBean;
-import com.zulwi.tiebasigner.db.SitesDBHelper;
+import com.zulwi.tiebasigner.db.BaseDBHelper;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -20,13 +20,13 @@ public class SiteListAdapter extends BaseAdapter implements Serializable {
 	private Context context;
 	private LayoutInflater inflater;
 	public List<SiteBean> list;
-	private SitesDBHelper sitesDBHelper;
+	private BaseDBHelper sitesDBHelper;
 
 	public SiteListAdapter(Context context, List<SiteBean> data) {
 		this.context = context;
 		this.inflater = LayoutInflater.from(context);
 		this.list = data;
-		sitesDBHelper = new SitesDBHelper(this.context);
+		sitesDBHelper = new BaseDBHelper(this.context);
 	}
 
 	@Override

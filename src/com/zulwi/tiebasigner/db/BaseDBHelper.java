@@ -6,20 +6,20 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class SitesDBHelper extends SQLiteOpenHelper {
-	private final static String DB_NAME = "database.db";
+public class BaseDBHelper extends SQLiteOpenHelper {
+	private final static String DB_NAME = "databese.db";
 	private final static int VERSION = 1;
-	private final static String CREATE_SQL = "create table if not exists sites(" + "id integer primary key autoincrement,name varchar(20) unique," + "url varchar(60) unique)";
 	private SQLiteDatabase db;
 
-	public SitesDBHelper(Context context) {
+	public BaseDBHelper(Context context) {
 		super(context, DB_NAME, null, VERSION);
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		this.db = db;
-		db.execSQL(CREATE_SQL);
+		db.execSQL("create table if not exists sites(id integer primary key autoincrement,name varchar(20) unique,url varchar(60) unique)");
+		db.execSQL("create table if not exists accounts(id integer primary key autoincrement, sid integer, username varchar(30) unique, cookie varchar(1000), current smallint(1))");
 	}
 
 	@Override

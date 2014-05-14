@@ -1,9 +1,13 @@
 package com.zulwi.tiebasigner.activity;
 
 import com.zulwi.tiebasigner.R;
+import com.zulwi.tiebasigner.bean.AccountBean;
+import com.zulwi.tiebasigner.bean.SiteBean;
+import com.zulwi.tiebasigner.db.BaseDBHelper;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Window;
@@ -20,15 +24,31 @@ public class SplashActivity extends Activity {
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-				SplashActivity.this.startActivity(intent);
-				SplashActivity.this.finish();
+				checkLogin();
 			}
 		}, 2000);
 	}
 
 	public void checkLogin() {
-		// TODO 未实现的检查登录方法
+		BaseDBHelper dbHelper = new BaseDBHelper(this);
+		Cursor accountCursor = dbHelper.rawQuery("select * from accounts where current=1", null);
+		if (accountCursor.getCount() > 0) {
+			accountCursor.moveToFirst();
+			int sid = accountCursor.getInt(1);
+			Cursor siteCursor = dbHelper.rawQuery("select * from sites where id="+sid, null);
+			String siteUrl = "";
+			if(siteCursor.getCount()>0){
+				siteCursor.moveToFirst();
+				siteUrl = siteCursor.getString(2);
+				Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+				intent.putExtra("accountBean", new AccountBean(accountCursor.getString(2), siteUrl, accountCursor.getString(3)));
+				startActivity(intent);
+			}
+		} else {
+			Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+			SplashActivity.this.startActivity(intent);
+		}
+		finish();
 	}
 
 	@Override
