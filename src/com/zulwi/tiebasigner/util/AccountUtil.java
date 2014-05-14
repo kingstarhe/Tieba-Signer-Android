@@ -61,7 +61,7 @@ public class AccountUtil implements Serializable {
 		JSONArray data = jsonObject.getJSONArray("data");
 		System.out.println(data);
 		if (status != 0) throw new Exception(msg);
-		return new AccountBean(username, cookieString, siteUrl);
+		return new AccountBean(username, siteUrl, cookieString);
 	}
 
 	public String getCookieString() {
