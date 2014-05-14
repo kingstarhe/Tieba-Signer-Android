@@ -5,19 +5,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.cookie.Cookie;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.zulwi.tiebasigner.R;
+import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.bean.SiteBean;
 import com.zulwi.tiebasigner.db.SitesDBHelper;
 import com.zulwi.tiebasigner.exception.StatusCodeException;
-import com.zulwi.tiebasigner.util.Common;
+import com.zulwi.tiebasigner.util.AccountUtil;
+import com.zulwi.tiebasigner.util.DialogUtil;
 import com.zulwi.tiebasigner.util.InternetUtil;
 
 import android.annotation.SuppressLint;
@@ -29,7 +26,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -68,8 +64,9 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 					tips = "JSON解析错误，请确认该站点是否支持客户端";
 					break;
 				case InternetUtil.SUCCESSED:
-					tips = (String) msg.obj;
-					startMainActivity();
+					AccountBean accountBean = (AccountBean) msg.obj;
+					tips = "欢迎回来，" + accountBean.username + "！";
+					startMainActivity(accountBean);
 					break;
 				default:
 					Exception t = (Exception) msg.obj;
@@ -88,7 +85,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 		setContentView(R.layout.activity_login);
 		usernameEditor = (EditText) findViewById(R.id.username);
 		passwordEditor = (EditText) findViewById(R.id.password);
-		progressDialog = Common.createLoadingDialog(this, "正在登录,请稍后...", false);
+		progressDialog = DialogUtil.createLoadingDialog(this, "正在登录,请稍后...", false);
 		flushSiteList();
 	}
 
@@ -127,8 +124,9 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 		startActivityForResult(intent, 1);
 	}
 
-	public void startMainActivity() {
+	public void startMainActivity(AccountBean accountBean) {
 		Intent intent = new Intent(this, MainActivity.class);
+		intent.putExtra("accountBean", accountBean);
 		startActivity(intent);
 		finish();
 	}
@@ -187,15 +185,14 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 	}
 
 	public void doLogin(View v) {
-		startMainActivity();
-		/*
-		 * String username = usernameEditor.getText().toString().trim(); String
-		 * password = passwordEditor.getText().toString().trim(); if
-		 * (username.equals("") || password.equals("")) { Toast.makeText(this,
-		 * "助手账号或助手密码不能为空！", Toast.LENGTH_SHORT).show(); return; }
-		 * progressDialog.show(); new Thread(new LoginThread(username, password,
-		 * siteUrlList[lastSelectedPosition])).start();
-		 */
+		String username = usernameEditor.getText().toString().trim();
+		String password = passwordEditor.getText().toString().trim();
+		if (username.equals("") || password.equals("")) {
+			Toast.makeText(this, "助手账号或助手密码不能为空！", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		progressDialog.show();
+		new Thread(new LoginThread(username, password, siteUrlList[lastSelectedPosition])).start();
 	}
 
 	class LoginThread implements Runnable {
@@ -212,24 +209,9 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 		@Override
 		public void run() {
 			try {
-				InternetUtil site = new InternetUtil(LoginActivity.this, url + "/plugin.php?id=zw_client_api&a=do_login");
-				List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-				NameValuePair pair1 = new BasicNameValuePair("username", username);
-				NameValuePair pair2 = new BasicNameValuePair("password", password);
-				postParams.add(pair1);
-				postParams.add(pair2);
-				String result = site.post(postParams);
-				List<Cookie> cookies = site.getCookies();
-				for (int i = 0; i < cookies.size(); i++) {
-					Log.i("Local cookie: ", cookies.get(i).toString());
-				}
-				JSONObject jsonObject = new JSONObject(result);
-				int status = jsonObject.getInt("status");
-				String msg = jsonObject.getString("msg");
-				JSONArray data = jsonObject.getJSONArray("data");
-				System.out.println(data);
-				if (status != 0) throw new Exception(msg);
-				handler.obtainMessage(InternetUtil.SUCCESSED, 0, 0, msg).sendToTarget();
+				AccountUtil accountUtil = new AccountUtil(username, password, url);
+				AccountBean accountBean = accountUtil.doLogin();
+				handler.obtainMessage(InternetUtil.SUCCESSED, 0, 0, accountBean).sendToTarget();
 			} catch (JSONException e) {
 				handler.obtainMessage(InternetUtil.PARSE_ERROR, 0, 0, e).sendToTarget();
 			} catch (StatusCodeException e) {

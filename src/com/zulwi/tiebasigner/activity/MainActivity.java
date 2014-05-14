@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.zulwi.tiebasigner.R;
+import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.bean.FragmentBean;
 import com.zulwi.tiebasigner.fragment.PluginFragment;
 import com.zulwi.tiebasigner.fragment.SettingFragment;
@@ -30,12 +31,14 @@ public class MainActivity extends FragmentActivity {
 	private List<Button> bottonBarButton = new ArrayList<Button>();
 	private TextView titleTextView;
 	private int currentFragmentId = 0;
+	private AccountBean accountBean;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
+		accountBean = (AccountBean) getIntent().getSerializableExtra("accountBean");
 		fragmentList.add(new FragmentBean("ÕËºÅ", new UserInfoFragment()));
 		fragmentList.add(new FragmentBean("¼ÇÂ¼", new SignLogFragment()));
 		fragmentList.add(new FragmentBean("²å¼þ", new PluginFragment()));
@@ -120,6 +123,10 @@ public class MainActivity extends FragmentActivity {
 				changeFragment(3);
 				break;
 		}
+	}
+
+	public AccountBean getAccountBean() {
+		return accountBean;
 	}
 
 }

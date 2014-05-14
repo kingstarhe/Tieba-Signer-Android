@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.zulwi.tiebasigner.R;
+import com.zulwi.tiebasigner.activity.MainActivity;
 import com.zulwi.tiebasigner.adapter.TiebaListAdapter;
 import com.zulwi.tiebasigner.bean.TiebaBean;
 import com.zulwi.tiebasigner.view.CircularImage;
@@ -14,12 +15,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 public class UserInfoFragment extends BaseFragment {
 	private CircularImage userAvatar;
 	private ListTableView tiebaTable;
+	private TextView usernameTextView;
 	private List<TiebaBean> tiebaList = new ArrayList<TiebaBean>();
 	private TiebaListAdapter tiebaListAdapter;
+	private MainActivity activity;
 	private View.OnClickListener emptyOnClickListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View arg0) {
@@ -29,6 +33,7 @@ public class UserInfoFragment extends BaseFragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
+		this.activity = (MainActivity) activity;
 	}
 
 	@Override
@@ -39,6 +44,8 @@ public class UserInfoFragment extends BaseFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_userinfo, container, false);
+		usernameTextView = (TextView) view.findViewById(R.id.userinfo_name);
+		usernameTextView.setText(activity.getAccountBean().username);
 		userAvatar = (CircularImage) view.findViewById(R.id.userinfo_avatar);
 		userAvatar.setImageResource(R.drawable.avatar);
 		tiebaList.add(new TiebaBean(1, 8, "≤‚ ‘Ã˘∞…1"));

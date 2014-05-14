@@ -13,7 +13,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class Common {
+public class DialogUtil {
 	public static Dialog createLoadingDialog(Context context, String msg, boolean cancelable) {
 		LayoutInflater inflater = LayoutInflater.from(context);
 		View v = inflater.inflate(R.layout.loading_dialog, null);

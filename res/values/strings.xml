@@ -38,7 +38,7 @@
     <string name="loading_tiebas">共有 0 个贴吧</string>
     <string name="loading_follows">共关注 0 人</string>
     <string name="loading_fans">共有 0 人关注我</string>
-    <string name="one_key_sign_tips">利用客户端网络进行签到，可减缓站点压力，但可能耗费手机流量</string>
+    <string name="one_key_sign_tips">使用手机网络签到以减缓站点压力，可能会耗费手机流量</string>
     <string name="one_key_sign_title">一键签到</string>
 
 </resources>

@@ -12,7 +12,7 @@ import com.zulwi.tiebasigner.adapter.SiteListAdapter;
 import com.zulwi.tiebasigner.bean.SiteBean;
 import com.zulwi.tiebasigner.db.SitesDBHelper;
 import com.zulwi.tiebasigner.exception.StatusCodeException;
-import com.zulwi.tiebasigner.util.Common;
+import com.zulwi.tiebasigner.util.DialogUtil;
 import com.zulwi.tiebasigner.util.InternetUtil;
 
 import android.support.v7.app.ActionBarActivity;
@@ -101,7 +101,7 @@ public class EditSitesActivity extends ActionBarActivity {
 		siteListAdapter = new SiteListAdapter(this, siteMapList);
 		siteList.setAdapter(siteListAdapter);
 		registerForContextMenu(siteList);
-		progressDialog = Common.createLoadingDialog(this, "正在检查站点,请稍后...", false);
+		progressDialog = DialogUtil.createLoadingDialog(this, "正在检查站点,请稍后...", false);
 	}
 
 	@Override
