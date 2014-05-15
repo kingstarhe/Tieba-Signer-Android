@@ -6,10 +6,14 @@ import java.util.List;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,11 +30,10 @@ import com.zulwi.tiebasigner.fragment.SettingFragment;
 import com.zulwi.tiebasigner.fragment.SignLogFragment;
 import com.zulwi.tiebasigner.fragment.UserInfoFragment;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends ActionBarActivity {
 	private FragmentManager fm;
 	private List<FragmentBean> fragmentList = new ArrayList<FragmentBean>();
 	private List<Button> bottonBarButton = new ArrayList<Button>();
-	private TextView titleTextView;
 	private int currentFragmentId = 0;
 	private AccountBean accountBean;
 	private SiteBean siteBean;
@@ -38,7 +41,10 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayUseLogoEnabled(false);
+		actionBar.setDisplayShowHomeEnabled(false);
+		actionBar.setBackgroundDrawable(getResources().getDrawable(R.color.zulwi_blue));
 		setContentView(R.layout.activity_main);
 		accountBean = (AccountBean) getIntent().getSerializableExtra("accountBean");
 		siteBean = (SiteBean) getIntent().getSerializableExtra("siteBean");
@@ -47,7 +53,6 @@ public class MainActivity extends FragmentActivity {
 		fragmentList.add(new FragmentBean("插件", new PluginFragment()));
 		fragmentList.add(new FragmentBean("设置", new SettingFragment()));
 		fm = getSupportFragmentManager();
-		titleTextView = (TextView) findViewById(R.id.main_title);
 		bottonBarButton.add((Button) findViewById(R.id.userinfo_button));
 		bottonBarButton.add((Button) findViewById(R.id.signlog_button));
 		bottonBarButton.add((Button) findViewById(R.id.plugin_button));
@@ -97,7 +102,7 @@ public class MainActivity extends FragmentActivity {
 		if (from == to && !to.fragment.isAdded()) ft.add(R.id.fragment_container, to.fragment);
 		else ft = to.fragment.isAdded() ? ft.hide(from.fragment).show(to.fragment) : ft.hide(from.fragment).add(R.id.fragment_container, to.fragment);
 		ft.commit();
-		titleTextView.setText(to.title);
+		setTitle(to.title);
 		currentFragmentId = position;
 	}
 

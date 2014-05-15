@@ -3,7 +3,6 @@
 
     <string name="app_name">贴吧签到助手</string>
     <string name="copyright">Copyright © 2011 &#8211; 2014 Zulwi Studio. All Rights Reserved.</string>
-    <string name="action_settings">设置</string>
     <string name="setting">设置</string>
     <string name="edit_site">站点域名</string>
     <string name="edit_username">助手账号</string>
