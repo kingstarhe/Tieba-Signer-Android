@@ -69,14 +69,24 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 					tips = "欢迎回来，" + accountBean.username + "！";
 					BaseDBHelper dbHelper = new BaseDBHelper(LoginActivity.this);
 					dbHelper.execSQL("delete from accounts where username=\'" + accountBean.username + "\'");
+					dbHelper.execSQL("update accounts set current=0 where current=1");
 					ContentValues value = new ContentValues();
-					value.put("sid", siteMapList.get(lastSelectedPosition).id);
-					value.put("username", accountBean.username);
-					value.put("cookie", accountBean.cookieString);
-					value.put("current", 1);
-					dbHelper.insert("accounts", value);
-					dbHelper.close();
-					startMainActivity(accountBean);
+					long sid = siteMapList.get(lastSelectedPosition).id;
+					Cursor siteCursor = dbHelper.rawQuery("select * from sites where id=" + sid, null);
+					if (siteCursor.getCount() > 0) {
+						siteCursor.moveToFirst();
+						value.put("sid", sid);
+						value.put("username", accountBean.username);
+						value.put("email", accountBean.email);
+						value.put("cookie", accountBean.cookieString);
+						value.put("current", 1);
+						dbHelper.insert("accounts", value);
+						SiteBean siteBean = new SiteBean(sid, siteCursor.getString(1), siteCursor.getString(2));
+						dbHelper.close();
+						startMainActivity(accountBean, siteBean);
+					} else {
+						tips = "站点信息错误！";
+					}
 					break;
 				default:
 					Exception t = (Exception) msg.obj;
@@ -134,8 +144,9 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 		startActivityForResult(intent, 1);
 	}
 
-	public void startMainActivity(AccountBean accountBean) {
+	public void startMainActivity(AccountBean accountBean, SiteBean siteBean) {
 		Intent intent = new Intent(this, MainActivity.class);
+		intent.putExtra("siteBean", siteBean);
 		intent.putExtra("accountBean", accountBean);
 		startActivity(intent);
 		finish();
@@ -223,14 +234,19 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 				AccountBean accountBean = accountUtil.doLogin();
 				handler.obtainMessage(InternetUtil.SUCCESSED, 0, 0, accountBean).sendToTarget();
 			} catch (JSONException e) {
+				e.printStackTrace();
 				handler.obtainMessage(InternetUtil.PARSE_ERROR, 0, 0, e).sendToTarget();
 			} catch (StatusCodeException e) {
+				e.printStackTrace();
 				handler.obtainMessage(InternetUtil.STATUS_ERROR, 0, 0, e).sendToTarget();
 			} catch (ClientProtocolException e) {
+				e.printStackTrace();
 				handler.obtainMessage(InternetUtil.NETWORK_FAIL, 0, 0, e).sendToTarget();
 			} catch (IOException e) {
+				e.printStackTrace();
 				handler.obtainMessage(InternetUtil.NETWORK_FAIL, 0, 0, e).sendToTarget();
 			} catch (Exception e) {
+				e.printStackTrace();
 				handler.obtainMessage(InternetUtil.OTHER_ERROR, 0, 0, e).sendToTarget();
 			}
 		}

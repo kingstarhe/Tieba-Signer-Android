@@ -274,7 +274,7 @@ public class EditSitesActivity extends ActionBarActivity {
 					int countUrl = sitesDBHelper.rawQuery("select * from sites where url=\'" + url + "\'", null).getCount();
 					if (countName != 0 || countUrl != 0) throw new Exception("添加失败！请检查是否已有重复名称或URL");
 				}
-				InternetUtil site = new InternetUtil(EditSitesActivity.this, url + "/plugin.php?id=zw_client_api&a=get_api_info");
+				InternetUtil site = new InternetUtil(EditSitesActivity.this, url + "/plugin.php?id=zw_client_api&a=api_info");
 				String result = site.get();
 				JSONObject jsonObject = new JSONObject(result);
 				int status = jsonObject.getInt("status");

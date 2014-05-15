@@ -9,7 +9,6 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,16 +51,16 @@ public class AccountUtil implements Serializable {
 		StringBuilder cookieBuilder = new StringBuilder();
 		for (int i = 0; i < cookie.size(); i++) {
 			Cookie cookieObject = cookie.get(i);
-			cookieBuilder.append(cookieObject.getName() + "=" + cookieObject.getValue() + ";");
+			cookieBuilder.append(cookieObject.getName() + "=" + cookieObject.getValue() + "; ");
 		}
 		cookieString = cookieBuilder.toString();
 		JSONObject jsonObject = new JSONObject(result);
 		int status = jsonObject.getInt("status");
 		String msg = jsonObject.getString("msg");
-		JSONArray data = jsonObject.getJSONArray("data");
+		JSONObject data = jsonObject.getJSONObject("data");
 		System.out.println(data);
 		if (status != 0) throw new Exception(msg);
-		return new AccountBean(username, siteUrl, cookieString);
+		return new AccountBean(username, data.getString("email"), siteUrl, cookieString);
 	}
 
 	public String getCookieString() {

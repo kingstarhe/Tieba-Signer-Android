@@ -35,13 +35,14 @@ public class SplashActivity extends Activity {
 		if (accountCursor.getCount() > 0) {
 			accountCursor.moveToFirst();
 			int sid = accountCursor.getInt(1);
-			Cursor siteCursor = dbHelper.rawQuery("select * from sites where id="+sid, null);
+			Cursor siteCursor = dbHelper.rawQuery("select * from sites where id=" + sid, null);
 			String siteUrl = "";
-			if(siteCursor.getCount()>0){
+			if (siteCursor.getCount() > 0) {
 				siteCursor.moveToFirst();
 				siteUrl = siteCursor.getString(2);
 				Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-				intent.putExtra("accountBean", new AccountBean(accountCursor.getString(2), siteUrl, accountCursor.getString(3)));
+				intent.putExtra("accountBean", new AccountBean(accountCursor.getString(2), accountCursor.getString(3), siteUrl, accountCursor.getString(4)));
+				intent.putExtra("siteBean", new SiteBean(siteCursor.getInt(0), siteCursor.getString(1), siteCursor.getString(2)));
 				startActivity(intent);
 			}
 		} else {

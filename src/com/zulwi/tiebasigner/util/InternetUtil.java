@@ -76,10 +76,11 @@ public class InternetUtil {
 		} else {
 			HttpEntity responseEntity = response.getEntity();
 			result = EntityUtils.toString(responseEntity, "utf-8");
+			System.out.println("InternetUtil Returned Result:" + result);
 			return result;
 		}
 	}
-	
+
 	public List<Cookie> getCookies() {
 		return cookies;
 	}

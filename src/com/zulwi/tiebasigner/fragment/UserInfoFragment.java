@@ -44,8 +44,6 @@ public class UserInfoFragment extends BaseFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_userinfo, container, false);
-		usernameTextView = (TextView) view.findViewById(R.id.userinfo_name);
-		usernameTextView.setText(activity.getAccountBean().username);
 		userAvatar = (CircularImage) view.findViewById(R.id.userinfo_avatar);
 		userAvatar.setImageResource(R.drawable.avatar);
 		tiebaList.add(new TiebaBean(1, 8, "≤‚ ‘Ã˘∞…1"));

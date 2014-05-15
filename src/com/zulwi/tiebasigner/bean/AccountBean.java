@@ -6,11 +6,13 @@ import java.io.Serializable;
 public class AccountBean implements Serializable {
 	public String siteUrl;
 	public String username;
+	public String email;
 	public String cookieString;
 
-	public AccountBean(String username, String siteUrl, String cookieString) {
+	public AccountBean(String username, String email, String siteUrl, String cookieString) {
 		this.username = username;
-		this.cookieString = cookieString;
+		this.email = email;
 		this.siteUrl = siteUrl;
+		this.cookieString = cookieString;
 	}
 }

@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.bean.FragmentBean;
+import com.zulwi.tiebasigner.bean.SiteBean;
 import com.zulwi.tiebasigner.fragment.PluginFragment;
 import com.zulwi.tiebasigner.fragment.SettingFragment;
 import com.zulwi.tiebasigner.fragment.SignLogFragment;
@@ -32,6 +33,7 @@ public class MainActivity extends FragmentActivity {
 	private TextView titleTextView;
 	private int currentFragmentId = 0;
 	private AccountBean accountBean;
+	private SiteBean siteBean;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,7 @@ public class MainActivity extends FragmentActivity {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
 		accountBean = (AccountBean) getIntent().getSerializableExtra("accountBean");
+		siteBean = (SiteBean) getIntent().getSerializableExtra("siteBean");
 		fragmentList.add(new FragmentBean("ÕËºÅ", new UserInfoFragment()));
 		fragmentList.add(new FragmentBean("¼ÇÂ¼", new SignLogFragment()));
 		fragmentList.add(new FragmentBean("²å¼þ", new PluginFragment()));
@@ -128,5 +131,9 @@ public class MainActivity extends FragmentActivity {
 	public AccountBean getAccountBean() {
 		return accountBean;
 	}
+
+	public SiteBean getSiteBean() {
+	    return siteBean;
+    }
 
 }
