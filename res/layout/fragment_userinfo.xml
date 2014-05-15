@@ -2,7 +2,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/white"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:splitMotionEvents="false" >
 
     <ImageView
         android:id="@+id/userinfo_avatar_bg"
@@ -100,7 +101,6 @@
             <com.zulwi.tiebasigner.view.ListTableView
                 android:id="@+id/userinfo_tieba_list"
                 android:layout_width="match_parent"
-                android:splitMotionEvents="false"
                 android:layout_height="wrap_content" >
             </com.zulwi.tiebasigner.view.ListTableView>
 

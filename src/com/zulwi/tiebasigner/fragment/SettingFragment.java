@@ -13,13 +13,8 @@ import android.widget.TextView;
 import com.zulwi.tiebasigner.activity.MainActivity;
 import com.zulwi.tiebasigner.view.CircularImage;
 
-public class SettingFragment extends Fragment {
+public class SettingFragment extends Fragment implements View.OnClickListener{
 	private MainActivity activity;
-	private View.OnClickListener emptyOnClickListener = new View.OnClickListener() {
-		@Override
-		public void onClick(View arg0) {
-		}
-	};
 	private TextView usernameTextView;
 	private TextView emailTextView;
 	private TextView siteNameTextView;
@@ -48,8 +43,13 @@ public class SettingFragment extends Fragment {
 		siteNameTextView.setText(activity.getSiteBean().name);
 		siteUrlTextView.setText(activity.getSiteBean().url);
 		((CircularImage) view.findViewById(R.id.setting_avatar)).setImageResource(R.drawable.avatar);
-		view.findViewById(R.id.setting_userinfo).setOnClickListener(emptyOnClickListener);
-		view.findViewById(R.id.setting_siteinfo).setOnClickListener(emptyOnClickListener);
+		view.findViewById(R.id.setting_userinfo).setOnClickListener(this);
+		view.findViewById(R.id.setting_siteinfo).setOnClickListener(this);
+		view.findViewById(R.id.setting_remind).setOnClickListener(this);
+		view.findViewById(R.id.setting_clear_cache).setOnClickListener(this);
+		view.findViewById(R.id.setting_faq).setOnClickListener(this);
+		view.findViewById(R.id.setting_donate).setOnClickListener(this);
+		view.findViewById(R.id.setting_about).setOnClickListener(this);
 		return view;
 	}
 
@@ -87,5 +87,23 @@ public class SettingFragment extends Fragment {
 	public void onStop() {
 		super.onStop();
 	}
+
+	@Override
+    public void onClick(View v) {
+	    switch(v.getId()){
+	    	case R.id.setting_userinfo:
+	    		break;
+	    	case R.id.setting_siteinfo:
+	    		break;
+	    	case R.id.setting_remind:
+	    		break;
+	    	case R.id.setting_faq:
+	    		break;
+	    	case R.id.setting_donate:
+	    		break;
+	    	case R.id.setting_about:
+	    		break;
+	    }
+    }
 
 }

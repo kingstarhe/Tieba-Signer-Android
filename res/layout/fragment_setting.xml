@@ -1,76 +1,147 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:splitMotionEvents="false"
-    android:paddingTop="@dimen/activity_vertical_margin" >
+    android:layout_height="match_parent" >
 
-    <RelativeLayout
-        android:id="@+id/setting_userinfo"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="@drawable/list_item"
-        android:padding="10dp" >
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:splitMotionEvents="false" >
 
-        <com.zulwi.tiebasigner.view.CircularImage
-            android:id="@+id/setting_avatar"
-            android:layout_width="50dp"
-            android:layout_height="50dp" />
+        <RelativeLayout
+            android:id="@+id/setting_userinfo"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@drawable/list_item"
+            android:padding="10dp" >
+
+            <com.zulwi.tiebasigner.view.CircularImage
+                android:id="@+id/setting_avatar"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+
+            <TextView
+                android:id="@+id/setting_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_toRightOf="@id/setting_avatar"
+                android:gravity="center_vertical|left"
+                android:text="@string/user_info"
+                android:textColor="@drawable/site_list_text"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/setting_email"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_alignLeft="@id/setting_username"
+                android:layout_below="@id/setting_username"
+                android:gravity="center_vertical|left"
+                android:text="@string/email"
+                android:textColor="@drawable/site_list_text"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/setting_siteinfo"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@drawable/list_item_bottom"
+            android:padding="10dp" >
+
+            <TextView
+                android:id="@+id/setting_sitename"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:gravity="center_vertical|left"
+                android:text="@string/site_name"
+                android:textColor="@drawable/site_list_text"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/setting_siteurl"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_alignLeft="@id/setting_sitename"
+                android:layout_below="@id/setting_sitename"
+                android:gravity="center_vertical|left"
+                android:text="@string/site_domain"
+                android:textColor="@drawable/site_list_text"
+                android:textSize="12sp" />
+        </RelativeLayout>
 
         <TextView
-            android:id="@+id/setting_username"
-            android:layout_width="wrap_content"
-            android:layout_toRightOf="@id/setting_avatar"
+            android:id="@+id/setting_remind"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:gravity="center_vertical|left"
-            android:text="@string/user_info"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/list_item"
+            android:paddingBottom="15dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="15dp"
+            android:text="@string/sign_remind"
             android:textColor="@drawable/site_list_text"
-            android:textSize="18sp" />
-        <TextView
-            android:id="@+id/setting_email"
-            android:layout_width="wrap_content"
-            android:layout_alignLeft="@id/setting_username"
-            android:layout_below="@id/setting_username"
-            android:layout_height="fill_parent"
-            android:gravity="center_vertical|left"
-            android:text="@string/email"
-            android:textColor="@drawable/site_list_text"
-            android:textSize="12sp" />
-        
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/setting_siteinfo"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="@drawable/list_item"
-        android:padding="10dp" >
+            android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/setting_sitename"
-            android:layout_width="wrap_content"
+            android:id="@+id/setting_clear_cache"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:gravity="center_vertical|left"
-            android:text="@string/site_name"
+            android:background="@drawable/list_item_bottom"
+            android:paddingBottom="15dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="15dp"
+            android:text="@string/clear_cache"
             android:textColor="@drawable/site_list_text"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/setting_siteurl"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_alignLeft="@id/setting_sitename"
-            android:layout_below="@id/setting_sitename"
-            android:gravity="center_vertical|left"
-            android:text="@string/site_domain"
+            android:id="@+id/setting_faq"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/list_item_bottom"
+            android:paddingBottom="15dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="15dp"
+            android:text="@string/faq"
             android:textColor="@drawable/site_list_text"
-            android:textSize="12sp" />
-    </RelativeLayout>
+            android:textSize="16sp" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/setting_donate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/list_item_bottom"
+            android:paddingBottom="15dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="15dp"
+            android:text="@string/donate"
+            android:textColor="@drawable/site_list_text"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/setting_about"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/list_item_bottom"
+            android:paddingBottom="15dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="15dp"
+            android:text="@string/about"
+            android:textColor="@drawable/site_list_text"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</ScrollView>

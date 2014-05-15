@@ -38,7 +38,12 @@
     <string name="loading_tiebas">共有 0 个贴吧</string>
     <string name="loading_follows">共关注 0 人</string>
     <string name="loading_fans">共有 0 人关注我</string>
-    <string name="one_key_sign_tips">使用手机网络签到以减缓站点压力，可能会耗费手机流量</string>
     <string name="one_key_sign_title">一键签到</string>
+    <string name="one_key_sign_tips">使用手机网络签到以减缓站点压力，可能会耗费手机流量</string>
+    <string name="sign_remind">签到提醒</string>
+    <string name="clear_cache">清除缓存</string>
+    <string name="faq">帮助</string>
+    <string name="donate">赞助</string>
+    <string name="about">关于</string>
 
 </resources>
