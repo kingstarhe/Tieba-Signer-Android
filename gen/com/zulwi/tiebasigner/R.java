@@ -1163,12 +1163,12 @@ containing a value of this type.
         public static final int action_mode_close_button=0x7f050024;
         public static final int action_settings=0x7f050076;
         public static final int activity_chooser_view_content=0x7f050025;
-        public static final int addSite=0x7f05003f;
-        public static final int addSiteName=0x7f05003d;
-        public static final int addSiteUrl=0x7f05003e;
+        public static final int addSite=0x7f050044;
+        public static final int addSiteName=0x7f050042;
+        public static final int addSiteUrl=0x7f050043;
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
-        public static final int bottom_bar=0x7f050045;
+        public static final int bottom_bar=0x7f05004a;
         public static final int checkbox=0x7f05002d;
         public static final int collapseActionView=0x7f05000d;
         public static final int default_activity_button=0x7f050028;
@@ -1183,7 +1183,7 @@ containing a value of this type.
         public static final int end=0x7f050013;
         public static final int expand_activities_button=0x7f050026;
         public static final int expanded_menu=0x7f05002c;
-        public static final int fragment_container=0x7f050044;
+        public static final int fragment_container=0x7f050049;
         public static final int home=0x7f050014;
         public static final int homeAsUp=0x7f050005;
         public static final int icon=0x7f05002a;
@@ -1193,16 +1193,16 @@ containing a value of this type.
         public static final int level=0x7f050071;
         public static final int listMode=0x7f050001;
         public static final int list_item=0x7f050029;
-        public static final int login=0x7f050043;
+        public static final int login=0x7f050048;
         public static final int middle=0x7f050012;
-        public static final int nameEditor=0x7f05004b;
+        public static final int nameEditor=0x7f050050;
         public static final int never=0x7f050009;
         public static final int none=0x7f050010;
         public static final int normal=0x7f050000;
         public static final int one_key_sign_tips=0x7f05005d;
         public static final int one_key_sign_title=0x7f05005c;
-        public static final int password=0x7f050042;
-        public static final int plugin_button=0x7f050048;
+        public static final int password=0x7f050047;
+        public static final int plugin_button=0x7f05004d;
         public static final int progress_circular=0x7f050018;
         public static final int progress_horizontal=0x7f050019;
         public static final int radio=0x7f05002f;
@@ -1216,19 +1216,19 @@ containing a value of this type.
         public static final int search_plate=0x7f050036;
         public static final int search_src_text=0x7f050037;
         public static final int search_voice_btn=0x7f05003b;
-        public static final int setting_about=0x7f050059;
-        public static final int setting_avatar=0x7f05004f;
-        public static final int setting_button=0x7f050049;
-        public static final int setting_clear_cache=0x7f050056;
-        public static final int setting_donate=0x7f050058;
-        public static final int setting_email=0x7f050051;
-        public static final int setting_faq=0x7f050057;
-        public static final int setting_remind=0x7f050055;
-        public static final int setting_siteinfo=0x7f050052;
-        public static final int setting_sitename=0x7f050053;
-        public static final int setting_siteurl=0x7f050054;
-        public static final int setting_userinfo=0x7f05004e;
-        public static final int setting_username=0x7f050050;
+        public static final int setting_about=0x7f050040;
+        public static final int setting_avatar=0x7f050054;
+        public static final int setting_button=0x7f05004e;
+        public static final int setting_clear_cache=0x7f05003d;
+        public static final int setting_donate=0x7f05003f;
+        public static final int setting_email=0x7f050056;
+        public static final int setting_faq=0x7f05003e;
+        public static final int setting_remind=0x7f05003c;
+        public static final int setting_siteinfo=0x7f050057;
+        public static final int setting_sitename=0x7f050058;
+        public static final int setting_siteurl=0x7f050059;
+        public static final int setting_userinfo=0x7f050053;
+        public static final int setting_username=0x7f050055;
         public static final int shortcut=0x7f05002e;
         public static final int showCustom=0x7f050007;
         public static final int showHome=0x7f050004;
@@ -1237,11 +1237,11 @@ containing a value of this type.
         public static final int sign_log_pager=0x7f05005a;
         public static final int sign_log_sign=0x7f05005b;
         public static final int sign_log_status=0x7f05005e;
-        public static final int signlog_button=0x7f050047;
-        public static final int site=0x7f050040;
-        public static final int siteList=0x7f05003c;
-        public static final int siteName=0x7f05004a;
-        public static final int siteUrl=0x7f05004c;
+        public static final int signlog_button=0x7f05004c;
+        public static final int site=0x7f050045;
+        public static final int siteList=0x7f050041;
+        public static final int siteName=0x7f05004f;
+        public static final int siteUrl=0x7f050051;
         public static final int split_action_bar=0x7f05001e;
         public static final int status=0x7f05006e;
         public static final int submit_area=0x7f050039;
@@ -1253,11 +1253,11 @@ containing a value of this type.
         public static final int top_action_bar=0x7f050020;
         public static final int up=0x7f050021;
         public static final int url=0x7f05006f;
-        public static final int urlEditor=0x7f05004d;
+        public static final int urlEditor=0x7f050052;
         public static final int useLogo=0x7f050003;
         public static final int userinfo_avatar=0x7f050061;
         public static final int userinfo_avatar_bg=0x7f050060;
-        public static final int userinfo_button=0x7f050046;
+        public static final int userinfo_button=0x7f05004b;
         public static final int userinfo_email=0x7f050063;
         public static final int userinfo_fans=0x7f05006c;
         public static final int userinfo_fans_tips=0x7f05006b;
@@ -1269,7 +1269,7 @@ containing a value of this type.
         public static final int userinfo_tieba_list=0x7f050068;
         public static final int userinfo_tieba_tips=0x7f050067;
         public static final int userinfo_tiebaage=0x7f050066;
-        public static final int username=0x7f050041;
+        public static final int username=0x7f050046;
         public static final int withText=0x7f05000c;
     }
     public static final class integer {
@@ -1322,24 +1322,25 @@ containing a value of this type.
         public static final int abc_search_dropdown_item_icons_2line=0x7f030015;
         public static final int abc_search_view=0x7f030016;
         public static final int abc_simple_decor=0x7f030017;
-        public static final int activity_edit_sites=0x7f030018;
-        public static final int activity_login=0x7f030019;
-        public static final int activity_main=0x7f03001a;
-        public static final int activity_splash=0x7f03001b;
-        public static final int dialog_edit_sites=0x7f03001c;
-        public static final int fragment_plugin=0x7f03001d;
-        public static final int fragment_setting=0x7f03001e;
-        public static final int fragment_signlog=0x7f03001f;
-        public static final int fragment_signlog_sign=0x7f030020;
-        public static final int fragment_signlog_status=0x7f030021;
-        public static final int fragment_userinfo=0x7f030022;
-        public static final int list_nav=0x7f030023;
-        public static final int list_sign_log=0x7f030024;
-        public static final int list_site=0x7f030025;
-        public static final int list_tag=0x7f030026;
-        public static final int list_tieba=0x7f030027;
-        public static final int loading_dialog=0x7f030028;
-        public static final int support_simple_spinner_dropdown_item=0x7f030029;
+        public static final int activity_about=0x7f030018;
+        public static final int activity_edit_sites=0x7f030019;
+        public static final int activity_login=0x7f03001a;
+        public static final int activity_main=0x7f03001b;
+        public static final int activity_splash=0x7f03001c;
+        public static final int dialog_edit_sites=0x7f03001d;
+        public static final int fragment_plugin=0x7f03001e;
+        public static final int fragment_setting=0x7f03001f;
+        public static final int fragment_signlog=0x7f030020;
+        public static final int fragment_signlog_sign=0x7f030021;
+        public static final int fragment_signlog_status=0x7f030022;
+        public static final int fragment_userinfo=0x7f030023;
+        public static final int list_nav=0x7f030024;
+        public static final int list_sign_log=0x7f030025;
+        public static final int list_site=0x7f030026;
+        public static final int list_tag=0x7f030027;
+        public static final int list_tieba=0x7f030028;
+        public static final int loading_dialog=0x7f030029;
+        public static final int support_simple_spinner_dropdown_item=0x7f03002a;
     }
     public static final class menu {
         public static final int edit_sites=0x7f0c0000;
@@ -1437,17 +1438,21 @@ containing a value of this type.
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
 
 
+
+
+
     
 
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
 
-
         
 
         Base application theme for API 11+. This theme completely replaces
         AppBaseTheme from res/values/styles.xml on API 11+ devices.
+
+
 
     
  API 11 theme customizations can go here. 
@@ -1455,6 +1460,9 @@ containing a value of this type.
         Base application theme for API 14+. This theme completely replaces
         AppBaseTheme from BOTH res/values/styles.xml and
         res/values-v11/styles.xml on API 14+ devices.
+
+
+
 
 
     
@@ -1465,6 +1473,17 @@ containing a value of this type.
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f0b008c;
+        /**  general styles for the action bar 
+ general styles for the action bar 
+ general styles for the action bar 
+         */
+        public static final int BlueActionBar=0x7f0b008f;
+        public static final int BlueActionBarTheme=0x7f0b008e;
+        /**  action bar tab text 
+ action bar tab text 
+ action bar tab text 
+         */
+        public static final int TabTextStyle=0x7f0b0091;
         /**  Mimic text appearance in select_dialog_item.xml 
          */
         public static final int TextAppearance_AppCompat_Base_CompactMenu_Dialog=0x7f0b0063;
@@ -1573,6 +1592,11 @@ containing a value of this type.
         /**  Base platform-dependent theme providing a light-themed activity. 
          */
         public static final int Theme_Base_Light=0x7f0b007f;
+        /**  action bar title text 
+ action bar title text 
+ action bar title text 
+         */
+        public static final int TitleTextStyle=0x7f0b0090;
         /**  Styles in here can be extended for customisation in your application. Each utilises
          one of the Base styles. If Holo themes are available on the current platform version
          they will be used instead of the compat styles. 

@@ -39,7 +39,6 @@ public class MainActivity extends ActionBarActivity {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayUseLogoEnabled(false);
 		actionBar.setDisplayShowHomeEnabled(false);
-		actionBar.setBackgroundDrawable(getResources().getDrawable(R.color.zulwi_blue));
 		setContentView(R.layout.activity_main);
 		accountBean = (AccountBean) getIntent().getSerializableExtra("accountBean");
 		siteBean = (SiteBean) getIntent().getSerializableExtra("siteBean");

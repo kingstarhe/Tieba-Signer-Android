@@ -3,10 +3,46 @@
     <!--
         Base application theme for API 14+. This theme completely replaces
         AppBaseTheme from BOTH res/values/styles.xml and
-        res/values-v11/styles.xml on API 14+ devices.
+        res/values-v11/styles.xml on API 14+ devices.
     -->
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- API 14 theme customizations can go here. -->
+    </style>
+
+    <style name="BlueActionBarTheme" parent="@style/Theme.AppCompat.Light">
+        <item name="android:actionBarStyle">@style/BlueActionBar</item>
+        <item name="android:actionBarTabTextStyle">@style/TabTextStyle</item>
+        <item name="android:actionMenuTextColor">@android:color/black</item>
+
+        <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/BlueActionBar</item>
+        <item name="actionBarTabTextStyle">@style/TabTextStyle</item>
+        <item name="actionMenuTextColor">@android:color/black</item>
+    </style>
+
+    <!-- general styles for the action bar -->
+    <style name="BlueActionBar" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="android:titleTextStyle">@style/TitleTextStyle</item>
+        <item name="android:background">@color/zulwi_blue</item>
+        <item name="android:backgroundStacked">@color/zulwi_blue</item>
+        <item name="android:backgroundSplit">@color/zulwi_blue</item>
+
+        <!-- Support library compatibility -->
+        <item name="titleTextStyle">@style/TitleTextStyle</item>
+        <item name="background">@color/zulwi_blue</item>
+        <item name="backgroundStacked">@color/zulwi_blue</item>
+        <item name="android:height">50dp</item>
+        <item name="backgroundSplit">@color/zulwi_blue</item>
+    </style>
+
+    <!-- action bar title text -->
+    <style name="TitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <!-- action bar tab text -->
+    <style name="TabTextStyle" parent="@style/Widget.AppCompat.ActionBar.TabText">
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
 </resources>

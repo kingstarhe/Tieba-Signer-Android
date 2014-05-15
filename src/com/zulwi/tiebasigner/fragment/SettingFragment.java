@@ -3,6 +3,7 @@ package com.zulwi.tiebasigner.fragment;
 import com.zulwi.tiebasigner.R;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,10 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.zulwi.tiebasigner.activity.AboutActivity;
 import com.zulwi.tiebasigner.activity.MainActivity;
 import com.zulwi.tiebasigner.view.CircularImage;
 
-public class SettingFragment extends Fragment implements View.OnClickListener{
+public class SettingFragment extends Fragment implements View.OnClickListener {
 	private MainActivity activity;
 	private TextView usernameTextView;
 	private TextView emailTextView;
@@ -89,21 +91,23 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 	}
 
 	@Override
-    public void onClick(View v) {
-	    switch(v.getId()){
-	    	case R.id.setting_userinfo:
-	    		break;
-	    	case R.id.setting_siteinfo:
-	    		break;
-	    	case R.id.setting_remind:
-	    		break;
-	    	case R.id.setting_faq:
-	    		break;
-	    	case R.id.setting_donate:
-	    		break;
-	    	case R.id.setting_about:
-	    		break;
-	    }
-    }
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.setting_userinfo:
+				break;
+			case R.id.setting_siteinfo:
+				break;
+			case R.id.setting_remind:
+				break;
+			case R.id.setting_faq:
+				break;
+			case R.id.setting_donate:
+				break;
+			case R.id.setting_about:
+				Intent intent = new Intent(activity, AboutActivity.class);
+				startActivity(intent);
+				break;
+		}
+	}
 
 }
