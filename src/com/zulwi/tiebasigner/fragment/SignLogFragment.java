@@ -36,8 +36,8 @@ public class SignLogFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_signlog, container, false);
 		fm = getChildFragmentManager();
-		fragmentList.add(new FragmentBean("Ç©µ½¼ÇÂ¼", new SignLogStatusFragment()));
-		fragmentList.add(new FragmentBean("Ò»¼üÇ©µ½", new SignLogSignFragment()));
+		fragmentList.add(new FragmentBean("ç­¾åˆ°è®°å½•", new SignLogStatusFragment()));
+		fragmentList.add(new FragmentBean("ä¸€é”®ç­¾åˆ°", new SignLogSignFragment()));
 		sectionsPagerAdapter = new SectionsPagerAdapter(fm, fragmentList);
 		viewPager = (ViewPager) view.findViewById(R.id.sign_log_pager);
 		viewPager.setAdapter(sectionsPagerAdapter);

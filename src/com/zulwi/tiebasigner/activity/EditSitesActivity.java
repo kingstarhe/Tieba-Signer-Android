@@ -56,26 +56,26 @@ public class EditSitesActivity extends ActionBarActivity {
 			if (msg.what != InternetUtil.SUCCESSED && msg.arg1 == InternetUtil.EDIT_SITE) EditDialog.show();
 			switch (msg.what) {
 				case InternetUtil.NETWORK_FAIL:
-					tips = "ÍøÂç´íÎó";
+					tips = "ç½‘ç»œé”™è¯¯";
 					break;
 				case InternetUtil.STATUS_ERROR:
 					StatusCodeException e = (StatusCodeException) msg.obj;
-					tips = e.getMessage() + String.valueOf(e.getCode()) + "´íÎó";
+					tips = e.getMessage() + String.valueOf(e.getCode()) + "é”™è¯¯";
 					break;
 				case InternetUtil.PARSE_ERROR:
-					tips = "JSON½âÎö´íÎó£¬ÇëÈ·ÈÏ¸ÃÕ¾µãÊÇ·ñÖ§³Ö¿Í»§¶Ë";
+					tips = "JSONè§£æé”™è¯¯ï¼Œè¯·ç¡®è®¤è¯¥ç«™ç‚¹æ˜¯å¦æ”¯æŒå®¢æˆ·ç«¯";
 					break;
 				case InternetUtil.SUCCESSED:
 					if (msg.arg1 == InternetUtil.ADD_SITE) {
 						SiteBean addingSite = (SiteBean) msg.obj;
 						boolean successed = siteListAdapter.addItem(addingSite.name, addingSite.url);
 						if (successed) hasChanged = true;
-						tips = successed ? "Ìí¼Ó³É¹¦" : "Ìí¼ÓÊ§°Ü";
+						tips = successed ? "æ·»åŠ æˆåŠŸ" : "æ·»åŠ å¤±è´¥";
 					} else if (msg.arg1 == InternetUtil.EDIT_SITE) {
 						SiteBean editingSite = (SiteBean) msg.obj;
 						boolean successed = siteListAdapter.updateItem(editingSite.position, editingSite.name, editingSite.url);
 						if (successed) hasChanged = true;
-						tips = successed ? "±à¼­³É¹¦" : "±à¼­Ê§°Ü";
+						tips = successed ? "ç¼–è¾‘æˆåŠŸ" : "ç¼–è¾‘å¤±è´¥";
 					}
 					break;
 				default:
@@ -101,7 +101,7 @@ public class EditSitesActivity extends ActionBarActivity {
 		siteListAdapter = new SiteListAdapter(this, siteMapList);
 		siteList.setAdapter(siteListAdapter);
 		registerForContextMenu(siteList);
-		progressDialog = DialogUtil.createLoadingDialog(this, "ÕıÔÚ¼ì²éÕ¾µã,ÇëÉÔºó...", false);
+		progressDialog = DialogUtil.createLoadingDialog(this, "æ­£åœ¨æ£€æŸ¥ç«™ç‚¹,è¯·ç¨å...", false);
 	}
 
 	@Override
@@ -114,7 +114,7 @@ public class EditSitesActivity extends ActionBarActivity {
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		getMenuInflater().inflate(R.menu.sites_context, menu);
-		menu.setHeaderTitle("²Ù×÷");
+		menu.setHeaderTitle("æ“ä½œ");
 	}
 
 	@Override
@@ -127,18 +127,18 @@ public class EditSitesActivity extends ActionBarActivity {
 				break;
 			case R.id.del_site:
 				AlertDialog.Builder confirm = new AlertDialog.Builder(this);
-				confirm.setTitle("È·¶¨ÒªÉ¾³ı¸ÃÕ¾µãÂğ£¿¸ÃÕ¾µãÏÂµÄËùÓĞÕËºÅÊı¾İ½«¾ù±»É¾³ı");
-				confirm.setPositiveButton("È·¶¨", new DialogInterface.OnClickListener() {
+				confirm.setTitle("ç¡®å®šè¦åˆ é™¤è¯¥ç«™ç‚¹å—ï¼Ÿè¯¥ç«™ç‚¹ä¸‹çš„æ‰€æœ‰è´¦å·æ•°æ®å°†å‡è¢«åˆ é™¤");
+				confirm.setPositiveButton("ç¡®å®š", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						int del = siteListAdapter.remove(menuInfo.position);
 						if (del != 0) {
 							hasChanged = true;
 						} else {
-							Toast.makeText(EditSitesActivity.this, "É¾³ıÊ§°Ü£¡", Toast.LENGTH_SHORT).show();
+							Toast.makeText(EditSitesActivity.this, "åˆ é™¤å¤±è´¥ï¼", Toast.LENGTH_SHORT).show();
 						}
 					}
-				}).setNegativeButton("È¡Ïû", new DialogInterface.OnClickListener() {
+				}).setNegativeButton("å–æ¶ˆ", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
@@ -157,19 +157,19 @@ public class EditSitesActivity extends ActionBarActivity {
 		final EditText urlEditor = (EditText) layout.findViewById(R.id.urlEditor);
 		siteEditor.setText(site.name);
 		urlEditor.setText(site.url);
-		EditDialog = builder.setTitle("±à¼­Õ¾µã").setView(layout).setPositiveButton("È·¶¨", new DialogInterface.OnClickListener() {
+		EditDialog = builder.setTitle("ç¼–è¾‘ç«™ç‚¹").setView(layout).setPositiveButton("ç¡®å®š", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				final String name = siteEditor.getText().toString().trim();
 				final String url = formatUrl(urlEditor.getText().toString().trim());
 				if (name.equals("") || url.equals("http://")) {
-					Toast.makeText(EditSitesActivity.this, "Õ¾µãÃû³Æ»òÕ¾µãÓòÃû²»ÄÜÎª¿Õ£¡", Toast.LENGTH_SHORT).show();
+					Toast.makeText(EditSitesActivity.this, "ç«™ç‚¹åç§°æˆ–ç«™ç‚¹åŸŸåä¸èƒ½ä¸ºç©ºï¼", Toast.LENGTH_SHORT).show();
 					return;
 				}
 				progressDialog.show();
 				new Thread(new EditSiteThread(position, name, url)).start();
 			}
-		}).setNegativeButton("È¡Ïû", new DialogInterface.OnClickListener() {
+		}).setNegativeButton("å–æ¶ˆ", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
@@ -182,15 +182,15 @@ public class EditSitesActivity extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.del_list) {
 			AlertDialog.Builder confirm = new AlertDialog.Builder(this);
-			confirm.setTitle("È·¶¨ÒªÇå¿ÕÕ¾µãÂğ£¿ËùÓĞÕËºÅÊı¾İ½«¾ù±»É¾³ı");
-			confirm.setPositiveButton("È·¶¨", new DialogInterface.OnClickListener() {
+			confirm.setTitle("ç¡®å®šè¦æ¸…ç©ºç«™ç‚¹å—ï¼Ÿæ‰€æœ‰è´¦å·æ•°æ®å°†å‡è¢«åˆ é™¤");
+			confirm.setPositiveButton("ç¡®å®š", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					siteListAdapter.removeAll();
 					hasChanged = true;
-					Toast.makeText(EditSitesActivity.this, "ÒÑ¾­È«²¿Çå¿Õ£¡", Toast.LENGTH_SHORT).show();
+					Toast.makeText(EditSitesActivity.this, "å·²ç»å…¨éƒ¨æ¸…ç©ºï¼", Toast.LENGTH_SHORT).show();
 				}
-			}).setNegativeButton("È¡Ïû", new DialogInterface.OnClickListener() {
+			}).setNegativeButton("å–æ¶ˆ", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.dismiss();
@@ -210,7 +210,7 @@ public class EditSitesActivity extends ActionBarActivity {
 		final String name = nameTextView.getText().toString().trim();
 		final String url = formatUrl(urlTextView.getText().toString().trim());
 		if (name.equals("") || url.equals("http://")) {
-			Toast.makeText(EditSitesActivity.this, "Õ¾µãÃû³Æ»òÕ¾µãÓòÃû²»ÄÜÎª¿Õ£¡", Toast.LENGTH_SHORT).show();
+			Toast.makeText(EditSitesActivity.this, "ç«™ç‚¹åç§°æˆ–ç«™ç‚¹åŸŸåä¸èƒ½ä¸ºç©ºï¼", Toast.LENGTH_SHORT).show();
 			return;
 		}
 		progressDialog.show();
@@ -221,17 +221,17 @@ public class EditSitesActivity extends ActionBarActivity {
 	public void onBackPressed() {
 		if (siteList.getCount() == 0) {
 			AlertDialog.Builder confirm = new AlertDialog.Builder(this);
-			confirm.setTitle("ÄúÉĞÎ´Ìí¼ÓÕ¾µã£¬ÎŞ·¨·µ»ØµÇÂ¼½çÃæ£¬È·¶¨ÍË³ö¿Í»§¶ËÂğ£¿");
-			confirm.setPositiveButton("È·¶¨", new DialogInterface.OnClickListener() {
+			confirm.setTitle("æ‚¨å°šæœªæ·»åŠ ç«™ç‚¹ï¼Œæ— æ³•è¿”å›ç™»å½•ç•Œé¢ï¼Œç¡®å®šé€€å‡ºå®¢æˆ·ç«¯å—ï¼Ÿ");
+			confirm.setPositiveButton("ç¡®å®š", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					Intent intent = new Intent(Intent.ACTION_MAIN);  
-                    intent.addCategory(Intent.CATEGORY_HOME);  
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);  
-                    startActivity(intent);  
-                    android.os.Process.killProcess(android.os.Process.myPid());
+					Intent intent = new Intent(Intent.ACTION_MAIN);
+					intent.addCategory(Intent.CATEGORY_HOME);
+					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					startActivity(intent);
+					android.os.Process.killProcess(android.os.Process.myPid());
 				}
-			}).setNegativeButton("È¡Ïû", new DialogInterface.OnClickListener() {
+			}).setNegativeButton("å–æ¶ˆ", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.dismiss();
@@ -272,13 +272,13 @@ public class EditSitesActivity extends ActionBarActivity {
 				if (position == -1) {
 					int countName = sitesDBHelper.rawQuery("select * from sites where name=\'" + name + "\'", null).getCount();
 					int countUrl = sitesDBHelper.rawQuery("select * from sites where url=\'" + url + "\'", null).getCount();
-					if (countName != 0 || countUrl != 0) throw new Exception("Ìí¼ÓÊ§°Ü£¡Çë¼ì²éÊÇ·ñÒÑÓĞÖØ¸´Ãû³Æ»òURL");
+					if (countName != 0 || countUrl != 0) throw new Exception("æ·»åŠ å¤±è´¥ï¼è¯·æ£€æŸ¥æ˜¯å¦å·²æœ‰é‡å¤åç§°æˆ–URL");
 				}
 				InternetUtil site = new InternetUtil(EditSitesActivity.this, url + "/plugin.php?id=zw_client_api&a=api_info");
 				String result = site.get();
 				JSONObject jsonObject = new JSONObject(result);
 				int status = jsonObject.getInt("status");
-				if (status == -1) throw new ClientProtocolException("×´Ì¬Âë´íÎó£¡");
+				if (status == -1) throw new ClientProtocolException("çŠ¶æ€ç é”™è¯¯ï¼");
 				handler.obtainMessage(InternetUtil.SUCCESSED, position == -1 ? InternetUtil.ADD_SITE : InternetUtil.EDIT_SITE, 0, position == -1 ? new SiteBean(name, url) : new SiteBean(name, url, position)).sendToTarget();
 			} catch (JSONException e) {
 				handler.obtainMessage(InternetUtil.PARSE_ERROR, position == -1 ? InternetUtil.ADD_SITE : InternetUtil.EDIT_SITE, 0, e).sendToTarget();

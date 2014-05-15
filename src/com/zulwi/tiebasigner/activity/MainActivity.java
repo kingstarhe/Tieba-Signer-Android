@@ -42,10 +42,10 @@ public class MainActivity extends FragmentActivity {
 		setContentView(R.layout.activity_main);
 		accountBean = (AccountBean) getIntent().getSerializableExtra("accountBean");
 		siteBean = (SiteBean) getIntent().getSerializableExtra("siteBean");
-		fragmentList.add(new FragmentBean("账号", new UserInfoFragment()));
-		fragmentList.add(new FragmentBean("记录", new SignLogFragment()));
-		fragmentList.add(new FragmentBean("插件", new PluginFragment()));
-		fragmentList.add(new FragmentBean("设置", new SettingFragment()));
+		fragmentList.add(new FragmentBean("璐﹀彿", new UserInfoFragment()));
+		fragmentList.add(new FragmentBean("璁板綍", new SignLogFragment()));
+		fragmentList.add(new FragmentBean("鎻掍欢", new PluginFragment()));
+		fragmentList.add(new FragmentBean("璁剧疆", new SettingFragment()));
 		fm = getSupportFragmentManager();
 		titleTextView = (TextView) findViewById(R.id.main_title);
 		bottonBarButton.add((Button) findViewById(R.id.userinfo_button));
@@ -71,8 +71,8 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	public void onBackPressed() {
 		AlertDialog.Builder confirm = new AlertDialog.Builder(this);
-		confirm.setTitle("确定要退出客户端吗？");
-		confirm.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+		confirm.setTitle("纭畾瑕侀��鍑哄鎴风鍚楋紵");
+		confirm.setPositiveButton("纭畾", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -81,7 +81,7 @@ public class MainActivity extends FragmentActivity {
 				startActivity(intent);
 				android.os.Process.killProcess(android.os.Process.myPid());
 			}
-		}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+		}).setNegativeButton("鍙栨秷", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();

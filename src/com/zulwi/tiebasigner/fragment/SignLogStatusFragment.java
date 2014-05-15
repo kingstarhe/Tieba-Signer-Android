@@ -25,10 +25,10 @@ public class SignLogStatusFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_signlog_status, container, false);
 		signLogStatusTextView = (TextView) view.findViewById(R.id.sign_log_status);
-		signLogStatusTextView.setText("×Ü¼Æ 79 ¸öÌù°É£¬ÆäÖĞ 1 ¸öÌù°ÉÇ©µ½Ê§°Ü");
+		signLogStatusTextView.setText("æ€»è®¡ 79 ä¸ªè´´å§ï¼Œå…¶ä¸­ 1 ä¸ªè´´å§ç­¾åˆ°å¤±è´¥");
 		signLogListView = (ListView) view.findViewById(R.id.sign_log_list);
 		for (int i = 1; i < 20; i++) {
-			signLogList.add(new TiebaBean(i, "²âÊÔÌù°É" + i, 8));
+			signLogList.add(new TiebaBean(i, "æµ‹è¯•è´´å§" + i, 8));
 		}
 		signLogAdapter = new SignLogListAdapter(getActivity(), signLogList);
 		signLogListView.setAdapter(signLogAdapter);

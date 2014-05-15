@@ -55,18 +55,18 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 			String tips = null;
 			switch (msg.what) {
 				case InternetUtil.NETWORK_FAIL:
-					tips = "ÍøÂç´íÎó";
+					tips = "ç½‘ç»œé”™è¯¯";
 					break;
 				case InternetUtil.STATUS_ERROR:
 					StatusCodeException e = (StatusCodeException) msg.obj;
-					tips = e.getMessage() + String.valueOf(e.getCode()) + "´íÎó";
+					tips = e.getMessage() + String.valueOf(e.getCode()) + "é”™è¯¯";
 					break;
 				case InternetUtil.PARSE_ERROR:
-					tips = "JSON½âÎö´íÎó£¬ÇëÈ·ÈÏ¸ÃÕ¾µãÊÇ·ñÖ§³Ö¿Í»§¶Ë";
+					tips = "JSONè§£æé”™è¯¯ï¼Œè¯·ç¡®è®¤è¯¥ç«™ç‚¹æ˜¯å¦æ”¯æŒå®¢æˆ·ç«¯";
 					break;
 				case InternetUtil.SUCCESSED:
 					AccountBean accountBean = (AccountBean) msg.obj;
-					tips = "»¶Ó­»ØÀ´£¬" + accountBean.username + "£¡";
+					tips = "æ¬¢è¿å›æ¥ï¼Œ" + accountBean.username + "ï¼";
 					BaseDBHelper dbHelper = new BaseDBHelper(LoginActivity.this);
 					dbHelper.execSQL("delete from accounts where username=\'" + accountBean.username + "\'");
 					dbHelper.execSQL("update accounts set current=0 where current=1");
@@ -85,7 +85,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 						dbHelper.close();
 						startMainActivity(accountBean, siteBean);
 					} else {
-						tips = "Õ¾µãĞÅÏ¢´íÎó£¡";
+						tips = "ç«™ç‚¹ä¿¡æ¯é”™è¯¯ï¼";
 					}
 					break;
 				default:
@@ -105,12 +105,12 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 		setContentView(R.layout.activity_login);
 		usernameEditor = (EditText) findViewById(R.id.username);
 		passwordEditor = (EditText) findViewById(R.id.password);
-		progressDialog = DialogUtil.createLoadingDialog(this, "ÕıÔÚµÇÂ¼,ÇëÉÔºó...", false);
+		progressDialog = DialogUtil.createLoadingDialog(this, "æ­£åœ¨ç™»å½•,è¯·ç¨å...", false);
 		flushSiteList();
 	}
 
 	public void flushSiteList() {
-		// ²éÑ¯ÒÑÓĞÁĞ±í²¢±£´æµ½ siteMapList ÖĞ
+		// æŸ¥è¯¢å·²æœ‰åˆ—è¡¨å¹¶ä¿å­˜åˆ° siteMapList ä¸­
 		siteMapList = new ArrayList<SiteBean>();
 		Cursor cursor = sitesDBHelper.query("sites");
 		if (cursor.getCount() > 0) {
@@ -118,7 +118,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 				siteMapList.add(new SiteBean(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2)));
 			}
 		}
-		// ´´½¨ Spinner ËùĞèÊı¾İ
+		// åˆ›å»º Spinner æ‰€éœ€æ•°æ®
 		int size = siteMapList.size();
 		siteNameList = new String[size + 1];
 		siteUrlList = new String[size];
@@ -126,15 +126,15 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 			siteNameList[i] = siteMapList.get(i).name;
 			siteUrlList[i] = siteMapList.get(i).url;
 		}
-		siteNameList[size] = "¹ÜÀíÕ¾µã";
+		siteNameList[size] = "ç®¡ç†ç«™ç‚¹";
 		siteSpinner = (Spinner) findViewById(R.id.site);
-		// ÎªSpinner Ìí¼ÓÊÊÅäÆ÷ºÍÑ¡ÔñÊÂ¼ş
+		// ä¸ºSpinner æ·»åŠ é€‚é…å™¨å’Œé€‰æ‹©äº‹ä»¶
 		ArrayAdapter<String> siteSpinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, siteNameList);
 		siteSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		siteSpinner.setAdapter(siteSpinnerAdapter);
 		siteSpinner.setOnItemSelectedListener(this);
 		if (size == 0) {
-			Toast.makeText(this, "ÇëÏÈÌí¼Ó¿É¹©µÇÂ¼µÄÖúÊÖÕ¾µã", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "è¯·å…ˆæ·»åŠ å¯ä¾›ç™»å½•çš„åŠ©æ‰‹ç«™ç‚¹", Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -187,8 +187,8 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 	@Override
 	public void onBackPressed() {
 		AlertDialog.Builder confirm = new AlertDialog.Builder(this);
-		confirm.setTitle("È·¶¨ÒªÍË³ö¿Í»§¶ËÂğ£¿");
-		confirm.setPositiveButton("È·¶¨", new DialogInterface.OnClickListener() {
+		confirm.setTitle("ç¡®å®šè¦é€€å‡ºå®¢æˆ·ç«¯å—ï¼Ÿ");
+		confirm.setPositiveButton("ç¡®å®š", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -197,7 +197,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 				startActivity(intent);
 				android.os.Process.killProcess(android.os.Process.myPid());
 			}
-		}).setNegativeButton("È¡Ïû", new DialogInterface.OnClickListener() {
+		}).setNegativeButton("å–æ¶ˆ", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
@@ -209,7 +209,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 		String username = usernameEditor.getText().toString().trim();
 		String password = passwordEditor.getText().toString().trim();
 		if (username.equals("") || password.equals("")) {
-			Toast.makeText(this, "ÖúÊÖÕËºÅ»òÖúÊÖÃÜÂë²»ÄÜÎª¿Õ£¡", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "åŠ©æ‰‹è´¦å·æˆ–åŠ©æ‰‹å¯†ç ä¸èƒ½ä¸ºç©ºï¼", Toast.LENGTH_SHORT).show();
 			return;
 		}
 		progressDialog.show();

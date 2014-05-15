@@ -46,9 +46,9 @@ public class UserInfoFragment extends BaseFragment {
 		View view = inflater.inflate(R.layout.fragment_userinfo, container, false);
 		userAvatar = (CircularImage) view.findViewById(R.id.userinfo_avatar);
 		userAvatar.setImageResource(R.drawable.avatar);
-		tiebaList.add(new TiebaBean(1, 8, "²âÊÔÌù°É1"));
-		tiebaList.add(new TiebaBean(2, 12, "²âÊÔÌù°É2"));
-		tiebaList.add(new TiebaBean(3, 11, "²âÊÔÌù°É3"));
+		tiebaList.add(new TiebaBean(1, 8, "æµ‹è¯•è´´å§1"));
+		tiebaList.add(new TiebaBean(2, 12, "æµ‹è¯•è´´å§2"));
+		tiebaList.add(new TiebaBean(3, 11, "æµ‹è¯•è´´å§3"));
 		tiebaListAdapter = new TiebaListAdapter(getActivity(), tiebaList);
 		tiebaTable = (ListTableView) view.findViewById(R.id.userinfo_tieba_list);
 		view.findViewById(R.id.userinfo_follows).setOnClickListener(emptyOnClickListener);

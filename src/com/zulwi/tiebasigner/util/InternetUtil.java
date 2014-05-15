@@ -27,7 +27,7 @@ public class InternetUtil {
 	private HttpClient client;
 	@SuppressWarnings("unused")
 	private Context context;
-	private String result = "ÎŞ·µ»Ø";
+	private String result = "æ— è¿”å›";
 	private List<Cookie> cookies;
 	public final static int NETWORK_FAIL = 0;
 	public final static int STATUS_ERROR = 1;
@@ -53,7 +53,7 @@ public class InternetUtil {
 		int statusCode = response.getStatusLine().getStatusCode();
 		cookies = ((AbstractHttpClient) client).getCookieStore().getCookies();
 		if (statusCode != 200) {
-			throw new StatusCodeException("HTTP×´Ì¬Âë´íÎó£¡", statusCode);
+			throw new StatusCodeException("HTTPçŠ¶æ€ç é”™è¯¯ï¼", statusCode);
 		} else {
 			HttpEntity entity = response.getEntity();
 			result = EntityUtils.toString(entity, "utf-8");
@@ -72,7 +72,7 @@ public class InternetUtil {
 		int statusCode = response.getStatusLine().getStatusCode();
 		cookies = ((AbstractHttpClient) client).getCookieStore().getCookies();
 		if (statusCode != 200) {
-			throw new StatusCodeException("HTTP×´Ì¬Âë´íÎó£¡", statusCode);
+			throw new StatusCodeException("HTTPçŠ¶æ€ç é”™è¯¯ï¼", statusCode);
 		} else {
 			HttpEntity responseEntity = response.getEntity();
 			result = EntityUtils.toString(responseEntity, "utf-8");
