@@ -101,7 +101,8 @@
             <com.zulwi.tiebasigner.view.ListTableView
                 android:id="@+id/userinfo_tieba_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:splitMotionEvents="false" >
             </com.zulwi.tiebasigner.view.ListTableView>
 
             <TextView
