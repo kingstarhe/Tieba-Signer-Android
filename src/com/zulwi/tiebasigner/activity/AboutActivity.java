@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.zulwi.tiebasigner.R;
@@ -15,8 +16,9 @@ public class AboutActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		ActionBar actionBar = getSupportActionBar();
-		actionBar.setDisplayUseLogoEnabled(false);
+		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setDisplayShowHomeEnabled(false);
+		
 		setContentView(R.layout.activity_about);
 	}
 
@@ -32,5 +34,14 @@ public class AboutActivity extends ActionBarActivity {
 		intent.setAction(Intent.ACTION_VIEW);
 		intent.setData(Uri.parse("http://www.zhuwei.cc"));
 		startActivity(intent);
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				this.finish();
+			default:
+				return super.onOptionsItemSelected(item);
+		}
 	}
 }

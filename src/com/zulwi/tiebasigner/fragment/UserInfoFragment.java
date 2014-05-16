@@ -20,10 +20,12 @@ import android.widget.TextView;
 public class UserInfoFragment extends BaseFragment {
 	private CircularImage userAvatar;
 	private ListTableView tiebaTable;
-	private TextView usernameTextView;
+	@SuppressWarnings("unused")
+    private TextView usernameTextView;
 	private List<TiebaBean> tiebaList = new ArrayList<TiebaBean>();
 	private TiebaListAdapter tiebaListAdapter;
-	private MainActivity activity;
+	@SuppressWarnings("unused")
+    private MainActivity activity;
 	private View.OnClickListener emptyOnClickListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View arg0) {

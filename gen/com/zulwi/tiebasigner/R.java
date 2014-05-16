@@ -1401,7 +1401,6 @@ containing a value of this type.
         public static final int blog_url=0x7f0a003f;
         public static final int clear_cache=0x7f0a0034;
         public static final int copyright=0x7f0a000e;
-        public static final int copyright_info=0x7f0a0040;
         public static final int del_list=0x7f0a0016;
         public static final int delete=0x7f0a001b;
         public static final int donate=0x7f0a0036;
@@ -1412,6 +1411,7 @@ containing a value of this type.
         public static final int email=0x7f0a002d;
         public static final int faq=0x7f0a0035;
         public static final int female=0x7f0a0027;
+        public static final int group=0x7f0a0040;
         public static final int icon=0x7f0a0023;
         public static final int loading=0x7f0a0024;
         public static final int loading_fans=0x7f0a0030;
