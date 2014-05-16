@@ -45,7 +45,10 @@
         <activity
             android:name="com.zulwi.tiebasigner.activity.AboutActivity"
             android:label="@string/about" >
-
+        </activity>
+        <activity
+            android:name="com.zulwi.tiebasigner.activity.EditAccountActivity"
+            android:label="@string/edit_account" >
         </activity>
     </application>
 

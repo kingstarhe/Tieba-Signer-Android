@@ -54,5 +54,7 @@
     <string name="blog_url">http://jerrys.me</string>
     <string name="group">团队</string>
     <string name="studio_name">著微工作室</string>
+    <string name="edit_account">管理账号</string>
+    <string name="logout">注销当前账号</string>
 
 </resources>

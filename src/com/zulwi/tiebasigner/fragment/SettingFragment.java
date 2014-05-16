@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.zulwi.tiebasigner.activity.AboutActivity;
+import com.zulwi.tiebasigner.activity.EditAccountActivity;
 import com.zulwi.tiebasigner.activity.MainActivity;
 import com.zulwi.tiebasigner.view.CircularImage;
 
@@ -92,8 +93,10 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 
 	@Override
 	public void onClick(View v) {
+		Intent intent = null;
 		switch (v.getId()) {
 			case R.id.setting_userinfo:
+				intent = new Intent(activity, EditAccountActivity.class);
 				break;
 			case R.id.setting_siteinfo:
 				break;
@@ -104,10 +107,10 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 			case R.id.setting_donate:
 				break;
 			case R.id.setting_about:
-				Intent intent = new Intent(activity, AboutActivity.class);
-				startActivity(intent);
+				intent = new Intent(activity, AboutActivity.class);
 				break;
 		}
+		startActivity(intent);
 	}
 
 }
