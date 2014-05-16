@@ -50,7 +50,7 @@ public class AccountListAdapter extends BaseAdapter implements Serializable {
 		ViewHolder viewHolder;
 		if (convertView == null) {
 			viewHolder = new ViewHolder();
-			convertView = inflater.inflate(R.layout.list_site, null);
+			convertView = inflater.inflate(R.layout.list_account, null);
 			viewHolder.accountInfo = (TextView) convertView.findViewById(R.id.account_info);
 			viewHolder.siteInfo = (TextView) convertView.findViewById(R.id.site_info);
 			convertView.setTag(viewHolder);
