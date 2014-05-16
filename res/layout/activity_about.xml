@@ -13,71 +13,156 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:splitMotionEvents="false" >
 
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_launcher_hdpi" />
+
         <TextView
-            android:id="@+id/setting_remind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/app_name"
+            android:textSize="16sp" />
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:background="@drawable/list_item"
+            android:clickable="true"
             android:paddingBottom="15dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:paddingTop="15dp"
-            android:text="@string/sign_remind"
-            android:textColor="@drawable/site_list_text"
-            android:textSize="16sp" />
+            android:paddingTop="15dp" >
 
-        <TextView
-            android:id="@+id/setting_clear_cache"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="@string/version"
+                android:textColor="@drawable/site_list_text"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="@string/version_num"
+                android:textColor="@drawable/site_list_text"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/list_item_bottom"
+            android:clickable="true"
             android:paddingBottom="15dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:paddingTop="15dp"
-            android:text="@string/clear_cache"
-            android:textColor="@drawable/site_list_text"
-            android:textSize="16sp" />
+            android:paddingTop="15dp" >
 
-        <TextView
-            android:id="@+id/setting_faq"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="@string/release"
+                android:textColor="@drawable/site_list_text"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="@string/release_date"
+                android:textColor="@drawable/site_list_text"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/list_item_bottom"
+            android:clickable="true"
             android:paddingBottom="15dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:paddingTop="15dp"
-            android:text="@string/faq"
-            android:textColor="@drawable/site_list_text"
-            android:textSize="16sp" />
+            android:paddingTop="15dp" >
 
-        <TextView
-            android:id="@+id/setting_donate"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="@string/author"
+                android:textColor="@drawable/site_list_text"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="@string/author_name"
+                android:textColor="@drawable/site_list_text"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/list_item_bottom"
+            android:clickable="true"
             android:paddingBottom="15dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:paddingTop="15dp"
-            android:text="@string/donate"
-            android:textColor="@drawable/site_list_text"
-            android:textSize="16sp" />
+            android:paddingTop="15dp" >
 
-        <TextView
-            android:id="@+id/setting_about"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="@string/blog"
+                android:textColor="@drawable/site_list_text"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="@string/blog_url"
+                android:textColor="@drawable/site_list_text"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/list_item_bottom"
+            android:clickable="true"
             android:paddingBottom="15dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:paddingTop="15dp"
-            android:text="@string/about"
-            android:textColor="@drawable/site_list_text"
-            android:textSize="16sp" />
+            android:paddingTop="15dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="@string/copyright_info"
+                android:textColor="@drawable/site_list_text"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="@string/studio_name"
+                android:textColor="@drawable/site_list_text"
+                android:textSize="12sp" />
+        </RelativeLayout>
     </LinearLayout>
 
 </ScrollView>
