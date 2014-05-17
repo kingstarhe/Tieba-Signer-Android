@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 
 public class PluginFragment extends Fragment {
 
-
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);

@@ -94,8 +94,8 @@ public class EditSitesActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		ActionBar actionBar = getSupportActionBar();
-		actionBar.setDisplayUseLogoEnabled(false);
 		actionBar.setDisplayShowHomeEnabled(false);
+		actionBar.setDisplayHomeAsUpEnabled(true);
 		setContentView(R.layout.activity_edit_sites);
 		urlTextView = (TextView) findViewById(R.id.addSiteUrl);
 		nameTextView = (TextView) findViewById(R.id.addSiteName);
@@ -184,22 +184,27 @@ public class EditSitesActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.del_list) {
-			AlertDialog.Builder confirm = new AlertDialog.Builder(this);
-			confirm.setTitle("确定要清空站点吗？所有账号数据将均被删除");
-			confirm.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					siteListAdapter.removeAll();
-					hasChanged = true;
-					Toast.makeText(EditSitesActivity.this, "已经全部清空！", Toast.LENGTH_SHORT).show();
-				}
-			}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
-				}
-			}).create().show();
+		switch (item.getItemId()) {
+			case R.id.del_list:
+				AlertDialog.Builder confirm = new AlertDialog.Builder(this);
+				confirm.setTitle("确定要清空站点吗？所有账号数据将均被删除");
+				confirm.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						siteListAdapter.removeAll();
+						hasChanged = true;
+						Toast.makeText(EditSitesActivity.this, "已经全部清空！", Toast.LENGTH_SHORT).show();
+					}
+				}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				}).create().show();
+				break;
+			case android.R.id.home:
+				onBackPressed();
+				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}

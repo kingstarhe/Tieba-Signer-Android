@@ -13,5 +13,5 @@ public class ViewBean implements Serializable {
 		this.id = id;
 		this.view = view;
 	}
-	
+
 }

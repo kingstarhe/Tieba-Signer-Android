@@ -21,11 +21,11 @@ public class UserInfoFragment extends BaseFragment {
 	private CircularImage userAvatar;
 	private ListTableView tiebaTable;
 	@SuppressWarnings("unused")
-    private TextView usernameTextView;
+	private TextView usernameTextView;
 	private List<TiebaBean> tiebaList = new ArrayList<TiebaBean>();
 	private TiebaListAdapter tiebaListAdapter;
 	@SuppressWarnings("unused")
-    private MainActivity activity;
+	private MainActivity activity;
 	private View.OnClickListener emptyOnClickListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View arg0) {

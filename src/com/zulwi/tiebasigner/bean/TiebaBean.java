@@ -14,7 +14,7 @@ public class TiebaBean implements Serializable {
 		this.level = level;
 		this.name = name;
 	}
-	
+
 	public TiebaBean(long tid, String name, int status) {
 		this.tid = tid;
 		this.name = name;

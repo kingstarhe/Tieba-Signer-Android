@@ -132,7 +132,7 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public SiteBean getSiteBean() {
-	    return siteBean;
-    }
+		return siteBean;
+	}
 
 }

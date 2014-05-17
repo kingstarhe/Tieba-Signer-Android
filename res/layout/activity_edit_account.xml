@@ -11,6 +11,9 @@
     <ListView
         android:id="@+id/account_list"
         android:layout_width="match_parent"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0sp"
         android:layout_height="0dp"
         android:layout_weight="1" >
     </ListView>

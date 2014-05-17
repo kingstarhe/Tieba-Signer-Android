@@ -1,18 +1,18 @@
 package com.zulwi.tiebasigner.view;
 
-import android.content.Context; 
-import android.content.res.TypedArray; 
-import android.graphics.Bitmap; 
-import android.graphics.Bitmap.Config; 
-import android.graphics.Canvas; 
-import android.graphics.Color; 
-import android.graphics.Paint; 
-import android.graphics.Path; 
-import android.graphics.PorterDuff; 
-import android.graphics.PorterDuffXfermode; 
-import android.graphics.RectF; 
-import android.util.AttributeSet; 
-import android.widget.ImageView; 
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.RectF;
+import android.util.AttributeSet;
+import android.widget.ImageView;
 import com.zulwi.tiebasigner.R;
 
 public class RoundAngleImageView extends ImageView {
@@ -36,7 +36,7 @@ public class RoundAngleImageView extends ImageView {
 		init(context, null);
 	}
 
-    private void init(Context context, AttributeSet attrs) {
+	private void init(Context context, AttributeSet attrs) {
 		if (attrs != null) {
 			TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RoundAngleImageView);
 			roundWidth = a.getDimensionPixelSize(R.styleable.RoundAngleImageView_roundWidth, roundWidth);

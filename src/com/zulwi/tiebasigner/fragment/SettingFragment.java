@@ -110,7 +110,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 				intent = new Intent(activity, AboutActivity.class);
 				break;
 		}
-		startActivity(intent);
+		if (intent != null) startActivity(intent);
 	}
 
 }

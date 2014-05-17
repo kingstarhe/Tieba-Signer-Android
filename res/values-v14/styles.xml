@@ -13,8 +13,10 @@
         <item name="android:actionBarStyle">@style/BlueActionBar</item>
         <item name="android:actionBarTabTextStyle">@style/TabTextStyle</item>
         <item name="android:actionMenuTextColor">@android:color/white</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_ab_back_am</item>
 
         <!-- Support library compatibility -->
+        <item name="homeAsUpIndicator">@drawable/ic_ab_back_am</item>
         <item name="actionBarStyle">@style/BlueActionBar</item>
         <item name="actionBarTabTextStyle">@style/TabTextStyle</item>
         <item name="actionMenuTextColor">@android:color/white</item>
@@ -26,13 +28,15 @@
         <item name="android:background">@color/zulwi_blue</item>
         <item name="android:backgroundStacked">@color/zulwi_blue</item>
         <item name="android:backgroundSplit">@color/zulwi_blue</item>
-
+		<item name="android:homeAsUpIndicator">@drawable/ic_ab_back_am</item>
+		
         <!-- Support library compatibility -->
         <item name="titleTextStyle">@style/TitleTextStyle</item>
         <item name="background">@color/zulwi_blue</item>
         <item name="backgroundStacked">@color/zulwi_blue</item>
         <item name="android:height">50dp</item>
         <item name="backgroundSplit">@color/zulwi_blue</item>
+        <item name="homeAsUpIndicator">@drawable/ic_ab_back_am</item>
     </style>
 
     <!-- action bar title text -->

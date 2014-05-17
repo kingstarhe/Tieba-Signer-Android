@@ -879,14 +879,13 @@ containing a value of this type.
         public static final int abc_split_action_bar_is_narrow=0x7f060002;
     }
     public static final class color {
-        public static final int abc_search_url_text_holo=0x7f070008;
+        public static final int abc_search_url_text_holo=0x7f070007;
         public static final int abc_search_url_text_normal=0x7f070000;
         public static final int abc_search_url_text_pressed=0x7f070002;
         public static final int abc_search_url_text_selected=0x7f070001;
-        public static final int bg_gray=0x7f070007;
-        public static final int bottom_bar_color=0x7f070006;
+        public static final int bg_gray=0x7f070006;
+        public static final int bottom_bar_color=0x7f070005;
         public static final int item_press=0x7f070004;
-        public static final int navigation_background_dark=0x7f070005;
         public static final int zulwi_blue=0x7f070003;
     }
     public static final class dimen {
@@ -1113,42 +1112,43 @@ containing a value of this type.
         public static final int button_press=0x7f02005d;
         public static final int drawer_shadow=0x7f02005e;
         public static final int gray_border=0x7f02005f;
-        public static final int ic_action_info=0x7f020060;
-        public static final int ic_action_refresh=0x7f020061;
-        public static final int ic_action_reset=0x7f020062;
-        public static final int ic_drawer=0x7f020063;
-        public static final int ic_launcher=0x7f020064;
-        public static final int ic_launcher_hdpi=0x7f020065;
-        public static final int icon_blockid=0x7f020066;
-        public static final int icon_plugin_focus=0x7f020067;
-        public static final int icon_plugin_normal=0x7f020068;
-        public static final int icon_refresh=0x7f020069;
-        public static final int icon_setting_focus=0x7f02006a;
-        public static final int icon_setting_normal=0x7f02006b;
-        public static final int icon_signlog_focus=0x7f02006c;
-        public static final int icon_signlog_normal=0x7f02006d;
-        public static final int icon_sitepost=0x7f02006e;
-        public static final int icon_userinfo_focus=0x7f02006f;
-        public static final int icon_userinfo_normal=0x7f020070;
-        public static final int list_item=0x7f020071;
-        public static final int list_item_bg=0x7f020072;
-        public static final int list_item_bg_bottom=0x7f020073;
-        public static final int list_item_bg_top=0x7f020074;
-        public static final int list_item_bottom=0x7f020075;
-        public static final int list_item_top=0x7f020076;
-        public static final int loading=0x7f020077;
-        public static final int loading_bg=0x7f020078;
-        public static final int login_banner=0x7f020079;
-        public static final int nav_list_item=0x7f02007a;
-        public static final int one_key_button=0x7f02007b;
-        public static final int plugin_button=0x7f02007c;
-        public static final int setting_button=0x7f02007d;
-        public static final int signlog_button=0x7f02007e;
-        public static final int site_list_item=0x7f02007f;
-        public static final int site_list_text=0x7f020080;
-        public static final int splash=0x7f020081;
-        public static final int transparent=0x7f020082;
-        public static final int userinfo_button=0x7f020083;
+        public static final int ic_ab_back_am=0x7f020060;
+        public static final int ic_action_info=0x7f020061;
+        public static final int ic_action_refresh=0x7f020062;
+        public static final int ic_action_reset=0x7f020063;
+        public static final int ic_drawer=0x7f020064;
+        public static final int ic_launcher=0x7f020065;
+        public static final int ic_launcher_hdpi=0x7f020066;
+        public static final int icon_blockid=0x7f020067;
+        public static final int icon_plugin_focus=0x7f020068;
+        public static final int icon_plugin_normal=0x7f020069;
+        public static final int icon_refresh=0x7f02006a;
+        public static final int icon_setting_focus=0x7f02006b;
+        public static final int icon_setting_normal=0x7f02006c;
+        public static final int icon_signlog_focus=0x7f02006d;
+        public static final int icon_signlog_normal=0x7f02006e;
+        public static final int icon_sitepost=0x7f02006f;
+        public static final int icon_userinfo_focus=0x7f020070;
+        public static final int icon_userinfo_normal=0x7f020071;
+        public static final int list_item=0x7f020072;
+        public static final int list_item_bg=0x7f020073;
+        public static final int list_item_bg_bottom=0x7f020074;
+        public static final int list_item_bg_top=0x7f020075;
+        public static final int list_item_bottom=0x7f020076;
+        public static final int list_item_top=0x7f020077;
+        public static final int loading=0x7f020078;
+        public static final int loading_bg=0x7f020079;
+        public static final int login_banner=0x7f02007a;
+        public static final int nav_list_item=0x7f02007b;
+        public static final int one_key_button=0x7f02007c;
+        public static final int plugin_button=0x7f02007d;
+        public static final int setting_button=0x7f02007e;
+        public static final int signlog_button=0x7f02007f;
+        public static final int site_list_item=0x7f020080;
+        public static final int site_list_text=0x7f020081;
+        public static final int splash=0x7f020082;
+        public static final int transparent=0x7f020083;
+        public static final int userinfo_button=0x7f020084;
     }
     public static final class id {
         public static final int account_avatar=0x7f05006e;
@@ -1460,16 +1460,19 @@ containing a value of this type.
 
 
 
+
     
 
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
 
+
         
 
         Base application theme for API 11+. This theme completely replaces
         AppBaseTheme from res/values/styles.xml on API 11+ devices.
+
 
 
 

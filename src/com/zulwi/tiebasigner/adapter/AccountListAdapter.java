@@ -22,7 +22,7 @@ public class AccountListAdapter extends BaseAdapter implements Serializable {
 
 	public AccountListAdapter(Context context, List<AccountBean> data) {
 		this.context = context;
-		this.inflater = LayoutInflater.from(context);
+		this.inflater = LayoutInflater.from(this.context);
 		this.list = data;
 	}
 

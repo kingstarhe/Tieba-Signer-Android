@@ -65,7 +65,7 @@ public abstract class MaskedImage extends ImageView {
 			paramCanvas.restoreToCount(i);
 			return;
 		} catch (Exception localException) {
-			
+
 		}
 	}
 }

@@ -18,21 +18,22 @@ public class AboutActivity extends ActionBarActivity {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setDisplayShowHomeEnabled(false);
-		
+
 		setContentView(R.layout.activity_about);
 	}
 
 	public void openAuthorWebSite(View view) {
-		Intent intent = new Intent();
-		intent.setAction(Intent.ACTION_VIEW);
-		intent.setData(Uri.parse("http://jerrys.me"));
-		startActivity(intent);
+		openWebSite("http://jerrys.me");
 	}
 
 	public void openStudioWebSite(View view) {
+		openWebSite("http://www.zhuwei.cc");
+	}
+
+	private void openWebSite(String url) {
 		Intent intent = new Intent();
 		intent.setAction(Intent.ACTION_VIEW);
-		intent.setData(Uri.parse("http://www.zhuwei.cc"));
+		intent.setData(Uri.parse(url));
 		startActivity(intent);
 	}
 
