@@ -1,28 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@drawable/site_list_item"
     android:descendantFocusability="blocksDescendants"
-    android:orientation="horizontal"
-    android:paddingTop="2dp" 
-    android:paddingBottom="2dp" 
-    android:paddingLeft="5dp" 
-    android:paddingRight="5dp" >
+    android:gravity="center_vertical"
+    android:padding="5dp" >
+
+    <ImageView
+        android:id="@+id/account_avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:contentDescription="@null"
+        android:src="@drawable/avatar" />
 
     <TextView
         android:id="@+id/account_info"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/account_avatar"
         android:textColor="@drawable/site_list_text"
-        android:textSize="22sp" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/site_info"
-        android:layout_below="@id/title"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/account_info"
+        android:layout_below="@id/account_info"
         android:textColor="@drawable/site_list_text"
-        android:textSize="13sp" />
+        android:textSize="12sp" />
 
 </RelativeLayout>

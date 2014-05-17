@@ -17,7 +17,7 @@
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/BlueActionBar</item>
         <item name="actionBarTabTextStyle">@style/TabTextStyle</item>
-        <item name="actionMenuTextColor">@android:color/black</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
     </style>
 
     <!-- general styles for the action bar -->

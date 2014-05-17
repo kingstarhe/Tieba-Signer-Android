@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,8 +58,10 @@ public class AccountListAdapter extends BaseAdapter implements Serializable {
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-		viewHolder.accountInfo.setText(list.get(position).username);
-		viewHolder.siteInfo.setText(list.get(position).siteUrl);
+		AccountBean bean = list.get(position);
+		viewHolder.accountInfo.setText(bean.username);
+		Uri url = Uri.parse(bean.siteUrl);
+		viewHolder.siteInfo.setText(bean.siteName + " - " + url.getHost() + url.getPath());
 		return convertView;
 	}
 

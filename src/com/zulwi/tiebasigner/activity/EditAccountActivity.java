@@ -1,9 +1,7 @@
 package com.zulwi.tiebasigner.activity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -15,13 +13,11 @@ import android.widget.ListView;
 import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.adapter.AccountListAdapter;
 import com.zulwi.tiebasigner.bean.AccountBean;
-import com.zulwi.tiebasigner.bean.SiteBean;
 import com.zulwi.tiebasigner.db.BaseDBHelper;
 
 public class EditAccountActivity extends ActionBarActivity {
 	private ListView accountListView;
 	private List<AccountBean> accountList = new ArrayList<AccountBean>();
-	private Map<String, SiteBean> siteMap = new HashMap<String, SiteBean>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +44,7 @@ public class EditAccountActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.edit_sites, menu);
 		return true;
 	}
 
