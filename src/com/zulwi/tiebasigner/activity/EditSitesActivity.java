@@ -15,6 +15,7 @@ import com.zulwi.tiebasigner.exception.StatusCodeException;
 import com.zulwi.tiebasigner.util.DialogUtil;
 import com.zulwi.tiebasigner.util.InternetUtil;
 
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -92,6 +93,9 @@ public class EditSitesActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayUseLogoEnabled(false);
+		actionBar.setDisplayShowHomeEnabled(false);
 		setContentView(R.layout.activity_edit_sites);
 		urlTextView = (TextView) findViewById(R.id.addSiteUrl);
 		nameTextView = (TextView) findViewById(R.id.addSiteName);

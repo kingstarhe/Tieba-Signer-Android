@@ -12,7 +12,7 @@
     <style name="BlueActionBarTheme" parent="@style/Theme.AppCompat.Light">
         <item name="android:actionBarStyle">@style/BlueActionBar</item>
         <item name="android:actionBarTabTextStyle">@style/TabTextStyle</item>
-        <item name="android:actionMenuTextColor">@android:color/black</item>
+        <item name="android:actionMenuTextColor">@android:color/white</item>
 
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/BlueActionBar</item>
