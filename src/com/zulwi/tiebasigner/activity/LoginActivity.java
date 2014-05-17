@@ -71,7 +71,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 					dbHelper.execSQL("delete from accounts where username=\'" + accountBean.username + "\'");
 					dbHelper.execSQL("update accounts set current=0 where current=1");
 					ContentValues value = new ContentValues();
-					long sid = siteMapList.get(lastSelectedPosition).id;
+					int sid = siteMapList.get(lastSelectedPosition).id;
 					Cursor siteCursor = dbHelper.rawQuery("select * from sites where id=" + sid, null);
 					if (siteCursor.getCount() > 0) {
 						siteCursor.moveToFirst();
@@ -81,9 +81,11 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 						value.put("cookie", accountBean.cookieString);
 						value.put("current", 1);
 						dbHelper.insert("accounts", value);
-						SiteBean siteBean = new SiteBean(sid, siteCursor.getString(1), siteCursor.getString(2));
+						accountBean.sid = sid;
+						accountBean.siteName = siteCursor.getString(1);
+						accountBean.siteUrl = siteCursor.getString(2);
 						dbHelper.close();
-						startMainActivity(accountBean, siteBean);
+						startMainActivity(accountBean);
 					} else {
 						tips = "站点信息错误！";
 					}
@@ -144,9 +146,8 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 		startActivityForResult(intent, 1);
 	}
 
-	public void startMainActivity(AccountBean accountBean, SiteBean siteBean) {
+	public void startMainActivity(AccountBean accountBean) {
 		Intent intent = new Intent(this, MainActivity.class);
-		intent.putExtra("siteBean", siteBean);
 		intent.putExtra("accountBean", accountBean);
 		startActivity(intent);
 		finish();

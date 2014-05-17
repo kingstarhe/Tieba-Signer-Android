@@ -19,7 +19,6 @@ import android.widget.Button;
 import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.bean.FragmentBean;
-import com.zulwi.tiebasigner.bean.SiteBean;
 import com.zulwi.tiebasigner.fragment.PluginFragment;
 import com.zulwi.tiebasigner.fragment.SettingFragment;
 import com.zulwi.tiebasigner.fragment.SignLogFragment;
@@ -31,7 +30,6 @@ public class MainActivity extends ActionBarActivity {
 	private List<Button> bottonBarButton = new ArrayList<Button>();
 	private int currentFragmentId = 0;
 	private AccountBean accountBean;
-	private SiteBean siteBean;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +39,6 @@ public class MainActivity extends ActionBarActivity {
 		actionBar.setDisplayShowHomeEnabled(false);
 		setContentView(R.layout.activity_main);
 		accountBean = (AccountBean) getIntent().getSerializableExtra("accountBean");
-		siteBean = (SiteBean) getIntent().getSerializableExtra("siteBean");
 		fragmentList.add(new FragmentBean("账号", new UserInfoFragment()));
 		fragmentList.add(new FragmentBean("记录", new SignLogFragment()));
 		fragmentList.add(new FragmentBean("插件", new PluginFragment()));
@@ -129,10 +126,6 @@ public class MainActivity extends ActionBarActivity {
 
 	public AccountBean getAccountBean() {
 		return accountBean;
-	}
-
-	public SiteBean getSiteBean() {
-		return siteBean;
 	}
 
 }

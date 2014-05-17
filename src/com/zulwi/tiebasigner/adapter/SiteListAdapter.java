@@ -38,7 +38,7 @@ public class SiteListAdapter extends BaseAdapter implements Serializable {
 		ContentValues value = new ContentValues();
 		value.put("name", name);
 		value.put("url", url);
-		long id = sitesDBHelper.insert("sites", value);
+		int id = (int) sitesDBHelper.insert("sites", value);
 		if (id != 0) {
 			list.add(new SiteBean(id, name, url));
 			notifyDataSetChanged();

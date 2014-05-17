@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 @SuppressWarnings("serial")
 public class SiteBean implements Serializable {
-	public long id;
+	public int id;
 	public int position;
 	public String name;
 	public String url;
@@ -14,7 +14,7 @@ public class SiteBean implements Serializable {
 		this.url = url;
 	}
 
-	public SiteBean(long id, String name, String url) {
+	public SiteBean(int id, String name, String url) {
 		this(name, url);
 		this.id = id;
 	}
