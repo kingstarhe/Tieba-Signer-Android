@@ -26,7 +26,7 @@ import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.bean.TiebaBean;
 import com.zulwi.tiebasigner.exception.StatusCodeException;
 import com.zulwi.tiebasigner.util.DialogUtil;
-import com.zulwi.tiebasigner.util.InternetUtil;
+import com.zulwi.tiebasigner.util.HttpUtil;
 import com.zulwi.tiebasigner.view.CircularImage;
 import com.zulwi.tiebasigner.view.ListTableView;
 
@@ -42,7 +42,7 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 	private Dialog dialog;
 	private Thread getBaiduAccountInfo = new Thread() {
 		public void run() {
-			InternetUtil site = new InternetUtil(activity, accountBean.siteUrl + "/plugin.php?id=zw_client_api&a=baidu_account_info", accountBean.cookieString);
+			HttpUtil site = new HttpUtil(activity, accountBean.siteUrl + "/plugin.php?id=zw_client_api&a=baidu_account_info", accountBean.cookieString);
 			String result;
 			try {
 				result = site.get();
@@ -52,26 +52,26 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 				if (status == -1) throw new Exception(msg);
 				else if (status == 0) {
 					JSONObject data = jsonObject.getJSONObject("data");
-					handler.obtainMessage(InternetUtil.SUCCESSED, 0, 0, data).sendToTarget();
+					handler.obtainMessage(HttpUtil.SUCCESSED, 0, 0, data).sendToTarget();
 				} else if (status == 1) {
 					JSONObject data = jsonObject.getJSONObject("data");
-					handler.obtainMessage(InternetUtil.SUCCESSED, 1, 0, data).sendToTarget();
+					handler.obtainMessage(HttpUtil.SUCCESSED, 1, 0, data).sendToTarget();
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
-				handler.obtainMessage(InternetUtil.PARSE_ERROR, 0, 0, e).sendToTarget();
+				handler.obtainMessage(HttpUtil.PARSE_ERROR, 0, 0, e).sendToTarget();
 			} catch (StatusCodeException e) {
 				e.printStackTrace();
-				handler.obtainMessage(InternetUtil.STATUS_ERROR, 0, 0, e).sendToTarget();
+				handler.obtainMessage(HttpUtil.STATUS_ERROR, 0, 0, e).sendToTarget();
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
-				handler.obtainMessage(InternetUtil.NETWORK_FAIL, 0, 0, e).sendToTarget();
+				handler.obtainMessage(HttpUtil.NETWORK_FAIL, 0, 0, e).sendToTarget();
 			} catch (IOException e) {
 				e.printStackTrace();
-				handler.obtainMessage(InternetUtil.NETWORK_FAIL, 0, 0, e).sendToTarget();
+				handler.obtainMessage(HttpUtil.NETWORK_FAIL, 0, 0, e).sendToTarget();
 			} catch (Exception e) {
 				e.printStackTrace();
-				handler.obtainMessage(InternetUtil.OTHER_ERROR, 0, 0, e).sendToTarget();
+				handler.obtainMessage(HttpUtil.OTHER_ERROR, 0, 0, e).sendToTarget();
 			}
 		}
 	};
@@ -83,20 +83,25 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 			super.handleMessage(msg);
 			String tips = null;
 			switch (msg.what) {
-				case InternetUtil.NETWORK_FAIL:
+				case HttpUtil.NETWORK_FAIL:
 					tips = "网络错误";
 					break;
-				case InternetUtil.STATUS_ERROR:
+				case HttpUtil.STATUS_ERROR:
 					StatusCodeException e = (StatusCodeException) msg.obj;
 					tips = e.getMessage() + String.valueOf(e.getCode()) + "错误";
 					break;
-				case InternetUtil.PARSE_ERROR:
+				case HttpUtil.PARSE_ERROR:
 					tips = "JSON解析错误，请确认该站点是否支持客户端";
 					break;
-				case InternetUtil.SUCCESSED:
+				case HttpUtil.SUCCESSED:
 					if (msg.arg1 == 0) {
 						JSONObject data = (JSONObject) msg.obj;
-						tips = "获取成功！";
+						try {
+							tips = data.getString("bd_username");
+						} catch (JSONException ej) {
+							ej.printStackTrace();
+							tips = "JSON解析错误";
+						}
 					} else {
 						tips = "抱歉，请绑定百度账号";
 					}

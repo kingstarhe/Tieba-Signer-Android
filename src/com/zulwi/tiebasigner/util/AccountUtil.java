@@ -14,7 +14,7 @@ import org.json.JSONObject;
 
 import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.exception.StatusCodeException;
-import com.zulwi.tiebasigner.util.InternetUtil;
+import com.zulwi.tiebasigner.util.HttpUtil;
 
 @SuppressWarnings("serial")
 public class AccountUtil implements Serializable {
@@ -40,7 +40,7 @@ public class AccountUtil implements Serializable {
 	}
 
 	public AccountBean doLogin() throws JSONException, StatusCodeException, ClientProtocolException, IOException, Exception {
-		InternetUtil site = new InternetUtil(null, siteUrl + "/plugin.php?id=zw_client_api&a=do_login");
+		HttpUtil site = new HttpUtil(null, siteUrl + "/plugin.php?id=zw_client_api&a=do_login");
 		List<NameValuePair> postParams = new ArrayList<NameValuePair>();
 		NameValuePair pair1 = new BasicNameValuePair("username", username);
 		NameValuePair pair2 = new BasicNameValuePair("password", password);

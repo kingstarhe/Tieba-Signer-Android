@@ -13,7 +13,7 @@ import com.zulwi.tiebasigner.bean.SiteBean;
 import com.zulwi.tiebasigner.db.BaseDBHelper;
 import com.zulwi.tiebasigner.exception.StatusCodeException;
 import com.zulwi.tiebasigner.util.DialogUtil;
-import com.zulwi.tiebasigner.util.InternetUtil;
+import com.zulwi.tiebasigner.util.HttpUtil;
 
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -54,25 +54,25 @@ public class EditSitesActivity extends ActionBarActivity {
 		public void handleMessage(android.os.Message msg) {
 			super.handleMessage(msg);
 			String tips = null;
-			if (msg.what != InternetUtil.SUCCESSED && msg.arg1 == InternetUtil.EDIT_SITE) EditDialog.show();
+			if (msg.what != HttpUtil.SUCCESSED && msg.arg1 == HttpUtil.EDIT_SITE) EditDialog.show();
 			switch (msg.what) {
-				case InternetUtil.NETWORK_FAIL:
+				case HttpUtil.NETWORK_FAIL:
 					tips = "网络错误";
 					break;
-				case InternetUtil.STATUS_ERROR:
+				case HttpUtil.STATUS_ERROR:
 					StatusCodeException e = (StatusCodeException) msg.obj;
 					tips = e.getMessage() + String.valueOf(e.getCode()) + "错误";
 					break;
-				case InternetUtil.PARSE_ERROR:
+				case HttpUtil.PARSE_ERROR:
 					tips = "JSON解析错误，请确认该站点是否支持客户端";
 					break;
-				case InternetUtil.SUCCESSED:
-					if (msg.arg1 == InternetUtil.ADD_SITE) {
+				case HttpUtil.SUCCESSED:
+					if (msg.arg1 == HttpUtil.ADD_SITE) {
 						SiteBean addingSite = (SiteBean) msg.obj;
 						boolean successed = siteListAdapter.addItem(addingSite.name, addingSite.url);
 						if (successed) hasChanged = true;
 						tips = successed ? "添加成功" : "添加失败";
-					} else if (msg.arg1 == InternetUtil.EDIT_SITE) {
+					} else if (msg.arg1 == HttpUtil.EDIT_SITE) {
 						SiteBean editingSite = (SiteBean) msg.obj;
 						boolean successed = siteListAdapter.updateItem(editingSite.position, editingSite.name, editingSite.url);
 						if (successed) hasChanged = true;
@@ -283,22 +283,22 @@ public class EditSitesActivity extends ActionBarActivity {
 					int countUrl = sitesDBHelper.rawQuery("select * from sites where url=\'" + url + "\'", null).getCount();
 					if (countName != 0 || countUrl != 0) throw new Exception("添加失败！请检查是否已有重复名称或URL");
 				}
-				InternetUtil site = new InternetUtil(EditSitesActivity.this, url + "/plugin.php?id=zw_client_api&a=api_info");
+				HttpUtil site = new HttpUtil(EditSitesActivity.this, url + "/plugin.php?id=zw_client_api&a=api_info");
 				String result = site.get();
 				JSONObject jsonObject = new JSONObject(result);
 				int status = jsonObject.getInt("status");
 				if (status == -1) throw new ClientProtocolException("状态码错误！");
-				handler.obtainMessage(InternetUtil.SUCCESSED, position == -1 ? InternetUtil.ADD_SITE : InternetUtil.EDIT_SITE, 0, position == -1 ? new SiteBean(name, url) : new SiteBean(name, url, position)).sendToTarget();
+				handler.obtainMessage(HttpUtil.SUCCESSED, position == -1 ? HttpUtil.ADD_SITE : HttpUtil.EDIT_SITE, 0, position == -1 ? new SiteBean(name, url) : new SiteBean(name, url, position)).sendToTarget();
 			} catch (JSONException e) {
-				handler.obtainMessage(InternetUtil.PARSE_ERROR, position == -1 ? InternetUtil.ADD_SITE : InternetUtil.EDIT_SITE, 0, e).sendToTarget();
+				handler.obtainMessage(HttpUtil.PARSE_ERROR, position == -1 ? HttpUtil.ADD_SITE : HttpUtil.EDIT_SITE, 0, e).sendToTarget();
 			} catch (StatusCodeException e) {
-				handler.obtainMessage(InternetUtil.STATUS_ERROR, position == -1 ? InternetUtil.ADD_SITE : InternetUtil.EDIT_SITE, 0, e).sendToTarget();
+				handler.obtainMessage(HttpUtil.STATUS_ERROR, position == -1 ? HttpUtil.ADD_SITE : HttpUtil.EDIT_SITE, 0, e).sendToTarget();
 			} catch (ClientProtocolException e) {
-				handler.obtainMessage(InternetUtil.NETWORK_FAIL, position == -1 ? InternetUtil.ADD_SITE : InternetUtil.EDIT_SITE, 0, e).sendToTarget();
+				handler.obtainMessage(HttpUtil.NETWORK_FAIL, position == -1 ? HttpUtil.ADD_SITE : HttpUtil.EDIT_SITE, 0, e).sendToTarget();
 			} catch (IOException e) {
-				handler.obtainMessage(InternetUtil.NETWORK_FAIL, position == -1 ? InternetUtil.ADD_SITE : InternetUtil.EDIT_SITE, 0, e).sendToTarget();
+				handler.obtainMessage(HttpUtil.NETWORK_FAIL, position == -1 ? HttpUtil.ADD_SITE : HttpUtil.EDIT_SITE, 0, e).sendToTarget();
 			} catch (Exception e) {
-				handler.obtainMessage(InternetUtil.OTHER_ERROR, position == -1 ? InternetUtil.ADD_SITE : InternetUtil.EDIT_SITE, 0, e).sendToTarget();
+				handler.obtainMessage(HttpUtil.OTHER_ERROR, position == -1 ? HttpUtil.ADD_SITE : HttpUtil.EDIT_SITE, 0, e).sendToTarget();
 			}
 		}
 	}

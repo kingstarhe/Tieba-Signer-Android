@@ -15,7 +15,7 @@ import com.zulwi.tiebasigner.db.BaseDBHelper;
 import com.zulwi.tiebasigner.exception.StatusCodeException;
 import com.zulwi.tiebasigner.util.AccountUtil;
 import com.zulwi.tiebasigner.util.DialogUtil;
-import com.zulwi.tiebasigner.util.InternetUtil;
+import com.zulwi.tiebasigner.util.HttpUtil;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -54,17 +54,17 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 			super.handleMessage(msg);
 			String tips = null;
 			switch (msg.what) {
-				case InternetUtil.NETWORK_FAIL:
+				case HttpUtil.NETWORK_FAIL:
 					tips = "网络错误";
 					break;
-				case InternetUtil.STATUS_ERROR:
+				case HttpUtil.STATUS_ERROR:
 					StatusCodeException e = (StatusCodeException) msg.obj;
 					tips = e.getMessage() + String.valueOf(e.getCode()) + "错误";
 					break;
-				case InternetUtil.PARSE_ERROR:
+				case HttpUtil.PARSE_ERROR:
 					tips = "JSON解析错误，请确认该站点是否支持客户端";
 					break;
-				case InternetUtil.SUCCESSED:
+				case HttpUtil.SUCCESSED:
 					AccountBean accountBean = (AccountBean) msg.obj;
 					tips = "欢迎回来，" + accountBean.username + "！";
 					BaseDBHelper dbHelper = new BaseDBHelper(LoginActivity.this);
@@ -116,22 +116,22 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 			try {
 				AccountUtil accountUtil = new AccountUtil(username, password, url);
 				AccountBean accountBean = accountUtil.doLogin();
-				handler.obtainMessage(InternetUtil.SUCCESSED, 0, 0, accountBean).sendToTarget();
+				handler.obtainMessage(HttpUtil.SUCCESSED, 0, 0, accountBean).sendToTarget();
 			} catch (JSONException e) {
 				e.printStackTrace();
-				handler.obtainMessage(InternetUtil.PARSE_ERROR, 0, 0, e).sendToTarget();
+				handler.obtainMessage(HttpUtil.PARSE_ERROR, 0, 0, e).sendToTarget();
 			} catch (StatusCodeException e) {
 				e.printStackTrace();
-				handler.obtainMessage(InternetUtil.STATUS_ERROR, 0, 0, e).sendToTarget();
+				handler.obtainMessage(HttpUtil.STATUS_ERROR, 0, 0, e).sendToTarget();
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
-				handler.obtainMessage(InternetUtil.NETWORK_FAIL, 0, 0, e).sendToTarget();
+				handler.obtainMessage(HttpUtil.NETWORK_FAIL, 0, 0, e).sendToTarget();
 			} catch (IOException e) {
 				e.printStackTrace();
-				handler.obtainMessage(InternetUtil.NETWORK_FAIL, 0, 0, e).sendToTarget();
+				handler.obtainMessage(HttpUtil.NETWORK_FAIL, 0, 0, e).sendToTarget();
 			} catch (Exception e) {
 				e.printStackTrace();
-				handler.obtainMessage(InternetUtil.OTHER_ERROR, 0, 0, e).sendToTarget();
+				handler.obtainMessage(HttpUtil.OTHER_ERROR, 0, 0, e).sendToTarget();
 			}
 		}
 	}
