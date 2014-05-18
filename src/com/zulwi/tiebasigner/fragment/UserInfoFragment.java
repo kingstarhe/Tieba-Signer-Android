@@ -44,13 +44,9 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 	private Thread getBaiduAccountInfo = new Thread() {
 		public void run() {
 			ClientApiUtil clientApiUtil = new ClientApiUtil(activity, accountBean.siteUrl, accountBean.cookieString);
-			JSONObject result;
 			try {
-				result = clientApiUtil.get("baidu_account_info");
-				int status = result.getInt("status");
-				String msg = result.getString("msg");
-				JSONObject data = result.getJSONObject("data");
-				handler.obtainMessage(ClientApiUtil.SUCCESSED, 0, 0, new JSONBean(status, msg, data)).sendToTarget();
+				JSONBean result = clientApiUtil.get("baidu_account_info");
+				handler.obtainMessage(ClientApiUtil.SUCCESSED, 0, 0, result).sendToTarget();
 			} catch (ClientApiException e) {
 				e.printStackTrace();
 				handler.obtainMessage(ClientApiUtil.ERROR, 0, 0, e).sendToTarget();
@@ -78,8 +74,8 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 						try {
 							baiduAccountUsername = object.getString("bd_username");
 							baiduAccountEmail = object.getString("bd_email");
-							if (usernameTextView != null) usernameTextView.setText(baiduAccountUsername);
-							if (emailTextView != null) emailTextView.setText(baiduAccountEmail);
+							usernameTextView.setText(baiduAccountUsername);
+							emailTextView.setText(baiduAccountEmail);
 						} catch (JSONException ej) {
 							ej.printStackTrace();
 							tips = "JSON解析错误";
@@ -103,9 +99,6 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 		super.onAttach(activity);
 		this.activity = (MainActivity) activity;
 		this.accountBean = this.activity.getAccountBean();
-		dialog = DialogUtil.createLoadingDialog(activity, "正在获取百度账号信息", true);
-		dialog.show();
-		getBaiduAccountInfo.start();
 	}
 
 	@Override
@@ -118,8 +111,9 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 		View view = inflater.inflate(R.layout.fragment_userinfo, container, false);
 		usernameTextView = (TextView) view.findViewById(R.id.userinfo_name);
 		emailTextView = (TextView) view.findViewById(R.id.userinfo_email);
-		usernameTextView.setText(baiduAccountUsername);
-		emailTextView.setText(baiduAccountEmail);
+		dialog = DialogUtil.createLoadingDialog(activity, "正在获取百度账号信息", true);
+		dialog.show();
+		getBaiduAccountInfo.start();
 		userAvatar = (CircularImage) view.findViewById(R.id.userinfo_avatar);
 		userAvatar.setImageResource(R.drawable.avatar);
 		tiebaList.add(new TiebaBean(1, 8, "测试贴吧1"));

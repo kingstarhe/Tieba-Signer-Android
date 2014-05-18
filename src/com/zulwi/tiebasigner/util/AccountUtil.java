@@ -7,9 +7,9 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.zulwi.tiebasigner.bean.AccountBean;
+import com.zulwi.tiebasigner.bean.JSONBean;
 import com.zulwi.tiebasigner.exception.ClientApiException;
 
 @SuppressWarnings("serial")
@@ -41,16 +41,13 @@ public class AccountUtil implements Serializable {
 		NameValuePair pair2 = new BasicNameValuePair("password", password);
 		postParams.add(pair1);
 		postParams.add(pair2);
-		JSONObject result;
-		result = site.post("do_login", postParams);
+		JSONBean result = site.post("do_login", postParams);
 		cookieString = site.getCookieString();
-		int status;
 		try {
-			status = result.getInt("status");
-			String msg = result.getString("msg");
-			JSONObject data = result.getJSONObject("data");
-			if (status != 0) throw new ClientApiException(msg, ClientApiUtil.AUTH_FAIL);
-			return new AccountBean(data.getString("username"), data.getString("email"), siteUrl, cookieString);
+			if (result.status != 0) throw new ClientApiException(result.message, ClientApiUtil.AUTH_FAIL);
+			String username = result.data.getString("username");
+			String email = result.data.getString("email");
+			return new AccountBean(username, email, siteUrl, cookieString);
 		} catch (JSONException e) {
 			e.printStackTrace();
 			throw new ClientApiException(ClientApiUtil.PARSE_ERROR);

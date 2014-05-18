@@ -21,6 +21,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
+import com.zulwi.tiebasigner.bean.JSONBean;
 import com.zulwi.tiebasigner.exception.ClientApiException;
 import com.zulwi.tiebasigner.exception.StatusCodeException;
 
@@ -56,7 +57,7 @@ public class ClientApiUtil {
 		this.cookie = cookie;
 	}
 
-	public JSONObject get(String action) throws ClientApiException {
+	public JSONBean get(String action) throws ClientApiException {
 		String url = getApiPath(action);
 		get = new HttpGet(url);
 		get.addHeader("Client-Version", "1.0.0");
@@ -74,8 +75,11 @@ public class ClientApiUtil {
 				HttpEntity entity = response.getEntity();
 				result = EntityUtils.toString(entity, "utf-8");
 				JSONObject jsonObject = new JSONObject(result);
-				if (jsonObject.getInt("status") == -1) throw new ClientApiException(ClientApiException.AUTH_FAIL);
-				return jsonObject;
+				int status = jsonObject.getInt("status") ;
+				String message =  jsonObject.getString("msg") ;
+				JSONObject data = jsonObject.getJSONObject("data");
+				if (status == -1) throw new ClientApiException(ClientApiException.AUTH_FAIL);
+				return new JSONBean(status, message, data);
 			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
@@ -89,7 +93,7 @@ public class ClientApiUtil {
 		}
 	}
 
-	public JSONObject post(String action, List<NameValuePair> postParams) throws ClientApiException{
+	public JSONBean post(String action, List<NameValuePair> postParams) throws ClientApiException{
 		String url = getApiPath(action);
 		post = new HttpPost(url);
 		post.addHeader("Client-Version", "1.0.0");
@@ -112,8 +116,11 @@ public class ClientApiUtil {
 				HttpEntity entity = response.getEntity();
 				result = EntityUtils.toString(entity, "utf-8");
 				JSONObject jsonObject = new JSONObject(result);
-				if (jsonObject.getInt("status") == -1) throw new ClientApiException(ClientApiException.AUTH_FAIL);
-				return jsonObject;
+				int status = jsonObject.getInt("status") ;
+				String message =  jsonObject.getString("msg") ;
+				JSONObject data = jsonObject.getJSONObject("data");
+				if (status == -1) throw new ClientApiException(ClientApiException.AUTH_FAIL);
+				return new JSONBean(status, message, data);
 			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();

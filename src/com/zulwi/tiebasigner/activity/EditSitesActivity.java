@@ -2,9 +2,6 @@ package com.zulwi.tiebasigner.activity;
 
 import java.util.List;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -29,6 +26,7 @@ import android.widget.Toast;
 
 import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.adapter.SiteListAdapter;
+import com.zulwi.tiebasigner.bean.JSONBean;
 import com.zulwi.tiebasigner.bean.SiteBean;
 import com.zulwi.tiebasigner.db.BaseDBHelper;
 import com.zulwi.tiebasigner.exception.ClientApiException;
@@ -272,13 +270,9 @@ public class EditSitesActivity extends ActionBarActivity {
 					if (countName != 0 || countUrl != 0) throw new ClientApiException("添加失败！请检查是否已有重复名称或URL");
 				}
 				ClientApiUtil clientApiUtil = new ClientApiUtil(EditSitesActivity.this, url);
-				JSONObject result = clientApiUtil.get("api_info");
-				int status = result.getInt("status");
-				if (status == -1) throw new ClientApiException("状态码错误！");
+				JSONBean result = clientApiUtil.get("api_info");
+				if (result.status == -1) throw new ClientApiException("状态码错误！");
 				handler.obtainMessage(ClientApiUtil.SUCCESSED, position == -1 ? ClientApiUtil.ADD_SITE : ClientApiUtil.EDIT_SITE, 0, position == -1 ? new SiteBean(name, url) : new SiteBean(name, url, position)).sendToTarget();
-			} catch (JSONException e) {
-				e.printStackTrace();
-				handler.obtainMessage(ClientApiUtil.ERROR, position == -1 ? ClientApiUtil.ADD_SITE : ClientApiUtil.EDIT_SITE, 0, new ClientApiException(ClientApiException.PARSE_ERROR)).sendToTarget();
 			} catch (ClientApiException e) {
 				handler.obtainMessage(ClientApiUtil.ERROR, position == -1 ? ClientApiUtil.ADD_SITE : ClientApiUtil.EDIT_SITE, 0, e).sendToTarget();
 			}
