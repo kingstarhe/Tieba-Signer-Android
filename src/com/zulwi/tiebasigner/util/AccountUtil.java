@@ -43,14 +43,15 @@ public class AccountUtil implements Serializable {
 		postParams.add(pair2);
 		JSONBean result = site.post("do_login", postParams);
 		cookieString = site.getCookieString();
+		System.out.println(result.status);
+		if (result.status != 0) throw new ClientApiException(result.message, ClientApiException.AUTH_FAIL);
 		try {
-			if (result.status != 0) throw new ClientApiException(result.message, ClientApiUtil.AUTH_FAIL);
 			String username = result.data.getString("username");
 			String email = result.data.getString("email");
 			return new AccountBean(username, email, siteUrl, cookieString);
 		} catch (JSONException e) {
 			e.printStackTrace();
-			throw new ClientApiException(ClientApiUtil.PARSE_ERROR);
+			throw new ClientApiException(ClientApiException.PARSE_ERROR);
 		}
 	}
 

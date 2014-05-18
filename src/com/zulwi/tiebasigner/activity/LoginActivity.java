@@ -80,10 +80,6 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 						tips = "站点信息错误！";
 					}
 					break;
-				default:
-					Exception t = (Exception) msg.obj;
-					tips = t.getMessage();
-					break;
 			}
 			progressDialog.dismiss();
 			Toast.makeText(LoginActivity.this, tips, Toast.LENGTH_SHORT).show();

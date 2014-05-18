@@ -35,11 +35,6 @@ public class ClientApiUtil {
 	private List<Cookie> cookies;
 	private String cookie;
 	private String siteUrl;
-	public final static int NETWORK_FAIL = 0;
-	public final static int STATUS_ERROR = 1;
-	public final static int PARSE_ERROR = 2;
-	public final static int OTHER_ERROR = 3;
-	public final static int AUTH_FAIL = 4;
 	public final static int ADD_SITE = 0;
 	public final static int EDIT_SITE = 1;
 	public final static String API_PATH = "/plugin.php?id=zw_client_api&a=";
@@ -64,9 +59,8 @@ public class ClientApiUtil {
 		get.addHeader("Content-Type", "application/json");
 		get.addHeader("User-Agent", "Android Client For Tieba Signer");
 		if (cookie != null) get.addHeader("Cookie", cookie);
-		HttpResponse response;
 		try {
-			response = client.execute(get);
+			HttpResponse response = client.execute(get);
 			int statusCode = response.getStatusLine().getStatusCode();
 			cookies = ((AbstractHttpClient) client).getCookieStore().getCookies();
 			if (statusCode != 200) {
@@ -75,8 +69,8 @@ public class ClientApiUtil {
 				HttpEntity entity = response.getEntity();
 				result = EntityUtils.toString(entity, "utf-8");
 				JSONObject jsonObject = new JSONObject(result);
-				int status = jsonObject.getInt("status") ;
-				String message =  jsonObject.getString("msg") ;
+				int status = jsonObject.getInt("status");
+				String message = jsonObject.getString("msg");
 				JSONObject data = jsonObject.getJSONObject("data");
 				if (status == -1) throw new ClientApiException(ClientApiException.AUTH_FAIL);
 				return new JSONBean(status, message, data);
@@ -93,21 +87,20 @@ public class ClientApiUtil {
 		}
 	}
 
-	public JSONBean post(String action, List<NameValuePair> postParams) throws ClientApiException{
+	public JSONBean post(String action, List<NameValuePair> postParams) throws ClientApiException {
 		String url = getApiPath(action);
 		post = new HttpPost(url);
 		post.addHeader("Client-Version", "1.0.0");
 		post.addHeader("User-Agent", "Android Client For Tieba Signer");
 		try {
-	        post.setEntity(new UrlEncodedFormEntity(postParams, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-        	 e.printStackTrace();
-	        throw new ClientApiException(ClientApiUtil.NETWORK_FAIL);
-        }
+			post.setEntity(new UrlEncodedFormEntity(postParams, "UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			throw new ClientApiException(ClientApiException.NETWORK_FAIL);
+		}
 		if (cookie != null) post.addHeader("Cookie", cookie);
-		HttpResponse response;
 		try {
-			response = client.execute(post);
+			HttpResponse response = client.execute(post);
 			int statusCode = response.getStatusLine().getStatusCode();
 			cookies = ((AbstractHttpClient) client).getCookieStore().getCookies();
 			if (statusCode != 200) {
@@ -116,8 +109,8 @@ public class ClientApiUtil {
 				HttpEntity entity = response.getEntity();
 				result = EntityUtils.toString(entity, "utf-8");
 				JSONObject jsonObject = new JSONObject(result);
-				int status = jsonObject.getInt("status") ;
-				String message =  jsonObject.getString("msg") ;
+				int status = jsonObject.getInt("status");
+				String message = jsonObject.getString("msg");
 				JSONObject data = jsonObject.getJSONObject("data");
 				if (status == -1) throw new ClientApiException(ClientApiException.AUTH_FAIL);
 				return new JSONBean(status, message, data);
