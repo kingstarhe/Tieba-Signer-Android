@@ -29,6 +29,7 @@ public class InternetUtil {
 	private Context context;
 	private String result = "无返回";
 	private List<Cookie> cookies;
+	private String cookie;
 	public final static int NETWORK_FAIL = 0;
 	public final static int STATUS_ERROR = 1;
 	public final static int PARSE_ERROR = 2;
@@ -43,12 +44,18 @@ public class InternetUtil {
 		this.url = url;
 	}
 
+	public InternetUtil(Context context, String url, String cookie) {
+		this(context, url);
+		this.cookie = cookie;
+	}
+
 	public String get() throws StatusCodeException, IOException, ClientProtocolException, Exception {
 		client = new DefaultHttpClient();
 		get = new HttpGet(url);
 		get.addHeader("Client-Version", "1.0.0");
 		get.addHeader("Content-Type", "application/json");
 		get.addHeader("User-Agent", "Android Client For Tieba Signer");
+		if (cookie != null) get.addHeader("Cookie", cookie);
 		HttpResponse response = client.execute(get);
 		int statusCode = response.getStatusLine().getStatusCode();
 		cookies = ((AbstractHttpClient) client).getCookieStore().getCookies();
@@ -66,6 +73,7 @@ public class InternetUtil {
 		client = new DefaultHttpClient();
 		post.addHeader("Client-Version", "1.0.0");
 		post.addHeader("User-Agent", "Android Client For Tieba Signer");
+		if (cookie != null) post.addHeader("Cookie", cookie);
 		HttpEntity entity = new UrlEncodedFormEntity(postParams, "UTF-8");
 		post.setEntity(entity);
 		HttpResponse response = client.execute(post);

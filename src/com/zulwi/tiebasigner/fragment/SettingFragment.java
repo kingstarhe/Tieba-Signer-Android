@@ -42,7 +42,6 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 		siteNameTextView = (TextView) view.findViewById(R.id.setting_sitename);
 		siteUrlTextView = (TextView) view.findViewById(R.id.setting_siteurl);
 		usernameTextView.setText(activity.getAccountBean().username);
-		//System.out.println(activity.getAccountBean().email);
 		emailTextView.setText(activity.getAccountBean().email);
 		siteNameTextView.setText(activity.getAccountBean().siteName);
 		siteUrlTextView.setText(activity.getAccountBean().siteUrl);

@@ -100,6 +100,42 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 		}
 	};
 
+	private class LoginThread implements Runnable {
+		private String username;
+		private String password;
+		private String url;
+
+		public LoginThread(String username, String password, String url) {
+			this.username = username;
+			this.password = password;
+			this.url = url;
+		}
+
+		@Override
+		public void run() {
+			try {
+				AccountUtil accountUtil = new AccountUtil(username, password, url);
+				AccountBean accountBean = accountUtil.doLogin();
+				handler.obtainMessage(InternetUtil.SUCCESSED, 0, 0, accountBean).sendToTarget();
+			} catch (JSONException e) {
+				e.printStackTrace();
+				handler.obtainMessage(InternetUtil.PARSE_ERROR, 0, 0, e).sendToTarget();
+			} catch (StatusCodeException e) {
+				e.printStackTrace();
+				handler.obtainMessage(InternetUtil.STATUS_ERROR, 0, 0, e).sendToTarget();
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+				handler.obtainMessage(InternetUtil.NETWORK_FAIL, 0, 0, e).sendToTarget();
+			} catch (IOException e) {
+				e.printStackTrace();
+				handler.obtainMessage(InternetUtil.NETWORK_FAIL, 0, 0, e).sendToTarget();
+			} catch (Exception e) {
+				e.printStackTrace();
+				handler.obtainMessage(InternetUtil.OTHER_ERROR, 0, 0, e).sendToTarget();
+			}
+		}
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -217,39 +253,4 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 		new Thread(new LoginThread(username, password, siteUrlList[lastSelectedPosition])).start();
 	}
 
-	class LoginThread implements Runnable {
-		private String username;
-		private String password;
-		private String url;
-
-		public LoginThread(String username, String password, String url) {
-			this.username = username;
-			this.password = password;
-			this.url = url;
-		}
-
-		@Override
-		public void run() {
-			try {
-				AccountUtil accountUtil = new AccountUtil(username, password, url);
-				AccountBean accountBean = accountUtil.doLogin();
-				handler.obtainMessage(InternetUtil.SUCCESSED, 0, 0, accountBean).sendToTarget();
-			} catch (JSONException e) {
-				e.printStackTrace();
-				handler.obtainMessage(InternetUtil.PARSE_ERROR, 0, 0, e).sendToTarget();
-			} catch (StatusCodeException e) {
-				e.printStackTrace();
-				handler.obtainMessage(InternetUtil.STATUS_ERROR, 0, 0, e).sendToTarget();
-			} catch (ClientProtocolException e) {
-				e.printStackTrace();
-				handler.obtainMessage(InternetUtil.NETWORK_FAIL, 0, 0, e).sendToTarget();
-			} catch (IOException e) {
-				e.printStackTrace();
-				handler.obtainMessage(InternetUtil.NETWORK_FAIL, 0, 0, e).sendToTarget();
-			} catch (Exception e) {
-				e.printStackTrace();
-				handler.obtainMessage(InternetUtil.OTHER_ERROR, 0, 0, e).sendToTarget();
-			}
-		}
-	}
 }
