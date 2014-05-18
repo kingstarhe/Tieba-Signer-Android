@@ -32,8 +32,10 @@ import com.zulwi.tiebasigner.view.ListTableView;
 public class UserInfoFragment extends BaseFragment implements View.OnClickListener {
 	private CircularImage userAvatar;
 	private ListTableView tiebaTable;
-	@SuppressWarnings("unused")
 	private TextView usernameTextView;
+	private TextView emailTextView;
+	private String baiduAccountUsername;
+	private String baiduAccountEmail;
 	private List<TiebaBean> tiebaList = new ArrayList<TiebaBean>();
 	private TiebaListAdapter tiebaListAdapter;
 	private MainActivity activity;
@@ -74,7 +76,10 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 					JSONObject object = data.data;
 					if (data.status == 0) {
 						try {
-							tips = object.getString("bd_username");
+							baiduAccountUsername = object.getString("bd_username");
+							baiduAccountEmail = object.getString("bd_email");
+							if (usernameTextView != null) usernameTextView.setText(baiduAccountUsername);
+							if (emailTextView != null) emailTextView.setText(baiduAccountEmail);
 						} catch (JSONException ej) {
 							ej.printStackTrace();
 							tips = "JSON解析错误";
@@ -89,7 +94,7 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 					break;
 			}
 			dialog.dismiss();
-			Toast.makeText(activity, tips, Toast.LENGTH_SHORT).show();
+			if (tips != null && !tips.equals("")) Toast.makeText(activity, tips, Toast.LENGTH_SHORT).show();
 		}
 	};
 
@@ -111,6 +116,10 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_userinfo, container, false);
+		usernameTextView = (TextView) view.findViewById(R.id.userinfo_name);
+		emailTextView = (TextView) view.findViewById(R.id.userinfo_email);
+		usernameTextView.setText(baiduAccountUsername);
+		emailTextView.setText(baiduAccountEmail);
 		userAvatar = (CircularImage) view.findViewById(R.id.userinfo_avatar);
 		userAvatar.setImageResource(R.drawable.avatar);
 		tiebaList.add(new TiebaBean(1, 8, "测试贴吧1"));
