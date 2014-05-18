@@ -1,10 +1,8 @@
 package com.zulwi.tiebasigner.fragment;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,10 +21,11 @@ import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.activity.MainActivity;
 import com.zulwi.tiebasigner.adapter.TiebaListAdapter;
 import com.zulwi.tiebasigner.bean.AccountBean;
+import com.zulwi.tiebasigner.bean.JSONBean;
 import com.zulwi.tiebasigner.bean.TiebaBean;
-import com.zulwi.tiebasigner.exception.StatusCodeException;
+import com.zulwi.tiebasigner.exception.ClientApiException;
+import com.zulwi.tiebasigner.util.ClientApiUtil;
 import com.zulwi.tiebasigner.util.DialogUtil;
-import com.zulwi.tiebasigner.util.HttpUtil;
 import com.zulwi.tiebasigner.view.CircularImage;
 import com.zulwi.tiebasigner.view.ListTableView;
 
@@ -42,36 +41,19 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 	private Dialog dialog;
 	private Thread getBaiduAccountInfo = new Thread() {
 		public void run() {
-			HttpUtil site = new HttpUtil(activity, accountBean.siteUrl + "/plugin.php?id=zw_client_api&a=baidu_account_info", accountBean.cookieString);
-			String result;
+			ClientApiUtil clientApiUtil = new ClientApiUtil(activity, accountBean.siteUrl, accountBean.cookieString);
+			JSONObject result;
 			try {
-				result = site.get();
-				JSONObject jsonObject = new JSONObject(result);
-				int status = jsonObject.getInt("status");
-				String msg = jsonObject.getString("msg");
-				if (status == -1) throw new Exception(msg);
-				else if (status == 0) {
-					JSONObject data = jsonObject.getJSONObject("data");
-					handler.obtainMessage(HttpUtil.SUCCESSED, 0, 0, data).sendToTarget();
-				} else if (status == 1) {
-					JSONObject data = jsonObject.getJSONObject("data");
-					handler.obtainMessage(HttpUtil.SUCCESSED, 1, 0, data).sendToTarget();
-				}
-			} catch (JSONException e) {
+				result = clientApiUtil.get("baidu_account_info");
+				int status = result.getInt("status");
+				String msg = result.getString("msg");
+				JSONObject data = result.getJSONObject("data");
+				handler.obtainMessage(ClientApiUtil.SUCCESSED, 0, 0, new JSONBean(status, msg, data)).sendToTarget();
+			} catch (ClientApiException e) {
 				e.printStackTrace();
-				handler.obtainMessage(HttpUtil.PARSE_ERROR, 0, 0, e).sendToTarget();
-			} catch (StatusCodeException e) {
-				e.printStackTrace();
-				handler.obtainMessage(HttpUtil.STATUS_ERROR, 0, 0, e).sendToTarget();
-			} catch (ClientProtocolException e) {
-				e.printStackTrace();
-				handler.obtainMessage(HttpUtil.NETWORK_FAIL, 0, 0, e).sendToTarget();
-			} catch (IOException e) {
-				e.printStackTrace();
-				handler.obtainMessage(HttpUtil.NETWORK_FAIL, 0, 0, e).sendToTarget();
+				handler.obtainMessage(ClientApiUtil.ERROR, 0, 0, e).sendToTarget();
 			} catch (Exception e) {
 				e.printStackTrace();
-				handler.obtainMessage(HttpUtil.OTHER_ERROR, 0, 0, e).sendToTarget();
 			}
 		}
 	};
@@ -83,21 +65,16 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 			super.handleMessage(msg);
 			String tips = null;
 			switch (msg.what) {
-				case HttpUtil.NETWORK_FAIL:
-					tips = "网络错误";
+				case ClientApiUtil.ERROR:
+					ClientApiException e = (ClientApiException) msg.obj;
+					tips = e.getMessage();
 					break;
-				case HttpUtil.STATUS_ERROR:
-					StatusCodeException e = (StatusCodeException) msg.obj;
-					tips = e.getMessage() + String.valueOf(e.getCode()) + "错误";
-					break;
-				case HttpUtil.PARSE_ERROR:
-					tips = "JSON解析错误，请确认该站点是否支持客户端";
-					break;
-				case HttpUtil.SUCCESSED:
-					if (msg.arg1 == 0) {
-						JSONObject data = (JSONObject) msg.obj;
+				case ClientApiUtil.SUCCESSED:
+					JSONBean data = (JSONBean) msg.obj;
+					JSONObject object = data.data;
+					if (data.status == 0) {
 						try {
-							tips = data.getString("bd_username");
+							tips = object.getString("bd_username");
 						} catch (JSONException ej) {
 							ej.printStackTrace();
 							tips = "JSON解析错误";

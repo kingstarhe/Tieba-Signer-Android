@@ -1,22 +1,10 @@
 package com.zulwi.tiebasigner.activity;
 
-import java.io.IOException;
 import java.util.List;
 
-import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.zulwi.tiebasigner.R;
-import com.zulwi.tiebasigner.adapter.SiteListAdapter;
-import com.zulwi.tiebasigner.bean.SiteBean;
-import com.zulwi.tiebasigner.db.BaseDBHelper;
-import com.zulwi.tiebasigner.exception.StatusCodeException;
-import com.zulwi.tiebasigner.util.DialogUtil;
-import com.zulwi.tiebasigner.util.HttpUtil;
-
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -24,18 +12,28 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.zulwi.tiebasigner.R;
+import com.zulwi.tiebasigner.adapter.SiteListAdapter;
+import com.zulwi.tiebasigner.bean.SiteBean;
+import com.zulwi.tiebasigner.db.BaseDBHelper;
+import com.zulwi.tiebasigner.exception.ClientApiException;
+import com.zulwi.tiebasigner.util.ClientApiUtil;
+import com.zulwi.tiebasigner.util.DialogUtil;
 
 public class EditSitesActivity extends ActionBarActivity {
 	private ListView siteList;
@@ -54,34 +52,24 @@ public class EditSitesActivity extends ActionBarActivity {
 		public void handleMessage(android.os.Message msg) {
 			super.handleMessage(msg);
 			String tips = null;
-			if (msg.what != HttpUtil.SUCCESSED && msg.arg1 == HttpUtil.EDIT_SITE) EditDialog.show();
+			if (msg.what != ClientApiUtil.SUCCESSED && msg.arg1 == ClientApiUtil.EDIT_SITE) EditDialog.show();
 			switch (msg.what) {
-				case HttpUtil.NETWORK_FAIL:
-					tips = "网络错误";
+				case ClientApiUtil.ERROR:
+					ClientApiException e = (ClientApiException) msg.obj;
+					tips = e.getMessage();
 					break;
-				case HttpUtil.STATUS_ERROR:
-					StatusCodeException e = (StatusCodeException) msg.obj;
-					tips = e.getMessage() + String.valueOf(e.getCode()) + "错误";
-					break;
-				case HttpUtil.PARSE_ERROR:
-					tips = "JSON解析错误，请确认该站点是否支持客户端";
-					break;
-				case HttpUtil.SUCCESSED:
-					if (msg.arg1 == HttpUtil.ADD_SITE) {
+				case ClientApiUtil.SUCCESSED:
+					if (msg.arg1 == ClientApiUtil.ADD_SITE) {
 						SiteBean addingSite = (SiteBean) msg.obj;
 						boolean successed = siteListAdapter.addItem(addingSite.name, addingSite.url);
 						if (successed) hasChanged = true;
 						tips = successed ? "添加成功" : "添加失败";
-					} else if (msg.arg1 == HttpUtil.EDIT_SITE) {
+					} else if (msg.arg1 == ClientApiUtil.EDIT_SITE) {
 						SiteBean editingSite = (SiteBean) msg.obj;
 						boolean successed = siteListAdapter.updateItem(editingSite.position, editingSite.name, editingSite.url);
 						if (successed) hasChanged = true;
 						tips = successed ? "编辑成功" : "编辑失败";
 					}
-					break;
-				default:
-					Throwable t = (Throwable) msg.obj;
-					tips = t.getMessage();
 					break;
 			}
 			progressDialog.dismiss();
@@ -281,24 +269,18 @@ public class EditSitesActivity extends ActionBarActivity {
 				if (position == -1) {
 					int countName = sitesDBHelper.rawQuery("select * from sites where name=\'" + name + "\'", null).getCount();
 					int countUrl = sitesDBHelper.rawQuery("select * from sites where url=\'" + url + "\'", null).getCount();
-					if (countName != 0 || countUrl != 0) throw new Exception("添加失败！请检查是否已有重复名称或URL");
+					if (countName != 0 || countUrl != 0) throw new ClientApiException("添加失败！请检查是否已有重复名称或URL");
 				}
-				HttpUtil site = new HttpUtil(EditSitesActivity.this, url + "/plugin.php?id=zw_client_api&a=api_info");
-				String result = site.get();
-				JSONObject jsonObject = new JSONObject(result);
-				int status = jsonObject.getInt("status");
-				if (status == -1) throw new ClientProtocolException("状态码错误！");
-				handler.obtainMessage(HttpUtil.SUCCESSED, position == -1 ? HttpUtil.ADD_SITE : HttpUtil.EDIT_SITE, 0, position == -1 ? new SiteBean(name, url) : new SiteBean(name, url, position)).sendToTarget();
+				ClientApiUtil clientApiUtil = new ClientApiUtil(EditSitesActivity.this, url);
+				JSONObject result = clientApiUtil.get("api_info");
+				int status = result.getInt("status");
+				if (status == -1) throw new ClientApiException("状态码错误！");
+				handler.obtainMessage(ClientApiUtil.SUCCESSED, position == -1 ? ClientApiUtil.ADD_SITE : ClientApiUtil.EDIT_SITE, 0, position == -1 ? new SiteBean(name, url) : new SiteBean(name, url, position)).sendToTarget();
 			} catch (JSONException e) {
-				handler.obtainMessage(HttpUtil.PARSE_ERROR, position == -1 ? HttpUtil.ADD_SITE : HttpUtil.EDIT_SITE, 0, e).sendToTarget();
-			} catch (StatusCodeException e) {
-				handler.obtainMessage(HttpUtil.STATUS_ERROR, position == -1 ? HttpUtil.ADD_SITE : HttpUtil.EDIT_SITE, 0, e).sendToTarget();
-			} catch (ClientProtocolException e) {
-				handler.obtainMessage(HttpUtil.NETWORK_FAIL, position == -1 ? HttpUtil.ADD_SITE : HttpUtil.EDIT_SITE, 0, e).sendToTarget();
-			} catch (IOException e) {
-				handler.obtainMessage(HttpUtil.NETWORK_FAIL, position == -1 ? HttpUtil.ADD_SITE : HttpUtil.EDIT_SITE, 0, e).sendToTarget();
-			} catch (Exception e) {
-				handler.obtainMessage(HttpUtil.OTHER_ERROR, position == -1 ? HttpUtil.ADD_SITE : HttpUtil.EDIT_SITE, 0, e).sendToTarget();
+				e.printStackTrace();
+				handler.obtainMessage(ClientApiUtil.ERROR, position == -1 ? ClientApiUtil.ADD_SITE : ClientApiUtil.EDIT_SITE, 0, new ClientApiException(ClientApiException.PARSE_ERROR)).sendToTarget();
+			} catch (ClientApiException e) {
+				handler.obtainMessage(ClientApiUtil.ERROR, position == -1 ? ClientApiUtil.ADD_SITE : ClientApiUtil.EDIT_SITE, 0, e).sendToTarget();
 			}
 		}
 	}

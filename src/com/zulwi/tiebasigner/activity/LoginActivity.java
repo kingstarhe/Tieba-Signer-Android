@@ -1,21 +1,8 @@
 package com.zulwi.tiebasigner.activity;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.http.client.ClientProtocolException;
-import org.json.JSONException;
-
-import com.zulwi.tiebasigner.R;
-import com.zulwi.tiebasigner.bean.AccountBean;
-import com.zulwi.tiebasigner.bean.SiteBean;
-import com.zulwi.tiebasigner.db.BaseDBHelper;
-import com.zulwi.tiebasigner.exception.StatusCodeException;
-import com.zulwi.tiebasigner.util.AccountUtil;
-import com.zulwi.tiebasigner.util.DialogUtil;
-import com.zulwi.tiebasigner.util.HttpUtil;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -36,6 +23,15 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.zulwi.tiebasigner.R;
+import com.zulwi.tiebasigner.bean.AccountBean;
+import com.zulwi.tiebasigner.bean.SiteBean;
+import com.zulwi.tiebasigner.db.BaseDBHelper;
+import com.zulwi.tiebasigner.exception.ClientApiException;
+import com.zulwi.tiebasigner.util.AccountUtil;
+import com.zulwi.tiebasigner.util.ClientApiUtil;
+import com.zulwi.tiebasigner.util.DialogUtil;
+
 public class LoginActivity extends Activity implements OnItemSelectedListener {
 	private Spinner siteSpinner;
 	private Dialog progressDialog;
@@ -54,17 +50,11 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 			super.handleMessage(msg);
 			String tips = null;
 			switch (msg.what) {
-				case HttpUtil.NETWORK_FAIL:
-					tips = "网络错误";
+				case ClientApiUtil.ERROR:
+					ClientApiException e = (ClientApiException) msg.obj;
+					tips = e.getMessage();
 					break;
-				case HttpUtil.STATUS_ERROR:
-					StatusCodeException e = (StatusCodeException) msg.obj;
-					tips = e.getMessage() + String.valueOf(e.getCode()) + "错误";
-					break;
-				case HttpUtil.PARSE_ERROR:
-					tips = "JSON解析错误，请确认该站点是否支持客户端";
-					break;
-				case HttpUtil.SUCCESSED:
+				case ClientApiUtil.SUCCESSED:
 					AccountBean accountBean = (AccountBean) msg.obj;
 					tips = "欢迎回来，" + accountBean.username + "！";
 					BaseDBHelper dbHelper = new BaseDBHelper(LoginActivity.this);
@@ -116,22 +106,12 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 			try {
 				AccountUtil accountUtil = new AccountUtil(username, password, url);
 				AccountBean accountBean = accountUtil.doLogin();
-				handler.obtainMessage(HttpUtil.SUCCESSED, 0, 0, accountBean).sendToTarget();
-			} catch (JSONException e) {
+				handler.obtainMessage(ClientApiUtil.SUCCESSED, 0, 0, accountBean).sendToTarget();
+			} catch (ClientApiException e) {
 				e.printStackTrace();
-				handler.obtainMessage(HttpUtil.PARSE_ERROR, 0, 0, e).sendToTarget();
-			} catch (StatusCodeException e) {
-				e.printStackTrace();
-				handler.obtainMessage(HttpUtil.STATUS_ERROR, 0, 0, e).sendToTarget();
-			} catch (ClientProtocolException e) {
-				e.printStackTrace();
-				handler.obtainMessage(HttpUtil.NETWORK_FAIL, 0, 0, e).sendToTarget();
-			} catch (IOException e) {
-				e.printStackTrace();
-				handler.obtainMessage(HttpUtil.NETWORK_FAIL, 0, 0, e).sendToTarget();
+				handler.obtainMessage(ClientApiUtil.ERROR, 0, 0, e).sendToTarget();
 			} catch (Exception e) {
 				e.printStackTrace();
-				handler.obtainMessage(HttpUtil.OTHER_ERROR, 0, 0, e).sendToTarget();
 			}
 		}
 	}
@@ -148,7 +128,6 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 	}
 
 	public void flushSiteList() {
-		// 查询已有列表并保存到 siteMapList 中
 		siteMapList = new ArrayList<SiteBean>();
 		Cursor cursor = sitesDBHelper.query("sites");
 		if (cursor.getCount() > 0) {
@@ -156,7 +135,6 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 				siteMapList.add(new SiteBean(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2)));
 			}
 		}
-		// 创建 Spinner 所需数据
 		int size = siteMapList.size();
 		siteNameList = new String[size + 1];
 		siteUrlList = new String[size];
@@ -166,7 +144,6 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 		}
 		siteNameList[size] = "管理站点";
 		siteSpinner = (Spinner) findViewById(R.id.site);
-		// 为Spinner 添加适配器和选择事件
 		ArrayAdapter<String> siteSpinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, siteNameList);
 		siteSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		siteSpinner.setAdapter(siteSpinnerAdapter);
