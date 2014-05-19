@@ -16,17 +16,19 @@ import android.widget.TextView;
 public class TiebaListAdapter extends BaseAdapter implements Serializable {
 	private Context context;
 	private LayoutInflater inflater;
-	public List<TiebaBean> list;
+	private List<TiebaBean> list;
+	public boolean overview;
 
-	public TiebaListAdapter(Context context, List<TiebaBean> data) {
+	public TiebaListAdapter(Context context, List<TiebaBean> data, boolean overview) {
 		this.context = context;
 		this.inflater = LayoutInflater.from(this.context);
 		this.list = data;
+		this.overview = overview;
 	}
 
 	@Override
 	public int getCount() {
-		return list.size();
+		return list.size() + 1;
 	}
 
 	@Override
@@ -44,20 +46,30 @@ public class TiebaListAdapter extends BaseAdapter implements Serializable {
 		ViewHolder viewHolder;
 		if (convertView == null) {
 			viewHolder = new ViewHolder();
-			convertView = inflater.inflate(R.layout.list_tieba, null);
-			viewHolder.tiebaName = (TextView) convertView.findViewById(R.id.tieba_name);
-			viewHolder.level = (TextView) convertView.findViewById(R.id.level);
+			if (position == list.size()) {
+				convertView = inflater.inflate(R.layout.list_more, null);
+				viewHolder.tips = (TextView) convertView.findViewById(R.id.tips);
+			} else {
+				convertView = inflater.inflate(R.layout.list_tieba, null);
+				viewHolder.tiebaName = (TextView) convertView.findViewById(R.id.tieba_name);
+				viewHolder.level = (TextView) convertView.findViewById(R.id.level);
+			}
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-		viewHolder.tiebaName.setText(list.get(position).name);
-		viewHolder.level.setText(String.valueOf(list.get(position).level));
+		if (position == list.size()) {
+			viewHolder.tips.setText(overview ? "显示更多" : "收缩列表");
+		} else {
+			viewHolder.tiebaName.setText(list.get(position).name);
+			viewHolder.level.setText(String.valueOf(list.get(position).level));
+		}
 		return convertView;
 	}
 
 	private static class ViewHolder {
 		public TextView tiebaName;
 		public TextView level;
+		public TextView tips;
 	}
 }

@@ -3,6 +3,7 @@ package com.zulwi.tiebasigner.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,6 +49,7 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 	private int baiduAccountFollowNum;
 	private int baiduAccountTiebaNum;
 	private List<TiebaBean> tiebaList = new ArrayList<TiebaBean>();
+	private List<TiebaBean> overviewTiebaList = new ArrayList<TiebaBean>();
 	private TiebaListAdapter tiebaListAdapter;
 	private MainActivity activity;
 	private AccountBean accountBean;
@@ -105,10 +107,20 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 									SexTextView.setText("?");
 									SexTextView.setTextColor(Color.GRAY);
 							}
-							TiebaAgeTextView.setText(baiduAccountTiebaAge+getString(R.string.years));
+							TiebaAgeTextView.setText(baiduAccountTiebaAge + getString(R.string.years));
 							TiebaTipsTextView.setText(getString(R.string.loading_tiebas).replace("0", String.valueOf(baiduAccountTiebaNum)));
 							FollowTipsTextView.setText(getString(R.string.loading_follows).replace("0", String.valueOf(baiduAccountFollowNum)));
 							FansTipsTextView.setText(getString(R.string.loading_fans).replace("0", String.valueOf(baiduAccountFansNum)));
+							JSONArray tiebas = object.getJSONArray("tiebas");
+							for (int i = 0; i < tiebas.length(); i++) {
+								JSONObject tieba = tiebas.getJSONObject(i);
+								tiebaList.add(new TiebaBean(tieba.getInt("forum_id"), tieba.getInt("level_id"), tieba.getString("forum_name")));
+							}
+							for (int i = 0; i < tiebaList.size() && i < 4; i++) {
+								overviewTiebaList.add(tiebaList.get(i));
+							}
+							tiebaListAdapter = new TiebaListAdapter(getActivity(), overviewTiebaList, true);
+							tiebaTable.setAdapter(tiebaListAdapter);
 						} catch (JSONException ej) {
 							ej.printStackTrace();
 							tips = "JSON解析错误";
@@ -149,25 +161,23 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 		TiebaTipsTextView = (TextView) view.findViewById(R.id.userinfo_tieba_tips);
 		FollowTipsTextView = (TextView) view.findViewById(R.id.userinfo_follow_tips);
 		FansTipsTextView = (TextView) view.findViewById(R.id.userinfo_fans_tips);
-		dialog = DialogUtil.createLoadingDialog(activity, "正在获取百度账号信息", true);
-		dialog.show();
-		getBaiduAccountInfo.start();
 		userAvatar = (CircularImage) view.findViewById(R.id.userinfo_avatar);
 		userAvatar.setImageResource(R.drawable.avatar);
-		tiebaList.add(new TiebaBean(1, 8, "测试贴吧1"));
-		tiebaList.add(new TiebaBean(2, 12, "测试贴吧2"));
-		tiebaList.add(new TiebaBean(3, 11, "测试贴吧3"));
-		tiebaListAdapter = new TiebaListAdapter(getActivity(), tiebaList);
 		tiebaTable = (ListTableView) view.findViewById(R.id.userinfo_tieba_list);
 		view.findViewById(R.id.userinfo_follows).setOnClickListener(this);
 		view.findViewById(R.id.userinfo_fans).setOnClickListener(this);
-		tiebaTable.setAdapter(tiebaListAdapter);
 		tiebaTable.setOnClickListener(new ListTableView.onClickListener() {
 			@Override
-			public void onClick(View v, int which) {
-				System.out.println(which);
+			public void onClick(View v, int which, boolean last) {
+				if (last) {
+					tiebaListAdapter = new TiebaListAdapter(getActivity(), tiebaListAdapter.overview ? tiebaList : overviewTiebaList, !tiebaListAdapter.overview);
+					tiebaTable.setAdapter(tiebaListAdapter);
+				}
 			}
 		});
+		dialog = DialogUtil.createLoadingDialog(activity, "正在获取百度账号信息", true);
+		dialog.show();
+		getBaiduAccountInfo.start();
 		return view;
 	}
 
