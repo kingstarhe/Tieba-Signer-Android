@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -34,8 +35,18 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 	private ListTableView tiebaTable;
 	private TextView usernameTextView;
 	private TextView emailTextView;
+	private TextView SexTextView;
+	private TextView TiebaAgeTextView;
+	private TextView TiebaTipsTextView;
+	private TextView FollowTipsTextView;
+	private TextView FansTipsTextView;
 	private String baiduAccountUsername;
 	private String baiduAccountEmail;
+	private int baiduAccountSex;
+	private String baiduAccountTiebaAge;
+	private int baiduAccountFansNum;
+	private int baiduAccountFollowNum;
+	private int baiduAccountTiebaNum;
 	private List<TiebaBean> tiebaList = new ArrayList<TiebaBean>();
 	private TiebaListAdapter tiebaListAdapter;
 	private MainActivity activity;
@@ -72,10 +83,32 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 					JSONObject object = data.data;
 					if (data.status == 0) {
 						try {
-							baiduAccountUsername = object.getString("bd_username");
-							baiduAccountEmail = object.getString("bd_email");
+							baiduAccountUsername = object.getString("username");
+							baiduAccountEmail = object.getString("email");
+							baiduAccountSex = object.getInt("sex");
+							baiduAccountTiebaAge = object.getString("tb_age");
+							baiduAccountFansNum = object.getInt("fans_num");
+							baiduAccountFollowNum = object.getInt("follow_num");
+							baiduAccountTiebaNum = object.getInt("tb_num");
 							usernameTextView.setText(baiduAccountUsername);
 							emailTextView.setText(baiduAccountEmail);
+							switch (baiduAccountSex) {
+								case 1:
+									SexTextView.setText("♂");
+									SexTextView.setTextColor(Color.parseColor("#00b4fd"));
+									break;
+								case 2:
+									SexTextView.setText("♀");
+									SexTextView.setTextColor(Color.RED);
+									break;
+								default:
+									SexTextView.setText("?");
+									SexTextView.setTextColor(Color.GRAY);
+							}
+							TiebaAgeTextView.setText(baiduAccountTiebaAge+getString(R.string.years));
+							TiebaTipsTextView.setText(getString(R.string.loading_tiebas).replace("0", String.valueOf(baiduAccountTiebaNum)));
+							FollowTipsTextView.setText(getString(R.string.loading_follows).replace("0", String.valueOf(baiduAccountFollowNum)));
+							FansTipsTextView.setText(getString(R.string.loading_fans).replace("0", String.valueOf(baiduAccountFansNum)));
 						} catch (JSONException ej) {
 							ej.printStackTrace();
 							tips = "JSON解析错误";
@@ -111,6 +144,11 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 		View view = inflater.inflate(R.layout.fragment_userinfo, container, false);
 		usernameTextView = (TextView) view.findViewById(R.id.userinfo_name);
 		emailTextView = (TextView) view.findViewById(R.id.userinfo_email);
+		SexTextView = (TextView) view.findViewById(R.id.userinfo_sex);
+		TiebaAgeTextView = (TextView) view.findViewById(R.id.userinfo_tiebaage);
+		TiebaTipsTextView = (TextView) view.findViewById(R.id.userinfo_tieba_tips);
+		FollowTipsTextView = (TextView) view.findViewById(R.id.userinfo_follow_tips);
+		FansTipsTextView = (TextView) view.findViewById(R.id.userinfo_fans_tips);
 		dialog = DialogUtil.createLoadingDialog(activity, "正在获取百度账号信息", true);
 		dialog.show();
 		getBaiduAccountInfo.start();
