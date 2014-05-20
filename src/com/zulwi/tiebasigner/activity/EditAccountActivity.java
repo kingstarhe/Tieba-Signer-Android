@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.adapter.AccountListAdapter;
@@ -63,14 +64,16 @@ public class EditAccountActivity extends ActionBarActivity {
 				return super.onOptionsItemSelected(item);
 		}
 	}
-	
-	public void doLogout(View view){
+
+	public void doLogout(View view) {
 		BaseDBHelper dbHelper = new BaseDBHelper(this);
 		dbHelper.execSQL("DELETE FROM accounts WHERE current=1");
 		dbHelper.close();
-		Intent intent = new Intent(this,LoginActivity.class);
+		Intent intent = new Intent(this, LoginActivity.class);
 		startActivity(intent);
 		finish();
+		sendBroadcast(new Intent("com.zulwi.tiebasigner.LOGOUT"));
+		Toast.makeText(this, "请重新登录", Toast.LENGTH_LONG).show();
 	}
 
 }

@@ -62,8 +62,8 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 	private int baiduAccountTiebaNum;
 	private List<TiebaBean> tiebaList = new ArrayList<TiebaBean>();
 	private List<TiebaBean> overviewTiebaList = new ArrayList<TiebaBean>();
-	private List<ImageView> followsAvatarImgView = new ArrayList<ImageView>();
-	private List<ImageView> fansAvatarImgView = new ArrayList<ImageView>();
+	private ImageView[] followsAvatarImgView = new ImageView[4];
+	private ImageView[] fansAvatarImgView = new ImageView[4];
 	private TiebaListAdapter tiebaListAdapter;
 	private MainActivity activity;
 	private AccountBean accountBean;
@@ -188,12 +188,13 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 					switch (msg.arg1) {
 						case 0:
 							userAvatar.setImageBitmap(bitmap);
+							activity.setAccountAvatar(bitmap);
 							break;
 						case 1:
-							followsAvatarImgView.get(msg.arg2).setImageBitmap(bitmap);
+							followsAvatarImgView[msg.arg2].setImageBitmap(bitmap);
 							break;
 						case 2:
-							fansAvatarImgView.get(msg.arg2).setImageBitmap(bitmap);
+							fansAvatarImgView[msg.arg2].setImageBitmap(bitmap);
 							break;
 					}
 					break;
@@ -231,14 +232,14 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 		FollowTipsTextView = (TextView) view.findViewById(R.id.userinfo_follow_tips);
 		FansTipsTextView = (TextView) view.findViewById(R.id.userinfo_fans_tips);
 		userAvatar = (CircularImage) view.findViewById(R.id.userinfo_avatar);
-		followsAvatarImgView.add((ImageView) view.findViewById(R.id.follow_avatar_1));
-		followsAvatarImgView.add((ImageView) view.findViewById(R.id.follow_avatar_2));
-		followsAvatarImgView.add((ImageView) view.findViewById(R.id.follow_avatar_3));
-		followsAvatarImgView.add((ImageView) view.findViewById(R.id.follow_avatar_4));
-		fansAvatarImgView.add((ImageView) view.findViewById(R.id.fans_avatar_1));
-		fansAvatarImgView.add((ImageView) view.findViewById(R.id.fans_avatar_2));
-		fansAvatarImgView.add((ImageView) view.findViewById(R.id.fans_avatar_3));
-		fansAvatarImgView.add((ImageView) view.findViewById(R.id.fans_avatar_4));
+		followsAvatarImgView[0] = (ImageView) view.findViewById(R.id.follow_avatar_1);
+		followsAvatarImgView[1] = (ImageView) view.findViewById(R.id.follow_avatar_2);
+		followsAvatarImgView[2] = (ImageView) view.findViewById(R.id.follow_avatar_3);
+		followsAvatarImgView[3] = (ImageView) view.findViewById(R.id.follow_avatar_4);
+		fansAvatarImgView[0] = (ImageView) view.findViewById(R.id.fans_avatar_1);
+		fansAvatarImgView[1] = (ImageView) view.findViewById(R.id.fans_avatar_2);
+		fansAvatarImgView[2] = (ImageView) view.findViewById(R.id.fans_avatar_3);
+		fansAvatarImgView[3] = (ImageView) view.findViewById(R.id.fans_avatar_4);
 		userAvatar.setImageResource(R.drawable.avatar);
 		tiebaTable = (ListTableView) view.findViewById(R.id.userinfo_tieba_list);
 		view.findViewById(R.id.userinfo_follows).setOnClickListener(this);

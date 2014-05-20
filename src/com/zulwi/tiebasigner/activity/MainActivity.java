@@ -4,9 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -30,6 +35,12 @@ public class MainActivity extends ActionBarActivity {
 	private List<Button> bottonBarButton = new ArrayList<Button>();
 	private int currentFragmentId = 0;
 	private AccountBean accountBean;
+	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			finish();
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +96,14 @@ public class MainActivity extends ActionBarActivity {
 		}).create().show();
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("com.zulwi.tiebasigner.LOGOUT");
+		registerReceiver(broadcastReceiver, intentFilter);
+	}
+
 	private void changeFragment(int position) {
 		FragmentBean from = fragmentList.get(currentFragmentId);
 		FragmentBean to = fragmentList.get(position);
@@ -126,6 +145,12 @@ public class MainActivity extends ActionBarActivity {
 
 	public AccountBean getAccountBean() {
 		return accountBean;
+	}
+
+	public void setAccountAvatar(Bitmap avatar) {
+		accountBean.avatar = avatar;
+		Fragment settingFragment = fragmentList.get(3).fragment;
+		if (settingFragment.isAdded()) ((SettingFragment) settingFragment).setAvatar(avatar);
 	}
 
 }

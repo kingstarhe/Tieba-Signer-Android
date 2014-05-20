@@ -4,6 +4,7 @@ import com.zulwi.tiebasigner.R;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 	private TextView emailTextView;
 	private TextView siteNameTextView;
 	private TextView siteUrlTextView;
+	private CircularImage avatarCircularImage;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -45,7 +47,8 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 		emailTextView.setText(activity.getAccountBean().email);
 		siteNameTextView.setText(activity.getAccountBean().siteName);
 		siteUrlTextView.setText(activity.getAccountBean().siteUrl);
-		((CircularImage) view.findViewById(R.id.setting_avatar)).setImageResource(R.drawable.avatar);
+		avatarCircularImage = (CircularImage) view.findViewById(R.id.setting_avatar);
+		avatarCircularImage.setImageBitmap(activity.getAccountBean().avatar);
 		view.findViewById(R.id.setting_userinfo).setOnClickListener(this);
 		view.findViewById(R.id.setting_siteinfo).setOnClickListener(this);
 		view.findViewById(R.id.setting_remind).setOnClickListener(this);
@@ -111,6 +114,10 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 				break;
 		}
 		if (intent != null) startActivity(intent);
+	}
+	
+	public void setAvatar(Bitmap avatar){
+		avatarCircularImage.setImageBitmap(avatar);
 	}
 
 }

@@ -2,6 +2,8 @@ package com.zulwi.tiebasigner.bean;
 
 import java.io.Serializable;
 
+import android.graphics.Bitmap;
+
 @SuppressWarnings("serial")
 public class AccountBean implements Serializable {
 	public int id;
@@ -12,6 +14,7 @@ public class AccountBean implements Serializable {
 	public String siteUrl;
 	public String siteName;
 	public int current;
+	public Bitmap avatar;
 
 	public AccountBean(String username, String email, String siteUrl, String cookieString) {
 		this.username = username;
