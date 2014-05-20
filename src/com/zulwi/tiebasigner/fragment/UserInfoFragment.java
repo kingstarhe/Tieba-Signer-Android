@@ -167,11 +167,11 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 							}
 							tiebaListAdapter = new TiebaListAdapter(getActivity(), overviewTiebaList, true);
 							tiebaTable.setAdapter(tiebaListAdapter);
-							JSONArray follow = object.getJSONObject("follow").getJSONArray("head_photo");
+							JSONArray follow = object.getJSONObject("follow").getJSONArray("head_photo_list");
 							for (int i = 0; i < follow.length() && i < 4; i++) {
 								new Thread(new loadUserAvatarThread(follow.getString(i), 1, i)).start();
 							}
-							JSONArray fans = object.getJSONObject("fans").getJSONArray("head_photo");
+							JSONArray fans = object.getJSONObject("fans").getJSONArray("head_photo_list");
 							for (int i = 0; i < fans.length() && i < 4; i++) {
 								new Thread(new loadUserAvatarThread(fans.getString(i), 2, i)).start();
 							}

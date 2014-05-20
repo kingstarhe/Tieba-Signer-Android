@@ -74,7 +74,7 @@ public class ClientApiUtil {
 				String message = jsonObject.getString("msg");
 				JSONObject data = jsonObject.getJSONObject("data");
 				if (status == -1) throw new ClientApiException(ClientApiException.AUTH_FAIL);
-				return new JSONBean(status, message, data);
+				return new JSONBean(status, message, data, result);
 			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
@@ -114,7 +114,7 @@ public class ClientApiUtil {
 				String message = jsonObject.getString("msg");
 				JSONObject data = jsonObject.getJSONObject("data");
 				if (status == -1) throw new ClientApiException(ClientApiException.AUTH_FAIL);
-				return new JSONBean(status, message, data);
+				return new JSONBean(status, message, data, result);
 			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
@@ -149,15 +149,15 @@ public class ClientApiUtil {
 	public String getResult() {
 		return result;
 	}
-	
-	public void close(){
+
+	public void close() {
 		client.getConnectionManager().shutdown();
 	}
-	
+
 	@Override
 	protected void finalize() throws Throwable {
-	    super.finalize();
-	    close();
+		super.finalize();
+		close();
 	}
-	
+
 }

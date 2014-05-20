@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.adapter.AccountListAdapter;
@@ -73,7 +72,6 @@ public class EditAccountActivity extends ActionBarActivity {
 		startActivity(intent);
 		finish();
 		sendBroadcast(new Intent("com.zulwi.tiebasigner.LOGOUT"));
-		Toast.makeText(this, "请重新登录", Toast.LENGTH_LONG).show();
 	}
 
 }
