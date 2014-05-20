@@ -3,12 +3,14 @@ package com.zulwi.tiebasigner.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 
 import com.zulwi.tiebasigner.R;
@@ -60,6 +62,15 @@ public class EditAccountActivity extends ActionBarActivity {
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	public void doLogout(View view){
+		BaseDBHelper dbHelper = new BaseDBHelper(this);
+		dbHelper.execSQL("DELETE FROM accounts WHERE current=1");
+		dbHelper.close();
+		Intent intent = new Intent(this,LoginActivity.class);
+		startActivity(intent);
+		finish();
 	}
 
 }

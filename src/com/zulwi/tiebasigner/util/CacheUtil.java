@@ -7,6 +7,7 @@ import java.util.Map;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import com.zulwi.tiebasigner.db.CacheDBHelper;
 
@@ -48,11 +49,12 @@ public class CacheUtil {
 			dbHelper.execSQL("DELETE FROM user_cache WHERE uid=" + this.uid + " AND key=\'" + key + "\'");
 		}
 
-		public byte[] getImgCache(String key) {
+		public Bitmap getImgCache(String key) {
 			Cursor cursor = dbHelper.rawQuery("SELECT value FROM img_cache WHERE  uid=" + this.uid + " AND key=\'" + key + "\'", null);
 			if (cursor.getCount() > 0) {
 				cursor.moveToFirst();
-				return cursor.getBlob(0);
+				byte[] img = cursor.getBlob(0);
+				return BitmapFactory.decodeByteArray(img, 0, img.length);
 			} else return null;
 		}
 

@@ -135,6 +135,36 @@
             android:layout_height="wrap_content"
             android:background="@drawable/list_item_bottom"
             android:clickable="true"
+            android:onClick="openBaiduClassAuthorWebSite"
+            android:paddingBottom="15dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="15dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:gravity="center_vertical"
+                android:text="@string/baidu_class_author"
+                android:textColor="@drawable/site_list_text"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:gravity="center_vertical"
+                android:text="@string/baidu_class_author_name"
+                android:textColor="@drawable/site_list_text"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/list_item_bottom"
+            android:clickable="true"
             android:onClick="openAuthorWebSite"
             android:paddingBottom="15dp"
             android:paddingLeft="10dp"

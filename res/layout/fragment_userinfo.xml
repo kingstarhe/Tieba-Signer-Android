@@ -29,42 +29,20 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/userinfo_avatar"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="0dp"
         android:layout_toRightOf="@id/userinfo_avatar"
         android:text="@string/user_info"
         android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/userinfo_email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/userinfo_name"
-        android:layout_below="@id/userinfo_name"
-        android:layout_marginTop="4dp"
-        android:text="@string/email"
-        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/userinfo_sex"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/userinfo_name"
-        android:layout_below="@id/userinfo_email"
+        android:layout_below="@id/userinfo_name"
         android:layout_marginTop="5dp"
         android:text="@string/male"
         android:textSize="12sp" />
-
-    <!--
-         <TextView
-        android:id="@+id/userinfo_selfage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/userinfo_sex"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@id/userinfo_sex"
-        android:text="@string/age"
-        android:textSize="12sp" />
-    -->
 
     <TextView
         android:id="@+id/userinfo_tiebaage"
@@ -74,6 +52,17 @@
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@id/userinfo_sex"
         android:text="@string/years"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/userinfo_intro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/userinfo_sex"
+        android:layout_below="@id/userinfo_sex"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="8dp"
+        android:text="@null"
         android:textSize="12sp" />
 
     <ScrollView
@@ -127,36 +116,40 @@
                 android:paddingRight="5dp" >
 
                 <ImageView
+                    android:id="@+id/follow_avatar_1"
                     android:layout_width="0dp"
                     android:layout_height="60dp"
                     android:layout_margin="5dp"
                     android:layout_weight="1"
                     android:contentDescription="@null"
-                    android:src="@drawable/avatar" />
+                    android:src="@android:color/transparent" />
 
                 <ImageView
+                    android:id="@+id/follow_avatar_2"
                     android:layout_width="0dp"
                     android:layout_height="60dp"
                     android:layout_margin="5dp"
                     android:layout_weight="1"
                     android:contentDescription="@null"
-                    android:src="@drawable/avatar" />
+                    android:src="@android:color/transparent" />
 
                 <ImageView
+                    android:id="@+id/follow_avatar_3"
                     android:layout_width="0dp"
                     android:layout_height="60dp"
                     android:layout_margin="5dp"
                     android:layout_weight="1"
                     android:contentDescription="@null"
-                    android:src="@drawable/avatar" />
+                    android:src="@android:color/transparent" />
 
                 <ImageView
+                    android:id="@+id/follow_avatar_4"
                     android:layout_width="0dp"
                     android:layout_height="60dp"
                     android:layout_margin="5dp"
                     android:layout_weight="1"
                     android:contentDescription="@null"
-                    android:src="@drawable/avatar" />
+                    android:src="@android:color/transparent" />
             </LinearLayout>
 
             <TextView
@@ -166,7 +159,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="10dp"
                 android:paddingLeft="5dp"
-                android:text="@string/loading_fans" />
+                android:text="@android:color/transparent" />
 
             <LinearLayout
                 android:id="@+id/userinfo_fans"
@@ -179,36 +172,40 @@
                 android:paddingRight="5dp" >
 
                 <ImageView
+                    android:id="@+id/fans_avatar_1"
                     android:layout_width="0dp"
                     android:layout_height="60dp"
                     android:layout_margin="5dp"
                     android:layout_weight="1"
                     android:contentDescription="@null"
-                    android:src="@drawable/avatar" />
+                    android:src="@android:color/transparent" />
 
                 <ImageView
+                    android:id="@+id/fans_avatar_2"
                     android:layout_width="0dp"
                     android:layout_height="60dp"
                     android:layout_margin="5dp"
                     android:layout_weight="1"
                     android:contentDescription="@null"
-                    android:src="@drawable/avatar" />
+                    android:src="@android:color/transparent" />
 
                 <ImageView
+                    android:id="@+id/fans_avatar_3"
                     android:layout_width="0dp"
                     android:layout_height="60dp"
                     android:layout_margin="5dp"
                     android:layout_weight="1"
                     android:contentDescription="@null"
-                    android:src="@drawable/avatar" />
+                    android:src="@android:color/transparent" />
 
                 <ImageView
+                    android:id="@+id/fans_avatar_4"
                     android:layout_width="0dp"
                     android:layout_height="60dp"
                     android:layout_margin="5dp"
                     android:layout_weight="1"
                     android:contentDescription="@null"
-                    android:src="@drawable/avatar" />
+                    android:src="@android:color/transparent" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

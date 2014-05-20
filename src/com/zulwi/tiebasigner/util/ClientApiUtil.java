@@ -40,6 +40,7 @@ public class ClientApiUtil {
 	public final static String API_PATH = "/plugin.php?id=zw_client_api&a=";
 	public final static int ERROR = 0;
 	public final static int SUCCESSED = 1;
+	public final static int LOAD_IMG = 2;
 
 	public ClientApiUtil(Context context, String siteUrl) {
 		client = new DefaultHttpClient();
@@ -148,4 +149,15 @@ public class ClientApiUtil {
 	public String getResult() {
 		return result;
 	}
+	
+	public void close(){
+		client.getConnectionManager().shutdown();
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+	    super.finalize();
+	    close();
+	}
+	
 }
