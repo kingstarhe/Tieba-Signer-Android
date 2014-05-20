@@ -60,8 +60,8 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/userinfo_sex"
         android:layout_below="@id/userinfo_sex"
-        android:layout_marginTop="4dp"
         android:layout_marginRight="8dp"
+        android:layout_marginTop="4dp"
         android:text="@null"
         android:textSize="12sp" />
 
@@ -95,6 +95,16 @@
                 android:layout_height="wrap_content"
                 android:splitMotionEvents="false" >
             </com.zulwi.tiebasigner.view.ListTableView>
+
+            <TextView
+                android:id="@+id/userinfo_more_tieba"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:textColor="@drawable/site_list_text"
+                android:background="@drawable/list_item"
+                android:gravity="center"
+                android:text="@string/no_tieba"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/userinfo_follow_tips"
@@ -159,7 +169,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="10dp"
                 android:paddingLeft="5dp"
-                android:text="@android:color/transparent" />
+                android:text="@string/loading_fans" />
 
             <LinearLayout
                 android:id="@+id/userinfo_fans"

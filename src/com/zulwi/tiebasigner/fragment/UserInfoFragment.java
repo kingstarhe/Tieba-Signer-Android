@@ -45,6 +45,7 @@ import com.zulwi.tiebasigner.view.ListTableView;
 public class UserInfoFragment extends BaseFragment implements View.OnClickListener {
 	private CircularImage userAvatar;
 	private ListTableView tiebaTable;
+	private TextView tiebaListSwitcher;
 	private TextView usernameTextView;
 	private TextView introTextView;
 	private TextView SexTextView;
@@ -165,7 +166,9 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 							for (int i = 0; i < tiebaList.size() && i < 4; i++) {
 								overviewTiebaList.add(tiebaList.get(i));
 							}
-							tiebaListAdapter = new TiebaListAdapter(getActivity(), overviewTiebaList, true);
+							tiebaListAdapter = new TiebaListAdapter(getActivity(), overviewTiebaList);
+							if (tiebaList.size() > 4) tiebaListSwitcher.setText(getString(R.string.show_more));
+							else if (tiebaList.size() <= 4 && tiebaList.size() != 0) tiebaListSwitcher.setVisibility(View.GONE);
 							tiebaTable.setAdapter(tiebaListAdapter);
 							JSONArray follow = object.getJSONObject("follow").getJSONArray("head_photo_list");
 							for (int i = 0; i < follow.length() && i < 4; i++) {
@@ -242,14 +245,18 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 		fansAvatarImgView[3] = (ImageView) view.findViewById(R.id.fans_avatar_4);
 		userAvatar.setImageResource(R.drawable.avatar);
 		tiebaTable = (ListTableView) view.findViewById(R.id.userinfo_tieba_list);
+		tiebaListSwitcher = (TextView) view.findViewById(R.id.userinfo_more_tieba);
+		tiebaListSwitcher.setOnClickListener(this);
 		view.findViewById(R.id.userinfo_follows).setOnClickListener(this);
 		view.findViewById(R.id.userinfo_fans).setOnClickListener(this);
 		tiebaTable.setOnClickListener(new ListTableView.onClickListener() {
 			@Override
 			public void onClick(View v, int which, boolean last) {
 				if (last) {
-					tiebaListAdapter = new TiebaListAdapter(getActivity(), tiebaListAdapter.overview ? tiebaList : overviewTiebaList, !tiebaListAdapter.overview);
-					tiebaTable.setAdapter(tiebaListAdapter);
+					// tiebaListAdapter = new TiebaListAdapter(getActivity(),
+					// tiebaListAdapter.overview ? tiebaList :
+					// overviewTiebaList, !tiebaListAdapter.overview);
+					// tiebaTable.setAdapter(tiebaListAdapter);
 				}
 			}
 		});
@@ -295,8 +302,21 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 	}
 
 	@Override
-	public void onClick(View v) {
-
+	public void onClick(View view) {
+		switch (view.getId()) {
+			case R.id.userinfo_more_tieba:
+				String oldText = tiebaListSwitcher.getText().toString();
+				if (oldText.equals(getString(R.string.show_more))){
+					tiebaListAdapter = new TiebaListAdapter(getActivity(), tiebaList);
+					tiebaListSwitcher.setText(getString(R.string.shrink_list));
+				}else if (oldText.equals(getString(R.string.shrink_list))) {
+					tiebaListAdapter = new TiebaListAdapter(getActivity(), overviewTiebaList);
+					tiebaListSwitcher.setText(getString(R.string.show_more));
+				}
+				else break;
+				tiebaTable.setAdapter(tiebaListAdapter);
+				break;
+		}
 	}
 
 }

@@ -17,18 +17,16 @@ public class TiebaListAdapter extends BaseAdapter implements Serializable {
 	private Context context;
 	private LayoutInflater inflater;
 	private List<TiebaBean> list;
-	public boolean overview;
 
-	public TiebaListAdapter(Context context, List<TiebaBean> data, boolean overview) {
+	public TiebaListAdapter(Context context, List<TiebaBean> data) {
 		this.context = context;
 		this.inflater = LayoutInflater.from(this.context);
 		this.list = data;
-		this.overview = overview;
 	}
 
 	@Override
 	public int getCount() {
-		return list.size() + 1;
+		return list.size();
 	}
 
 	@Override
@@ -46,30 +44,20 @@ public class TiebaListAdapter extends BaseAdapter implements Serializable {
 		ViewHolder viewHolder;
 		if (convertView == null) {
 			viewHolder = new ViewHolder();
-			if (position == list.size()) {
-				convertView = inflater.inflate(R.layout.list_more, null);
-				viewHolder.tips = (TextView) convertView.findViewById(R.id.tips);
-			} else {
-				convertView = inflater.inflate(R.layout.list_tieba, null);
-				viewHolder.tiebaName = (TextView) convertView.findViewById(R.id.tieba_name);
-				viewHolder.level = (TextView) convertView.findViewById(R.id.level);
-			}
+			convertView = inflater.inflate(R.layout.list_tieba, null);
+			viewHolder.tiebaName = (TextView) convertView.findViewById(R.id.tieba_name);
+			viewHolder.level = (TextView) convertView.findViewById(R.id.level);
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-		if (position == list.size()) {
-			viewHolder.tips.setText(overview ? "显示更多" : "收缩列表");
-		} else {
-			viewHolder.tiebaName.setText(list.get(position).name);
-			viewHolder.level.setText(String.valueOf(list.get(position).level));
-		}
+		viewHolder.tiebaName.setText(list.get(position).name);
+		viewHolder.level.setText(String.valueOf(list.get(position).level));
 		return convertView;
 	}
 
 	private static class ViewHolder {
 		public TextView tiebaName;
 		public TextView level;
-		public TextView tips;
 	}
 }

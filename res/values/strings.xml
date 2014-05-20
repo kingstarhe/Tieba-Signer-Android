@@ -34,6 +34,7 @@
     <string name="piece">个</string>
     <string name="tieba">贴吧</string>
     <string name="email">邮箱</string>
+    <string name="no_tieba">未关注任何贴吧</string>
     <string name="loading_tiebas">共有 0 个贴吧</string>
     <string name="loading_follows">共关注 0 人</string>
     <string name="loading_fans">共有 0 人关注我</string>
@@ -58,5 +59,6 @@
     <string name="studio_name">著微工作室</string>
     <string name="edit_account">管理账号</string>
     <string name="logout">注销当前账号</string>
-
+	<string name="show_more">显示更多</string>
+	<string name="shrink_list">收缩列表</string>
 </resources>
