@@ -24,7 +24,7 @@ public class ListTableView extends TableLayout {
 				row.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View arg0) {
-						if (listener != null) listener.onClick(row, n, n == adapter.getCount() - 1);
+						if (listener != null) listener.onClick(row, n);
 					}
 				});
 				row.addView(adapter.getView(i, null, null));
@@ -65,7 +65,7 @@ public class ListTableView extends TableLayout {
 	}
 
 	public interface onClickListener {
-		void onClick(View v, int which, boolean last);
+		void onClick(View v, int which);
 	}
 
 }

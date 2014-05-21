@@ -23,6 +23,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +44,7 @@ import com.zulwi.tiebasigner.util.DialogUtil;
 import com.zulwi.tiebasigner.view.CircularImage;
 import com.zulwi.tiebasigner.view.ListTableView;
 
-public class UserInfoFragment extends BaseFragment implements View.OnClickListener {
+public class UserInfoFragment extends BaseFragment implements View.OnClickListener, OnRefreshListener {
 	private CircularImage userAvatar;
 	private ListTableView tiebaTable;
 	private TextView tiebaListSwitcher;
@@ -69,7 +71,9 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 	private MainActivity activity;
 	private AccountBean accountBean;
 	private Dialog dialog;
-	private Thread getBaiduAccountInfo = new Thread() {
+	private SwipeRefreshLayout swipeLayout;
+
+	private class getBaiduAccountInfo extends Thread {
 		public void run() {
 			ClientApiUtil clientApiUtil = new ClientApiUtil(activity, accountBean.siteUrl, accountBean.cookieString);
 			try {
@@ -82,7 +86,7 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 				e.printStackTrace();
 			}
 		}
-	};
+	}
 
 	private class loadUserAvatarThread implements Runnable {
 		private String url;
@@ -144,11 +148,11 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 							switch (baiduAccountSex) {
 								case 1:
 									SexTextView.setText("♂");
-									SexTextView.setTextColor(Color.parseColor("#00b4fd"));
+									SexTextView.setTextColor(Color.parseColor("#00B4FD"));
 									break;
 								case 2:
 									SexTextView.setText("♀");
-									SexTextView.setTextColor(Color.RED);
+									SexTextView.setTextColor(Color.parseColor("#E53A37"));
 									break;
 								default:
 									SexTextView.setText("?");
@@ -159,14 +163,17 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 							FollowTipsTextView.setText(getString(R.string.loading_follows).replace("0", String.valueOf(baiduAccountFollowNum)));
 							FansTipsTextView.setText(getString(R.string.loading_fans).replace("0", String.valueOf(baiduAccountFansNum)));
 							JSONArray tiebas = object.getJSONArray("tiebas");
+							tiebaList.clear();
 							for (int i = 0; i < tiebas.length(); i++) {
 								JSONObject tieba = tiebas.getJSONObject(i);
 								tiebaList.add(new TiebaBean(tieba.getInt("forum_id"), tieba.getInt("level_id"), tieba.getString("forum_name")));
 							}
+							overviewTiebaList.clear();
 							for (int i = 0; i < tiebaList.size() && i < 4; i++) {
 								overviewTiebaList.add(tiebaList.get(i));
 							}
 							tiebaListAdapter = new TiebaListAdapter(getActivity(), overviewTiebaList);
+							tiebaListSwitcher.setVisibility(View.VISIBLE);
 							if (tiebaList.size() > 4) tiebaListSwitcher.setText(getString(R.string.show_more));
 							else if (tiebaList.size() <= 4 && tiebaList.size() != 0) tiebaListSwitcher.setVisibility(View.GONE);
 							tiebaTable.setAdapter(tiebaListAdapter);
@@ -178,6 +185,7 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 							for (int i = 0; i < fans.length() && i < 4; i++) {
 								new Thread(new loadUserAvatarThread(fans.getString(i), 2, i)).start();
 							}
+							swipeLayout.setRefreshing(false);
 						} catch (JSONException ej) {
 							ej.printStackTrace();
 							tips = "JSON解析错误";
@@ -227,6 +235,9 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_userinfo, container, false);
+		swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+		swipeLayout.setOnRefreshListener(this);
+		swipeLayout.setColorScheme(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
 		usernameTextView = (TextView) view.findViewById(R.id.userinfo_name);
 		introTextView = (TextView) view.findViewById(R.id.userinfo_intro);
 		SexTextView = (TextView) view.findViewById(R.id.userinfo_sex);
@@ -251,54 +262,12 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 		view.findViewById(R.id.userinfo_fans).setOnClickListener(this);
 		tiebaTable.setOnClickListener(new ListTableView.onClickListener() {
 			@Override
-			public void onClick(View v, int which, boolean last) {
-				if (last) {
-					// tiebaListAdapter = new TiebaListAdapter(getActivity(),
-					// tiebaListAdapter.overview ? tiebaList :
-					// overviewTiebaList, !tiebaListAdapter.overview);
-					// tiebaTable.setAdapter(tiebaListAdapter);
-				}
+			public void onClick(View v, int which) {
 			}
 		});
 		dialog = DialogUtil.createLoadingDialog(activity, "正在获取百度账号信息", true);
-		dialog.show();
-		getBaiduAccountInfo.start();
+		refreshUserInfo();
 		return view;
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-	}
-
-	@Override
-	public void onDetach() {
-		super.onDetach();
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
 	}
 
 	@Override
@@ -306,17 +275,26 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 		switch (view.getId()) {
 			case R.id.userinfo_more_tieba:
 				String oldText = tiebaListSwitcher.getText().toString();
-				if (oldText.equals(getString(R.string.show_more))){
+				if (oldText.equals(getString(R.string.show_more))) {
 					tiebaListAdapter = new TiebaListAdapter(getActivity(), tiebaList);
 					tiebaListSwitcher.setText(getString(R.string.shrink_list));
-				}else if (oldText.equals(getString(R.string.shrink_list))) {
+				} else if (oldText.equals(getString(R.string.shrink_list))) {
 					tiebaListAdapter = new TiebaListAdapter(getActivity(), overviewTiebaList);
 					tiebaListSwitcher.setText(getString(R.string.show_more));
-				}
-				else break;
+				} else break;
 				tiebaTable.setAdapter(tiebaListAdapter);
 				break;
 		}
+	}
+
+	@Override
+	public void onRefresh() {
+		refreshUserInfo();
+	}
+
+	public void refreshUserInfo() {
+		dialog.show();
+		new getBaiduAccountInfo().start();
 	}
 
 }
