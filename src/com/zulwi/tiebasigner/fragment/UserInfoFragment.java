@@ -73,12 +73,20 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 	private AccountBean accountBean;
 	private Dialog dialog;
 	private SwipeRefreshLayout swipeLayout;
+	private boolean loadedFlag = false;
 
 	private class getBaiduAccountInfo extends Thread {
 		public void run() {
 			ClientApiUtil clientApiUtil = new ClientApiUtil(activity, accountBean.siteUrl, accountBean.cookieString);
 			try {
-				JSONBean result = clientApiUtil.get("baidu_account_info");
+				JSONBean result;
+				if (loadedFlag == false) {
+					UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);
+					result = new JSONBean(new JSONObject(cache.getDataCache("userinfo")));
+					cache.close();
+				} else {
+					result = clientApiUtil.get("baidu_account_info");
+				}
 				handler.obtainMessage(ClientApiUtil.SUCCESSED, 0, 0, result).sendToTarget();
 			} catch (ClientApiException e) {
 				e.printStackTrace();
@@ -188,7 +196,9 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 							}
 							UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);
 							cache.saveDataCache("userinfo", data.jsonString);
+							cache.close();
 							swipeLayout.setRefreshing(false);
+							loadedFlag = true;
 						} catch (JSONException ej) {
 							ej.printStackTrace();
 							tips = "JSON解析错误";

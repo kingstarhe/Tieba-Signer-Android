@@ -87,11 +87,11 @@ public class UserCacheUtil {
 		return true;
 	}
 
-	public void destruct() {
+	public void close() {
 		if (dbHelper != null) dbHelper.close();
 	}
 
 	protected void finalize() {
-		destruct();
+		close();
 	}
 }
