@@ -156,7 +156,9 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 							baiduAccountFollowNum = object.getInt("follow_num");
 							baiduAccountTiebaNum = object.getInt("tb_num");
 							baiduAccountAvatarUrl = object.getString("avatar");
-							new Thread(new loadUserAvatarThread(baiduAccountId, baiduAccountAvatarUrl, 0, 0)).start();
+							Bitmap cacheAccountAvatar = UserCacheUtil.getImgCache(baiduAccountId, activity);
+							if (loadedFlag == false && cacheAccountAvatar != null) handler.obtainMessage(ClientApiUtil.LOAD_IMG, 0, 0, new BaiduAccountBean(baiduAccountId, cacheAccountAvatar)).sendToTarget();
+							else new Thread(new loadUserAvatarThread(baiduAccountId, baiduAccountAvatarUrl, 0, 0)).start();
 							usernameTextView.setText(baiduAccountUsername);
 							introTextView.setText(baiduAccountIntro);
 							switch (baiduAccountSex) {
@@ -280,7 +282,6 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 		fansAvatarImgView[1] = (ImageView) view.findViewById(R.id.fans_avatar_2);
 		fansAvatarImgView[2] = (ImageView) view.findViewById(R.id.fans_avatar_3);
 		fansAvatarImgView[3] = (ImageView) view.findViewById(R.id.fans_avatar_4);
-		userAvatar.setImageResource(R.drawable.avatar);
 		tiebaTable = (ListTableView) view.findViewById(R.id.userinfo_tieba_list);
 		tiebaListSwitcher = (TextView) view.findViewById(R.id.userinfo_more_tieba);
 		tiebaListSwitcher.setOnClickListener(this);
@@ -292,6 +293,7 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 			}
 		});
 		dialog = DialogUtil.createLoadingDialog(activity, "正在获取百度账号信息", true);
+		dialog.show();
 		refreshUserInfo();
 		return view;
 	}
@@ -319,7 +321,6 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 	}
 
 	public void refreshUserInfo() {
-		dialog.show();
 		new getBaiduAccountInfo().start();
 	}
 
