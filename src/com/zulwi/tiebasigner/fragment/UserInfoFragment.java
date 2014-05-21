@@ -80,10 +80,11 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 			ClientApiUtil clientApiUtil = new ClientApiUtil(activity, accountBean.siteUrl, accountBean.cookieString);
 			try {
 				JSONBean result;
-				if (loadedFlag == false) {
-					UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);
+				UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);
+				String cacheString = cache.getDataCache("userinfo");
+				cache.close();
+				if (loadedFlag == false && cacheString!=null) {
 					result = new JSONBean(new JSONObject(cache.getDataCache("userinfo")));
-					cache.close();
 				} else {
 					result = clientApiUtil.get("baidu_account_info");
 				}
