@@ -25,11 +25,15 @@ public class AboutActivity extends ActionBarActivity {
 	public void openAuthorWebSite(View view) {
 		openWebSite("http://jerrys.me");
 	}
-	
+
 	public void openBaiduClassAuthorWebSite(View view) {
 		openWebSite("http://www.baidu.com/p/%E6%98%9F%E5%BC%A6%E9%9B%AA");
 	}
-	
+
+	public void openTesterWebSite(View view) {
+		openWebSite("http://linzian.us");
+	}
+
 	public void openStudioWebSite(View view) {
 		openWebSite("http://www.zhuwei.cc");
 	}

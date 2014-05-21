@@ -53,12 +53,15 @@
     <string name="author_name">Jerry Locke</string>
     <string name="baidu_class_author">百度接口</string>
     <string name="baidu_class_author_name">星弦雪</string>
+    <string name="app_test">测试</string>
+    <string name="app_tester">linzian</string>
     <string name="blog">博客</string>
     <string name="blog_url">http://jerrys.me</string>
     <string name="group">团队</string>
     <string name="studio_name">著微工作室</string>
     <string name="edit_account">管理账号</string>
     <string name="logout">注销当前账号</string>
-	<string name="show_more">显示更多</string>
-	<string name="shrink_list">收缩列表</string>
+    <string name="show_more">显示更多</string>
+    <string name="shrink_list">收缩列表</string>
+
 </resources>

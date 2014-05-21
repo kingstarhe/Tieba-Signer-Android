@@ -33,14 +33,17 @@ public class UserCacheUtil {
 	}
 
 	public boolean saveDataCache(String key, String value) {
-		Cursor cursor = dbHelper.rawQuery("SELECT id, value FROM user_cache WHERE  uid=" + this.uid + " AND key=\'" + key + "\'", null);
+		Cursor cursor = dbHelper.rawQuery("SELECT id, value FROM user_cache WHERE  sid=" + sid + " AND uid=" + this.uid + " AND key=\'" + key + "\'", null);
+		ContentValues values = new ContentValues();
+		values.put("key", key);
+		values.put("value", value);
 		if (cursor.getCount() > 0) {
 			cursor.moveToFirst();
+			dbHelper.update("user_cache", values, "id=" + cursor.getInt(0));
 			dbHelper.execSQL("UPDATE user_cache SET value=\'" + value + "\' WHERE id=" + cursor.getInt(0));
 		} else {
-			ContentValues values = new ContentValues();
-			values.put("key", key);
-			values.put("value", value);
+			values.put("sid", sid);
+			values.put("uid", uid);
 			long id = dbHelper.insert("user_cache", values);
 			if (id < 0) return false;
 		}
