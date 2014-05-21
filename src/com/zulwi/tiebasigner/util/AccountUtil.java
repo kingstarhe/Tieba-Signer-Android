@@ -46,9 +46,10 @@ public class AccountUtil implements Serializable {
 		System.out.println(result.status);
 		if (result.status != 0) throw new ClientApiException(result.message, ClientApiException.AUTH_FAIL);
 		try {
+			int uid = result.data.getInt("uid");
 			String username = result.data.getString("username");
 			String email = result.data.getString("email");
-			return new AccountBean(username, email, siteUrl, cookieString);
+			return new AccountBean(uid, username, email, siteUrl, cookieString);
 		} catch (JSONException e) {
 			e.printStackTrace();
 			throw new ClientApiException(ClientApiException.PARSE_ERROR);

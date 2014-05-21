@@ -41,6 +41,7 @@ import com.zulwi.tiebasigner.bean.TiebaBean;
 import com.zulwi.tiebasigner.exception.ClientApiException;
 import com.zulwi.tiebasigner.util.ClientApiUtil;
 import com.zulwi.tiebasigner.util.DialogUtil;
+import com.zulwi.tiebasigner.util.UserCacheUtil;
 import com.zulwi.tiebasigner.view.CircularImage;
 import com.zulwi.tiebasigner.view.ListTableView;
 
@@ -185,6 +186,8 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 							for (int i = 0; i < fans.length() && i < 4; i++) {
 								new Thread(new loadUserAvatarThread(fans.getString(i), 2, i)).start();
 							}
+							UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);
+							cache.saveDataCache("userinfo", data.jsonString);
 							swipeLayout.setRefreshing(false);
 						} catch (JSONException ej) {
 							ej.printStackTrace();

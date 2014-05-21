@@ -65,6 +65,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 					Cursor siteCursor = dbHelper.rawQuery("select * from sites where id=" + sid, null);
 					if (siteCursor.getCount() > 0) {
 						siteCursor.moveToFirst();
+						value.put("uid", accountBean.uid);
 						value.put("sid", sid);
 						value.put("username", accountBean.username);
 						value.put("email", accountBean.email);

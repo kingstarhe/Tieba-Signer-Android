@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,13 +14,15 @@ import com.zulwi.tiebasigner.db.CacheDBHelper;
 
 public class UserCacheUtil {
 	private int uid;
+	private int sid;
 	private CacheDBHelper dbHelper;
 	private Map<String, String> userCache = new HashMap<String, String>();
 
-	public UserCacheUtil(int uid) {
+	public UserCacheUtil(Context context, int sid, int uid) {
 		this.uid = uid;
-		this.dbHelper = new CacheDBHelper(null);
-		Cursor cursor = dbHelper.rawQuery("SELECT key, value FROM user_cache WHERE  uid=" + this.uid, null);
+		this.sid = sid;
+		this.dbHelper = new CacheDBHelper(context);
+		Cursor cursor = dbHelper.rawQuery("SELECT key, value FROM user_cache WHERE  uid=" + this.uid + " AND sid=" + this.sid, null);
 		for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
 			userCache.put(cursor.getString(0), cursor.getString(1));
 		}
