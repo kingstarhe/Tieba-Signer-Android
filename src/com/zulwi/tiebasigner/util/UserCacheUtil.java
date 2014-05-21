@@ -15,17 +15,19 @@ import com.zulwi.tiebasigner.db.CacheDBHelper;
 public class UserCacheUtil {
 	private int uid;
 	private int sid;
-	private CacheDBHelper dbHelper;
+	private Context context;
 	private Map<String, String> userCache = new HashMap<String, String>();
 
 	public UserCacheUtil(Context context, int sid, int uid) {
+		this.context = context;
 		this.uid = uid;
 		this.sid = sid;
-		this.dbHelper = new CacheDBHelper(context);
+		CacheDBHelper dbHelper = new CacheDBHelper(this.context);
 		Cursor cursor = dbHelper.rawQuery("SELECT key, value FROM user_cache WHERE  uid=" + this.uid + " AND sid=" + this.sid, null);
 		for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
 			userCache.put(cursor.getString(0), cursor.getString(1));
 		}
+		dbHelper.close();
 	}
 
 	public String getDataCache(String key) {
@@ -33,6 +35,7 @@ public class UserCacheUtil {
 	}
 
 	public boolean saveDataCache(String key, String value) {
+		CacheDBHelper dbHelper = new CacheDBHelper(this.context);
 		Cursor cursor = dbHelper.rawQuery("SELECT id, value FROM user_cache WHERE  sid=" + sid + " AND uid=" + this.uid + " AND key=\'" + key + "\'", null);
 		ContentValues values = new ContentValues();
 		values.put("key", key);
@@ -45,28 +48,37 @@ public class UserCacheUtil {
 			values.put("sid", sid);
 			values.put("uid", uid);
 			long id = dbHelper.insert("user_cache", values);
-			if (id < 0) return false;
+			if (id < 0) {
+				dbHelper.close();
+				return false;
+			}
 		}
+		dbHelper.close();
 		return true;
 	}
 
 	public void deleteDataCache(String key) {
+		CacheDBHelper dbHelper = new CacheDBHelper(this.context);
 		dbHelper.execSQL("DELETE FROM user_cache WHERE key=\'" + key + "\'");
+		dbHelper.close();
 	}
 
-	public static Bitmap getImgCache(String key) {
-		CacheDBHelper dbHelper = new CacheDBHelper(null);
+	public static Bitmap getImgCache(String key, Context context) {
+		CacheDBHelper dbHelper = new CacheDBHelper(context);
 		Cursor cursor = dbHelper.rawQuery("SELECT value FROM img_cache WHERE key=\'" + key + "\'", null);
-		dbHelper.close();
 		if (cursor.getCount() > 0) {
 			cursor.moveToFirst();
 			byte[] img = cursor.getBlob(0);
+			dbHelper.close();
 			return BitmapFactory.decodeByteArray(img, 0, img.length);
-		} else return null;
+		} else {
+			dbHelper.close();
+			return null;
+		}
 	}
 
-	public static boolean saveImgCache(String key, Bitmap img) {
-		CacheDBHelper dbHelper = new CacheDBHelper(null);
+	public static boolean saveImgCache(String key, Bitmap img, Context context) {
+		CacheDBHelper dbHelper = new CacheDBHelper(context);
 		Cursor cursor = dbHelper.rawQuery("SELECT id, value FROM img_cache WHERE key=\'" + key + "\'", null);
 		ContentValues values = new ContentValues();
 		final ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -85,13 +97,5 @@ public class UserCacheUtil {
 		}
 		dbHelper.close();
 		return true;
-	}
-
-	public void close() {
-		if (dbHelper != null) dbHelper.close();
-	}
-
-	protected void finalize() {
-		close();
 	}
 }

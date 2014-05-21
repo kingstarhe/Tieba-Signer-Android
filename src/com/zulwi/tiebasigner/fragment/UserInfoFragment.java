@@ -36,6 +36,7 @@ import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.activity.MainActivity;
 import com.zulwi.tiebasigner.adapter.TiebaListAdapter;
 import com.zulwi.tiebasigner.bean.AccountBean;
+import com.zulwi.tiebasigner.bean.BaiduAccountBean;
 import com.zulwi.tiebasigner.bean.JSONBean;
 import com.zulwi.tiebasigner.bean.TiebaBean;
 import com.zulwi.tiebasigner.exception.ClientApiException;
@@ -57,6 +58,7 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 	private TextView FollowTipsTextView;
 	private TextView FansTipsTextView;
 	private String baiduAccountUsername;
+	private String baiduAccountId;
 	private String baiduAccountAvatarUrl;
 	private String baiduAccountIntro;
 	private int baiduAccountSex;
@@ -82,8 +84,7 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 				JSONBean result;
 				UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);
 				String cacheString = cache.getDataCache("userinfo");
-				cache.close();
-				if (loadedFlag == false && cacheString!=null) {
+				if (loadedFlag == false && cacheString != null) {
 					result = new JSONBean(new JSONObject(cache.getDataCache("userinfo")));
 				} else {
 					result = clientApiUtil.get("baidu_account_info");
@@ -100,11 +101,13 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 
 	private class loadUserAvatarThread implements Runnable {
 		private String url;
+		private String userId;
 		private int imgViewGroup;
 		private int which;
 
-		public loadUserAvatarThread(String url, int imgViewGroup, int which) {
+		public loadUserAvatarThread(String userId, String url, int imgViewGroup, int which) {
 			this.url = url;
+			this.userId = userId;
 			this.imgViewGroup = imgViewGroup;
 			this.which = which;
 		}
@@ -118,7 +121,7 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 					HttpEntity entity = resp.getEntity();
 					InputStream in = entity.getContent();
 					Bitmap bitmap = BitmapFactory.decodeStream(in);
-					handler.obtainMessage(ClientApiUtil.LOAD_IMG, imgViewGroup, which, bitmap).sendToTarget();
+					handler.obtainMessage(ClientApiUtil.LOAD_IMG, imgViewGroup, which, new BaiduAccountBean(userId, bitmap)).sendToTarget();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -145,6 +148,7 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 					if (data.status == 0) {
 						try {
 							baiduAccountUsername = object.getString("username");
+							baiduAccountId = object.getString("id");
 							baiduAccountIntro = object.getString("intro");
 							baiduAccountSex = object.getInt("sex");
 							baiduAccountTiebaAge = object.getString("tb_age");
@@ -152,7 +156,7 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 							baiduAccountFollowNum = object.getInt("follow_num");
 							baiduAccountTiebaNum = object.getInt("tb_num");
 							baiduAccountAvatarUrl = object.getString("avatar");
-							new Thread(new loadUserAvatarThread(baiduAccountAvatarUrl, 0, 0)).start();
+							new Thread(new loadUserAvatarThread(baiduAccountId, baiduAccountAvatarUrl, 0, 0)).start();
 							usernameTextView.setText(baiduAccountUsername);
 							introTextView.setText(baiduAccountIntro);
 							switch (baiduAccountSex) {
@@ -187,17 +191,24 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 							if (tiebaList.size() > 4) tiebaListSwitcher.setText(getString(R.string.show_more));
 							else if (tiebaList.size() <= 4 && tiebaList.size() != 0) tiebaListSwitcher.setVisibility(View.GONE);
 							tiebaTable.setAdapter(tiebaListAdapter);
-							JSONArray follow = object.getJSONObject("follow").getJSONArray("head_photo_list");
+							JSONArray follow = object.getJSONObject("follow").getJSONArray("user_list");
 							for (int i = 0; i < follow.length() && i < 4; i++) {
-								new Thread(new loadUserAvatarThread(follow.getString(i), 1, i)).start();
+								JSONObject followInfo = follow.getJSONObject(i);
+								String userId = followInfo.getString("id");
+								Bitmap cacheAvatar = UserCacheUtil.getImgCache(userId, activity);
+								if (loadedFlag == false && cacheAvatar != null) handler.obtainMessage(ClientApiUtil.LOAD_IMG, 1, i, new BaiduAccountBean(userId, cacheAvatar)).sendToTarget();
+								else new Thread(new loadUserAvatarThread(userId, followInfo.getString("head_photo"), 1, i)).start();
 							}
-							JSONArray fans = object.getJSONObject("fans").getJSONArray("head_photo_list");
+							JSONArray fans = object.getJSONObject("fans").getJSONArray("user_list");
 							for (int i = 0; i < fans.length() && i < 4; i++) {
-								new Thread(new loadUserAvatarThread(fans.getString(i), 2, i)).start();
+								JSONObject fansInfo = fans.getJSONObject(i);
+								String userId = fansInfo.getString("id");
+								Bitmap cacheAvatar = UserCacheUtil.getImgCache(userId, activity);
+								if (loadedFlag == false && cacheAvatar != null) handler.obtainMessage(ClientApiUtil.LOAD_IMG, 1, i, new BaiduAccountBean(userId, cacheAvatar)).sendToTarget();
+								else new Thread(new loadUserAvatarThread(userId, fansInfo.getString("head_photo"), 2, i)).start();
 							}
 							UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);
 							cache.saveDataCache("userinfo", data.jsonString);
-							cache.close();
 							swipeLayout.setRefreshing(false);
 							loadedFlag = true;
 						} catch (JSONException ej) {
@@ -209,17 +220,18 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 					}
 					break;
 				case ClientApiUtil.LOAD_IMG:
-					Bitmap bitmap = (Bitmap) msg.obj;
+					BaiduAccountBean baiduAccountBean = (BaiduAccountBean) msg.obj;
+					UserCacheUtil.saveImgCache(baiduAccountBean.userId, baiduAccountBean.avatar, activity);
 					switch (msg.arg1) {
 						case 0:
-							userAvatar.setImageBitmap(bitmap);
-							activity.setAccountAvatar(bitmap);
+							userAvatar.setImageBitmap(baiduAccountBean.avatar);
+							activity.setAccountAvatar(baiduAccountBean.avatar);
 							break;
 						case 1:
-							followsAvatarImgView[msg.arg2].setImageBitmap(bitmap);
+							followsAvatarImgView[msg.arg2].setImageBitmap(baiduAccountBean.avatar);
 							break;
 						case 2:
-							fansAvatarImgView[msg.arg2].setImageBitmap(bitmap);
+							fansAvatarImgView[msg.arg2].setImageBitmap(baiduAccountBean.avatar);
 							break;
 					}
 					break;
