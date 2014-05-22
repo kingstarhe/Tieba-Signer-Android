@@ -879,12 +879,48 @@ containing a value of this type.
         public static final int abc_split_action_bar_is_narrow=0x7f060002;
     }
     public static final class color {
-        public static final int abc_search_url_text_holo=0x7f070007;
+        public static final int abc_search_url_text_holo=0x7f070013;
         public static final int abc_search_url_text_normal=0x7f070000;
         public static final int abc_search_url_text_pressed=0x7f070002;
         public static final int abc_search_url_text_selected=0x7f070001;
         public static final int bg_gray=0x7f070006;
         public static final int bottom_bar_color=0x7f070005;
+        /**  A really bright Holo shade of blue 
+         */
+        public static final int holo_blue_bright=0x7f070011;
+        /**  A dark Holo shade of blue 
+         */
+        public static final int holo_blue_dark=0x7f07000b;
+        /**  A light Holo shade of blue 
+         */
+        public static final int holo_blue_light=0x7f070007;
+        /**  A really bright Holo shade of gray 
+         */
+        public static final int holo_gray_bright=0x7f070012;
+        /**  A light Holo shade of gray 
+         */
+        public static final int holo_gray_light=0x7f070008;
+        /**  A dark Holo shade of green 
+         */
+        public static final int holo_green_dark=0x7f07000c;
+        /**  A light Holo shade of green 
+         */
+        public static final int holo_green_light=0x7f070009;
+        /**  A dark Holo shade of orange 
+         */
+        public static final int holo_orange_dark=0x7f070010;
+        /**  A light Holo shade of orange 
+         */
+        public static final int holo_orange_light=0x7f07000f;
+        /**  A Holo shade of purple 
+         */
+        public static final int holo_purple=0x7f07000e;
+        /**  A dark Holo shade of red 
+         */
+        public static final int holo_red_dark=0x7f07000d;
+        /**  A light Holo shade of red 
+         */
+        public static final int holo_red_light=0x7f07000a;
         public static final int item_press=0x7f070004;
         public static final int zulwi_blue=0x7f070003;
     }

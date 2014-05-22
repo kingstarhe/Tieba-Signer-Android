@@ -265,7 +265,7 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 		View view = inflater.inflate(R.layout.fragment_userinfo, container, false);
 		swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
 		swipeLayout.setOnRefreshListener(this);
-		swipeLayout.setColorScheme(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
+		swipeLayout.setColorScheme(R.color.holo_blue_bright, R.color.holo_green_light, R.color.holo_orange_light, R.color.holo_red_light);
 		usernameTextView = (TextView) view.findViewById(R.id.userinfo_name);
 		introTextView = (TextView) view.findViewById(R.id.userinfo_intro);
 		SexTextView = (TextView) view.findViewById(R.id.userinfo_sex);
