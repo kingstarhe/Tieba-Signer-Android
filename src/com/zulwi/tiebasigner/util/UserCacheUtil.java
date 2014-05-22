@@ -27,6 +27,7 @@ public class UserCacheUtil {
 		for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
 			userCache.put(cursor.getString(0), cursor.getString(1));
 		}
+		cursor.close();
 		dbHelper.close();
 	}
 
@@ -44,6 +45,7 @@ public class UserCacheUtil {
 			cursor.moveToFirst();
 			dbHelper.update("user_cache", values, "id=" + cursor.getInt(0));
 			dbHelper.execSQL("UPDATE user_cache SET value=\'" + value + "\' WHERE id=" + cursor.getInt(0));
+			cursor.close();
 		} else {
 			values.put("sid", sid);
 			values.put("uid", uid);
@@ -70,8 +72,10 @@ public class UserCacheUtil {
 			cursor.moveToFirst();
 			byte[] img = cursor.getBlob(0);
 			dbHelper.close();
+			cursor.close();
 			return BitmapFactory.decodeByteArray(img, 0, img.length);
 		} else {
+			cursor.close();
 			dbHelper.close();
 			return null;
 		}
@@ -91,10 +95,12 @@ public class UserCacheUtil {
 			values.put("key", key);
 			long id = dbHelper.insert("user_cache", values);
 			if (id < 0) {
+				cursor.close();
 				dbHelper.close();
 				return false;
 			}
 		}
+		cursor.close();
 		dbHelper.close();
 		return true;
 	}

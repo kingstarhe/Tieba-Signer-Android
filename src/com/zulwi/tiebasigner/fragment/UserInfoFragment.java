@@ -23,6 +23,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
@@ -46,7 +47,7 @@ import com.zulwi.tiebasigner.util.UserCacheUtil;
 import com.zulwi.tiebasigner.view.CircularImage;
 import com.zulwi.tiebasigner.view.ListTableView;
 
-public class UserInfoFragment extends BaseFragment implements View.OnClickListener, OnRefreshListener {
+public class UserInfoFragment extends Fragment implements View.OnClickListener, OnRefreshListener {
 	private CircularImage userAvatar;
 	private ListTableView tiebaTable;
 	private TextView tiebaListSwitcher;
@@ -218,6 +219,7 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 							tips = "JSON解析错误";
 						}
 					} else {
+						activity.changeFragment(1);
 						tips = "抱歉，请绑定百度账号";
 					}
 					break;
@@ -262,6 +264,7 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 	@SuppressLint("NewApi")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		super.onCreateView(inflater, container, savedInstanceState);
 		View view = inflater.inflate(R.layout.fragment_userinfo, container, false);
 		swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
 		swipeLayout.setOnRefreshListener(this);

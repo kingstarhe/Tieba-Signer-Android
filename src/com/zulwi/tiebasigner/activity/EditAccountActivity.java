@@ -34,6 +34,8 @@ public class EditAccountActivity extends ActionBarActivity {
 		for (accountCursor.moveToFirst(); !(accountCursor.isAfterLast()); accountCursor.moveToNext()) {
 			accountList.add(new AccountBean(accountCursor.getInt(0), accountCursor.getInt(1), accountCursor.getInt(2), accountCursor.getString(3), accountCursor.getString(4), accountCursor.getString(5), accountCursor.getInt(6), accountCursor.getString(7), accountCursor.getString(8)));
 		}
+		accountCursor.close();
+		dbHelper.close();
 		AccountListAdapter accountListAdapter = new AccountListAdapter(this, accountList);
 		accountListView = (ListView) findViewById(R.id.account_list);
 		accountListView.setAdapter(accountListAdapter);

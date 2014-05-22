@@ -63,5 +63,7 @@
     <string name="logout">注销当前账号</string>
     <string name="show_more">显示更多</string>
     <string name="shrink_list">收缩列表</string>
-
+    <string name="maimeng">⊙ω⊙</string>
+	<string name="bind_tips">你的助手账号还未和度娘绑定在一起呢</string>
+	<string name="bind_now">>> 现在绑定</string>
 </resources>

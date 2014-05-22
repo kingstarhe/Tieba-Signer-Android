@@ -75,6 +75,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 						accountBean.sid = sid;
 						accountBean.siteName = siteCursor.getString(1);
 						accountBean.siteUrl = siteCursor.getString(2);
+						siteCursor.close();
 						dbHelper.close();
 						startMainActivity(accountBean);
 					} else {
@@ -131,6 +132,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 			for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
 				siteMapList.add(new SiteBean(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2)));
 			}
+			cursor.close();
 		}
 		int size = siteMapList.size();
 		siteNameList = new String[size + 1];

@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.bean.FragmentBean;
+import com.zulwi.tiebasigner.fragment.BindBaiduFragment;
 import com.zulwi.tiebasigner.fragment.PluginFragment;
 import com.zulwi.tiebasigner.fragment.SettingFragment;
 import com.zulwi.tiebasigner.fragment.SignLogFragment;
@@ -53,6 +54,7 @@ public class MainActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_main);
 		accountBean = (AccountBean) getIntent().getSerializableExtra("accountBean");
 		fragmentList.add(new FragmentBean("账号", new UserInfoFragment()));
+		fragmentList.add(new FragmentBean("绑定", new BindBaiduFragment()));
 		fragmentList.add(new FragmentBean("记录", new SignLogFragment()));
 		fragmentList.add(new FragmentBean("插件", new PluginFragment()));
 		fragmentList.add(new FragmentBean("设置", new SettingFragment()));
@@ -106,7 +108,7 @@ public class MainActivity extends ActionBarActivity {
 		registerReceiver(broadcastReceiver, intentFilter);
 	}
 
-	private void changeFragment(int position) {
+	public void changeFragment(int position) {
 		FragmentBean from = fragmentList.get(currentFragmentId);
 		FragmentBean to = fragmentList.get(position);
 		FragmentTransaction ft = fm.beginTransaction();
@@ -131,16 +133,16 @@ public class MainActivity extends ActionBarActivity {
 				changeFragment(0);
 				break;
 			case R.id.signlog_button:
-				setEnabled(1);
-				changeFragment(1);
-				break;
-			case R.id.plugin_button:
 				setEnabled(2);
 				changeFragment(2);
 				break;
-			case R.id.setting_button:
+			case R.id.plugin_button:
 				setEnabled(3);
 				changeFragment(3);
+				break;
+			case R.id.setting_button:
+				setEnabled(4);
+				changeFragment(4);
 				break;
 		}
 	}

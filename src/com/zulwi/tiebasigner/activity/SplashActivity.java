@@ -34,6 +34,7 @@ public class SplashActivity extends Activity {
 		if (accountCursor.getCount() > 0) {
 			accountCursor.moveToFirst();
 			AccountBean accountBean = new AccountBean(accountCursor.getInt(0), accountCursor.getInt(1), accountCursor.getInt(2), accountCursor.getString(3), accountCursor.getString(4), accountCursor.getString(5), accountCursor.getInt(6), accountCursor.getString(7), accountCursor.getString(8));
+			accountCursor.close();
 			Intent intent = new Intent(SplashActivity.this, MainActivity.class);
 			intent.putExtra("accountBean", accountBean);
 			startActivity(intent);
@@ -41,6 +42,7 @@ public class SplashActivity extends Activity {
 			Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
 			SplashActivity.this.startActivity(intent);
 		}
+		dbHelper.close();
 		finish();
 	}
 
