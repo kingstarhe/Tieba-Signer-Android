@@ -166,8 +166,8 @@ public class MainActivity extends ActionBarActivity {
 	public void finishUserInfoRefresh() {
 		UserInfoFragment userInfoFragment = (UserInfoFragment) fragmentList.get(0).fragment;
 		BindBaiduFragment bindBaiduFragment = (BindBaiduFragment) fragmentList.get(1).fragment;
-		if (userInfoFragment.isAdded() && userInfoFragment.swipeLayout.isRefreshing()) userInfoFragment.swipeLayout.setRefreshing(false);
-		if (bindBaiduFragment.isAdded() && bindBaiduFragment.swipeLayout.isRefreshing()) bindBaiduFragment.swipeLayout.setRefreshing(false);
+		if (userInfoFragment.isAdded()) userInfoFragment.swipeLayout.setRefreshing(false);
+		if (bindBaiduFragment.isAdded()) bindBaiduFragment.swipeLayout.setRefreshing(false);
 	}
 
 }

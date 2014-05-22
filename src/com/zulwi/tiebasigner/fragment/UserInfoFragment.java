@@ -236,6 +236,10 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 					} else {
 						if(activity.binded) activity.changeFragment(1);
 						activity.binded = false;
+						UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);
+						cache.saveDataCache("userinfo", data.jsonString);
+						activity.finishUserInfoRefresh();
+						loadedFlag = true;
 						tips = "抱歉，请绑定百度账号";
 					}
 					break;
