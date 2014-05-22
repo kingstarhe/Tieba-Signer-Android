@@ -36,7 +36,7 @@ public class MainActivity extends ActionBarActivity {
 	private List<FragmentBean> fragmentList = new ArrayList<FragmentBean>();
 	private List<Button> bottonBarButton = new ArrayList<Button>();
 	private int currentFragmentId = 0;
-	private boolean logined = true;
+	public boolean binded = true;
 	private AccountBean accountBean;
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 		@Override
@@ -132,7 +132,7 @@ public class MainActivity extends ActionBarActivity {
 		switch (v.getId()) {
 			case R.id.userinfo_button:
 				setEnabled(0);
-				changeFragment(logined ? 0 : 1);
+				changeFragment(binded ? 0 : 1);
 				break;
 			case R.id.signlog_button:
 				setEnabled(1);
@@ -158,9 +158,16 @@ public class MainActivity extends ActionBarActivity {
 		Fragment settingFragment = fragmentList.get(3).fragment;
 		if (settingFragment.isAdded()) ((SettingFragment) settingFragment).setAvatar(avatar);
 	}
+	
+	public void refreshUserInfo() {
+		((UserInfoFragment) fragmentList.get(0).fragment).refreshUserInfo();
+	}
 
-	public void setLogined(boolean logined) {
-		this.logined = logined;
+	public void finishUserInfoRefresh() {
+		UserInfoFragment userInfoFragment = (UserInfoFragment) fragmentList.get(0).fragment;
+		BindBaiduFragment bindBaiduFragment = (BindBaiduFragment) fragmentList.get(1).fragment;
+		if (userInfoFragment.isAdded() && userInfoFragment.swipeLayout.isRefreshing()) userInfoFragment.swipeLayout.setRefreshing(false);
+		if (bindBaiduFragment.isAdded() && bindBaiduFragment.swipeLayout.isRefreshing()) bindBaiduFragment.swipeLayout.setRefreshing(false);
 	}
 
 }

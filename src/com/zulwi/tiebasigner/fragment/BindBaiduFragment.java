@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +14,9 @@ import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.activity.BindBaiduActivity;
 import com.zulwi.tiebasigner.activity.MainActivity;
 
-public class BindBaiduFragment extends Fragment implements View.OnClickListener {
+public class BindBaiduFragment extends Fragment implements View.OnClickListener, OnRefreshListener {
 	private MainActivity activity;
+	public SwipeRefreshLayout swipeLayout;
 
 	public BindBaiduFragment() {
 	}
@@ -34,6 +37,9 @@ public class BindBaiduFragment extends Fragment implements View.OnClickListener 
 		super.onCreateView(inflater, container, savedInstanceState);
 		View view = inflater.inflate(R.layout.fragment_bindbaidu, container, false);
 		view.findViewById(R.id.bind_now).setOnClickListener(this);
+		swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+		swipeLayout.setOnRefreshListener(this);
+		swipeLayout.setColorScheme(R.color.holo_blue_bright, R.color.holo_green_light, R.color.holo_orange_light, R.color.holo_red_light);
 		return view;
 	}
 
@@ -51,5 +57,10 @@ public class BindBaiduFragment extends Fragment implements View.OnClickListener 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    super.onActivityResult(requestCode, resultCode, data);
 	}
+
+	@Override
+    public void onRefresh() {
+		activity.refreshUserInfo();
+    }
 
 }

@@ -78,7 +78,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 	private MainActivity activity;
 	private AccountBean accountBean;
 	private Dialog dialog;
-	private SwipeRefreshLayout swipeLayout;
+	public SwipeRefreshLayout swipeLayout;
 	private boolean loadedFlag = false;
 
 	private class getBaiduAccountInfo extends Thread {
@@ -225,15 +225,17 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 							fansTipsTextView.setVisibility(follow.length() == 0 ? View.GONE : View.VISIBLE);
 							UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);
 							cache.saveDataCache("userinfo", data.jsonString);
-							swipeLayout.setRefreshing(false);
+							activity.finishUserInfoRefresh();
+							if (!activity.binded) activity.changeFragment(0);
+							activity.binded = true;
 							loadedFlag = true;
 						} catch (JSONException ej) {
 							ej.printStackTrace();
 							tips = "JSON解析错误";
 						}
 					} else {
-						activity.changeFragment(1);
-						activity.setLogined(false);
+						if(activity.binded) activity.changeFragment(1);
+						activity.binded = false;
 						tips = "抱歉，请绑定百度账号";
 					}
 					break;
