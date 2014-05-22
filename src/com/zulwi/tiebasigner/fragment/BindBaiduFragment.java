@@ -62,5 +62,11 @@ public class BindBaiduFragment extends Fragment implements View.OnClickListener,
     public void onRefresh() {
 		activity.refreshUserInfo();
     }
+	
+	@Override
+	public void onDestroy() {
+	    super.onDestroy();
+	    System.out.println("UserInfo Destoring..");
+	}
 
 }

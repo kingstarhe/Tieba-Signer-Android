@@ -129,6 +129,12 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void onBottomBarButtonClick(View v) {
+		UserInfoFragment userInfoFragment = (UserInfoFragment) fragmentList.get(0).fragment;
+		BindBaiduFragment bindBaiduFragment = (BindBaiduFragment) fragmentList.get(1).fragment;
+		if ((userInfoFragment.isAdded() && userInfoFragment.swipeLayout.isRefreshing()) || (bindBaiduFragment.isAdded() && bindBaiduFragment.swipeLayout.isRefreshing())) {
+			Toast.makeText(this, "正在刷新资料，请稍后...", Toast.LENGTH_LONG).show();
+			return;
+		}
 		switch (v.getId()) {
 			case R.id.userinfo_button:
 				setEnabled(0);
@@ -158,7 +164,7 @@ public class MainActivity extends ActionBarActivity {
 		Fragment settingFragment = fragmentList.get(3).fragment;
 		if (settingFragment.isAdded()) ((SettingFragment) settingFragment).setAvatar(avatar);
 	}
-	
+
 	public void refreshUserInfo() {
 		((UserInfoFragment) fragmentList.get(0).fragment).refreshUserInfo();
 	}
@@ -168,6 +174,10 @@ public class MainActivity extends ActionBarActivity {
 		BindBaiduFragment bindBaiduFragment = (BindBaiduFragment) fragmentList.get(1).fragment;
 		if (userInfoFragment.isAdded()) userInfoFragment.swipeLayout.setRefreshing(false);
 		if (bindBaiduFragment.isAdded()) bindBaiduFragment.swipeLayout.setRefreshing(false);
+	}
+
+	public int getCurrentFragmentId() {
+		return currentFragmentId;
 	}
 
 }

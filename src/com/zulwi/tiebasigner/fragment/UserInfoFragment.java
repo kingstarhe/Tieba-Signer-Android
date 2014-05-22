@@ -225,23 +225,21 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 							fansTipsTextView.setVisibility(follow.length() == 0 ? View.GONE : View.VISIBLE);
 							UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);
 							cache.saveDataCache("userinfo", data.jsonString);
-							activity.finishUserInfoRefresh();
 							if (!activity.binded) activity.changeFragment(0);
 							activity.binded = true;
-							loadedFlag = true;
 						} catch (JSONException ej) {
 							ej.printStackTrace();
 							tips = "JSON解析错误";
 						}
 					} else {
-						if(activity.binded) activity.changeFragment(1);
+						if (activity.binded) activity.changeFragment(1);
 						activity.binded = false;
 						UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);
 						cache.saveDataCache("userinfo", data.jsonString);
-						activity.finishUserInfoRefresh();
-						loadedFlag = true;
 						tips = "抱歉，请绑定百度账号";
 					}
+					activity.finishUserInfoRefresh();
+					loadedFlag = true;
 					break;
 				case ClientApiUtil.LOAD_IMG:
 					BaiduAccountBean baiduAccountBean = (BaiduAccountBean) msg.obj;
@@ -347,6 +345,12 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 
 	public void refreshUserInfo() {
 		new getBaiduAccountInfo().start();
+	}
+	
+	@Override
+	public void onDestroy() {
+	    super.onDestroy();
+	    System.out.println("UserInfo Destoring..");
 	}
 
 }
