@@ -42,6 +42,7 @@ public class MainActivity extends ActionBarActivity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Toast.makeText(MainActivity.this, "请重新登录", Toast.LENGTH_LONG).show();
+			unregisterReceiver(broadcastReceiver);
 			finish();
 		}
 	};

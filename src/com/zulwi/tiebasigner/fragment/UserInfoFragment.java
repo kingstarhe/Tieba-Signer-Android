@@ -30,6 +30,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,11 +54,11 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 	private TextView tiebaListSwitcher;
 	private TextView usernameTextView;
 	private TextView introTextView;
-	private TextView SexTextView;
-	private TextView TiebaAgeTextView;
-	private TextView TiebaTipsTextView;
-	private TextView FollowTipsTextView;
-	private TextView FansTipsTextView;
+	private TextView sexTextView;
+	private TextView tiebaAgeTextView;
+	private TextView tiebaTipsTextView;
+	private TextView followTipsTextView;
+	private TextView fansTipsTextView;
 	private String baiduAccountUsername;
 	private String baiduAccountId;
 	private String baiduAccountAvatarUrl;
@@ -71,6 +72,8 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 	private List<TiebaBean> overviewTiebaList = new ArrayList<TiebaBean>();
 	private ImageView[] followsAvatarImgView = new ImageView[4];
 	private ImageView[] fansAvatarImgView = new ImageView[4];
+	private LinearLayout fallowBar;
+	private LinearLayout fansBar;
 	private TiebaListAdapter tiebaListAdapter;
 	private MainActivity activity;
 	private AccountBean accountBean;
@@ -164,21 +167,21 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 							introTextView.setText(baiduAccountIntro);
 							switch (baiduAccountSex) {
 								case 1:
-									SexTextView.setText("♂");
-									SexTextView.setTextColor(Color.parseColor("#00B4FD"));
+									sexTextView.setText("♂");
+									sexTextView.setTextColor(Color.parseColor("#00B4FD"));
 									break;
 								case 2:
-									SexTextView.setText("♀");
-									SexTextView.setTextColor(Color.parseColor("#E53A37"));
+									sexTextView.setText("♀");
+									sexTextView.setTextColor(Color.parseColor("#E53A37"));
 									break;
 								default:
-									SexTextView.setText("?");
-									SexTextView.setTextColor(Color.GRAY);
+									sexTextView.setText("?");
+									sexTextView.setTextColor(Color.GRAY);
 							}
-							TiebaAgeTextView.setText(baiduAccountTiebaAge + getString(R.string.years));
-							TiebaTipsTextView.setText(getString(R.string.loading_tiebas).replace("0", String.valueOf(baiduAccountTiebaNum)));
-							FollowTipsTextView.setText(getString(R.string.loading_follows).replace("0", String.valueOf(baiduAccountFollowNum)));
-							FansTipsTextView.setText(getString(R.string.loading_fans).replace("0", String.valueOf(baiduAccountFansNum)));
+							tiebaAgeTextView.setText(baiduAccountTiebaAge + getString(R.string.years));
+							tiebaTipsTextView.setText(getString(R.string.loading_tiebas).replace("0", String.valueOf(baiduAccountTiebaNum)));
+							followTipsTextView.setText(getString(R.string.loading_follows).replace("0", String.valueOf(baiduAccountFollowNum)));
+							fansTipsTextView.setText(getString(R.string.loading_fans).replace("0", String.valueOf(baiduAccountFansNum)));
 							JSONArray tiebas = object.getJSONArray("tiebas");
 							tiebaList.clear();
 							for (int i = 0; i < tiebas.length(); i++) {
@@ -194,6 +197,12 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 							if (tiebaList.size() > 4) tiebaListSwitcher.setText(getString(R.string.show_more));
 							else if (tiebaList.size() <= 4 && tiebaList.size() != 0) tiebaListSwitcher.setVisibility(View.GONE);
 							tiebaTable.setAdapter(tiebaListAdapter);
+							for (ImageView imgView : followsAvatarImgView) {
+								imgView.setImageResource(android.R.color.transparent);
+							}
+							for (ImageView imgView : fansAvatarImgView) {
+								imgView.setImageResource(android.R.color.transparent);
+							}
 							JSONArray follow = object.getJSONObject("follow").getJSONArray("user_list");
 							for (int i = 0; i < follow.length() && i < 4; i++) {
 								JSONObject followInfo = follow.getJSONObject(i);
@@ -202,6 +211,8 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 								if (loadedFlag == false && cacheAvatar != null) handler.obtainMessage(ClientApiUtil.LOAD_IMG, 1, i, new BaiduAccountBean(userId, cacheAvatar)).sendToTarget();
 								else new Thread(new loadUserAvatarThread(userId, followInfo.getString("head_photo"), 1, i)).start();
 							}
+							fallowBar.setVisibility(follow.length() == 0 ? View.GONE : View.VISIBLE);
+							followTipsTextView.setVisibility(follow.length() == 0 ? View.GONE : View.VISIBLE);
 							JSONArray fans = object.getJSONObject("fans").getJSONArray("user_list");
 							for (int i = 0; i < fans.length() && i < 4; i++) {
 								JSONObject fansInfo = fans.getJSONObject(i);
@@ -210,6 +221,8 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 								if (loadedFlag == false && cacheAvatar != null) handler.obtainMessage(ClientApiUtil.LOAD_IMG, 1, i, new BaiduAccountBean(userId, cacheAvatar)).sendToTarget();
 								else new Thread(new loadUserAvatarThread(userId, fansInfo.getString("head_photo"), 2, i)).start();
 							}
+							fansBar.setVisibility(fans.length() == 0 ? View.GONE : View.VISIBLE);
+							fansTipsTextView.setVisibility(follow.length() == 0 ? View.GONE : View.VISIBLE);
 							UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);
 							cache.saveDataCache("userinfo", data.jsonString);
 							swipeLayout.setRefreshing(false);
@@ -272,11 +285,13 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 		swipeLayout.setColorScheme(R.color.holo_blue_bright, R.color.holo_green_light, R.color.holo_orange_light, R.color.holo_red_light);
 		usernameTextView = (TextView) view.findViewById(R.id.userinfo_name);
 		introTextView = (TextView) view.findViewById(R.id.userinfo_intro);
-		SexTextView = (TextView) view.findViewById(R.id.userinfo_sex);
-		TiebaAgeTextView = (TextView) view.findViewById(R.id.userinfo_tiebaage);
-		TiebaTipsTextView = (TextView) view.findViewById(R.id.userinfo_tieba_tips);
-		FollowTipsTextView = (TextView) view.findViewById(R.id.userinfo_follow_tips);
-		FansTipsTextView = (TextView) view.findViewById(R.id.userinfo_fans_tips);
+		sexTextView = (TextView) view.findViewById(R.id.userinfo_sex);
+		tiebaAgeTextView = (TextView) view.findViewById(R.id.userinfo_tiebaage);
+		tiebaTipsTextView = (TextView) view.findViewById(R.id.userinfo_tieba_tips);
+		followTipsTextView = (TextView) view.findViewById(R.id.userinfo_follow_tips);
+		fallowBar = (LinearLayout) view.findViewById(R.id.userinfo_follows);
+		fansTipsTextView = (TextView) view.findViewById(R.id.userinfo_fans_tips);
+		fansBar = (LinearLayout) view.findViewById(R.id.userinfo_fans);
 		userAvatar = (CircularImage) view.findViewById(R.id.userinfo_avatar);
 		followsAvatarImgView[0] = (ImageView) view.findViewById(R.id.follow_avatar_1);
 		followsAvatarImgView[1] = (ImageView) view.findViewById(R.id.follow_avatar_2);

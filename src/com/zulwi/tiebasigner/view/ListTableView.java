@@ -21,6 +21,7 @@ public class ListTableView extends TableLayout {
 			for (int i = 0; i < adapter.getCount(); i++) {
 				final int n = i;
 				final TableRow row = new TableRow(context);
+				row.setClickable(true);
 				row.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View arg0) {

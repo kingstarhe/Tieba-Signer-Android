@@ -7,7 +7,6 @@
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/maimeng"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/maimeng"
@@ -15,7 +14,6 @@
         android:textSize="80sp" />
 
     <TextView
-        android:id="@+id/bind_tips"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/bind_tips"
@@ -23,6 +21,7 @@
         android:textSize="15sp" />
 
     <TextView
+        android:id="@+id/bind_now"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/bind_now"
