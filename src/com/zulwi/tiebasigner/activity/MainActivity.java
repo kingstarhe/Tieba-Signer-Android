@@ -36,6 +36,7 @@ public class MainActivity extends ActionBarActivity {
 	private List<FragmentBean> fragmentList = new ArrayList<FragmentBean>();
 	private List<Button> bottonBarButton = new ArrayList<Button>();
 	private int currentFragmentId = 0;
+	private boolean logined = true;
 	private AccountBean accountBean;
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 		@Override
@@ -130,18 +131,18 @@ public class MainActivity extends ActionBarActivity {
 		switch (v.getId()) {
 			case R.id.userinfo_button:
 				setEnabled(0);
-				changeFragment(0);
+				changeFragment(logined ? 0 : 1);
 				break;
 			case R.id.signlog_button:
-				setEnabled(2);
+				setEnabled(1);
 				changeFragment(2);
 				break;
 			case R.id.plugin_button:
-				setEnabled(3);
+				setEnabled(2);
 				changeFragment(3);
 				break;
 			case R.id.setting_button:
-				setEnabled(4);
+				setEnabled(3);
 				changeFragment(4);
 				break;
 		}
@@ -155,6 +156,10 @@ public class MainActivity extends ActionBarActivity {
 		accountBean.avatar = avatar;
 		Fragment settingFragment = fragmentList.get(3).fragment;
 		if (settingFragment.isAdded()) ((SettingFragment) settingFragment).setAvatar(avatar);
+	}
+
+	public void setLogined(boolean logined) {
+		this.logined = logined;
 	}
 
 }

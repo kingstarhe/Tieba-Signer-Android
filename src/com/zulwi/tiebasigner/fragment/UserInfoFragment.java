@@ -220,6 +220,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 						}
 					} else {
 						activity.changeFragment(1);
+						activity.setLogined(false);
 						tips = "抱歉，请绑定百度账号";
 					}
 					break;
