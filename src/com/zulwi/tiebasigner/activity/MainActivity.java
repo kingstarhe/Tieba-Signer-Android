@@ -28,7 +28,7 @@ import com.zulwi.tiebasigner.bean.FragmentBean;
 import com.zulwi.tiebasigner.fragment.AccountFragment;
 import com.zulwi.tiebasigner.fragment.PluginFragment;
 import com.zulwi.tiebasigner.fragment.SettingFragment;
-import com.zulwi.tiebasigner.fragment.SignLogFragment;
+import com.zulwi.tiebasigner.fragment.LogFragment;
 
 public class MainActivity extends ActionBarActivity {
 	private FragmentManager fm;
@@ -54,7 +54,7 @@ public class MainActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_main);
 		accountBean = (AccountBean) getIntent().getSerializableExtra("accountBean");
 		fragmentList.add(new FragmentBean("账号", new AccountFragment()));
-		fragmentList.add(new FragmentBean("记录", new SignLogFragment()));
+		fragmentList.add(new FragmentBean("记录", new LogFragment()));
 		fragmentList.add(new FragmentBean("插件", new PluginFragment()));
 		fragmentList.add(new FragmentBean("设置", new SettingFragment()));
 		fm = getSupportFragmentManager();

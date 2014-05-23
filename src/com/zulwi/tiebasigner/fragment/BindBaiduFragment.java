@@ -17,7 +17,7 @@ import com.zulwi.tiebasigner.activity.MainActivity;
 
 public class BindBaiduFragment extends Fragment implements OnClickListener, OnRefreshListener{
 	private MainActivity activity;
-	public SwipeRefreshLayout swipeLayout;
+	protected SwipeRefreshLayout swipeLayout;
 	private AccountFragment fragment;	
 	
 	public BindBaiduFragment() {
@@ -65,6 +65,5 @@ public class BindBaiduFragment extends Fragment implements OnClickListener, OnRe
     public void onRefresh() {
 		fragment.refreshUserInfo();
     }
-	
 
 }

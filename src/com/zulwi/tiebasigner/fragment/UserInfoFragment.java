@@ -68,8 +68,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 	private int baiduAccountTiebaNum;
 	private List<TiebaBean> tiebaList = new ArrayList<TiebaBean>();
 	private List<TiebaBean> overviewTiebaList = new ArrayList<TiebaBean>();
-	private ImageView[] followsAvatarImgView = new ImageView[4];
-	private ImageView[] fansAvatarImgView = new ImageView[4];
+	private ImageView[][] followsAndFollowAvatarImgView = new ImageView[2][4];
 	private LinearLayout fallowBar;
 	private LinearLayout fansBar;
 	private TiebaListAdapter tiebaListAdapter;
@@ -123,7 +122,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 					break;
 				case ClientApiUtil.SUCCESSED:
 					JSONBean data = (JSONBean) msg.obj;
-					JSONObject object= data.data;
+					JSONObject object = data.data;
 					try {
 						baiduAccountUsername = object.getString("username");
 						baiduAccountId = object.getString("id");
@@ -171,11 +170,10 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 						if (tiebaList.size() > 4) tiebaListSwitcher.setText(getString(R.string.show_more));
 						else if (tiebaList.size() <= 4 && tiebaList.size() != 0) tiebaListSwitcher.setVisibility(View.GONE);
 						tiebaTable.setAdapter(tiebaListAdapter);
-						for (ImageView imgView : followsAvatarImgView) {
-							imgView.setImageResource(android.R.color.transparent);
-						}
-						for (ImageView imgView : fansAvatarImgView) {
-							imgView.setImageResource(android.R.color.transparent);
+						for (ImageView imgView[] : followsAndFollowAvatarImgView) {
+							for (ImageView iv : imgView) {
+								iv.setImageResource(android.R.color.transparent);
+							}
 						}
 						JSONArray follow = object.getJSONObject("follow").getJSONArray("user_list");
 						for (int i = 0; i < follow.length() && i < 4; i++) {
@@ -216,12 +214,8 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 							userAvatar.setImageBitmap(baiduAccountBean.avatar);
 							activity.setAccountAvatar(baiduAccountBean.avatar);
 							break;
-						case 1:
-							followsAvatarImgView[msg.arg2].setImageBitmap(baiduAccountBean.avatar);
-							break;
-						case 2:
-							fansAvatarImgView[msg.arg2].setImageBitmap(baiduAccountBean.avatar);
-							break;
+						default:
+							followsAndFollowAvatarImgView[msg.arg1 - 1][msg.arg2].setImageBitmap(baiduAccountBean.avatar);
 					}
 					break;
 				default:
@@ -265,14 +259,14 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 		fansTipsTextView = (TextView) view.findViewById(R.id.userinfo_fans_tips);
 		fansBar = (LinearLayout) view.findViewById(R.id.userinfo_fans);
 		userAvatar = (CircularImage) view.findViewById(R.id.userinfo_avatar);
-		followsAvatarImgView[0] = (ImageView) view.findViewById(R.id.follow_avatar_1);
-		followsAvatarImgView[1] = (ImageView) view.findViewById(R.id.follow_avatar_2);
-		followsAvatarImgView[2] = (ImageView) view.findViewById(R.id.follow_avatar_3);
-		followsAvatarImgView[3] = (ImageView) view.findViewById(R.id.follow_avatar_4);
-		fansAvatarImgView[0] = (ImageView) view.findViewById(R.id.fans_avatar_1);
-		fansAvatarImgView[1] = (ImageView) view.findViewById(R.id.fans_avatar_2);
-		fansAvatarImgView[2] = (ImageView) view.findViewById(R.id.fans_avatar_3);
-		fansAvatarImgView[3] = (ImageView) view.findViewById(R.id.fans_avatar_4);
+		followsAndFollowAvatarImgView[0][0] = (ImageView) view.findViewById(R.id.follow_avatar_1);
+		followsAndFollowAvatarImgView[0][1] = (ImageView) view.findViewById(R.id.follow_avatar_2);
+		followsAndFollowAvatarImgView[0][2] = (ImageView) view.findViewById(R.id.follow_avatar_3);
+		followsAndFollowAvatarImgView[0][3] = (ImageView) view.findViewById(R.id.follow_avatar_4);
+		followsAndFollowAvatarImgView[1][0] = (ImageView) view.findViewById(R.id.fans_avatar_1);
+		followsAndFollowAvatarImgView[1][1] = (ImageView) view.findViewById(R.id.fans_avatar_2);
+		followsAndFollowAvatarImgView[1][2] = (ImageView) view.findViewById(R.id.fans_avatar_3);
+		followsAndFollowAvatarImgView[1][3] = (ImageView) view.findViewById(R.id.fans_avatar_4);
 		tiebaTable = (ListTableView) view.findViewById(R.id.userinfo_tieba_list);
 		tiebaListSwitcher = (TextView) view.findViewById(R.id.userinfo_more_tieba);
 		tiebaListSwitcher.setOnClickListener(this);
@@ -306,12 +300,6 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 	@Override
 	public void onRefresh() {
 		fragment.refreshUserInfo();
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		System.out.println("UserInfo Destoring..");
 	}
 
 	protected void setUp(JSONBean data) {
