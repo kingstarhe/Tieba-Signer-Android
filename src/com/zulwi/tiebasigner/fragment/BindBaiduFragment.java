@@ -8,16 +8,18 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.activity.BindBaiduActivity;
 import com.zulwi.tiebasigner.activity.MainActivity;
 
-public class BindBaiduFragment extends Fragment implements View.OnClickListener, OnRefreshListener {
+public class BindBaiduFragment extends Fragment implements OnClickListener, OnRefreshListener{
 	private MainActivity activity;
 	public SwipeRefreshLayout swipeLayout;
-
+	private AccountFragment fragment;	
+	
 	public BindBaiduFragment() {
 	}
 
@@ -25,6 +27,7 @@ public class BindBaiduFragment extends Fragment implements View.OnClickListener,
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		this.activity = (MainActivity) activity;
+		this.fragment = (AccountFragment)getParentFragment();
 	}
 
 	@Override
@@ -60,13 +63,8 @@ public class BindBaiduFragment extends Fragment implements View.OnClickListener,
 
 	@Override
     public void onRefresh() {
-		activity.refreshUserInfo();
+		fragment.refreshUserInfo();
     }
 	
-	@Override
-	public void onDestroy() {
-	    super.onDestroy();
-	    System.out.println("UserInfo Destoring..");
-	}
 
 }

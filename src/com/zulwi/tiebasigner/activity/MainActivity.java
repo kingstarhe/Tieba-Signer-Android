@@ -25,18 +25,16 @@ import android.widget.Toast;
 import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.bean.FragmentBean;
-import com.zulwi.tiebasigner.fragment.BindBaiduFragment;
+import com.zulwi.tiebasigner.fragment.AccountFragment;
 import com.zulwi.tiebasigner.fragment.PluginFragment;
 import com.zulwi.tiebasigner.fragment.SettingFragment;
 import com.zulwi.tiebasigner.fragment.SignLogFragment;
-import com.zulwi.tiebasigner.fragment.UserInfoFragment;
 
 public class MainActivity extends ActionBarActivity {
 	private FragmentManager fm;
 	private List<FragmentBean> fragmentList = new ArrayList<FragmentBean>();
 	private List<Button> bottonBarButton = new ArrayList<Button>();
 	private int currentFragmentId = 0;
-	public boolean binded = true;
 	private AccountBean accountBean;
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 		@Override
@@ -55,8 +53,7 @@ public class MainActivity extends ActionBarActivity {
 		actionBar.setDisplayShowHomeEnabled(false);
 		setContentView(R.layout.activity_main);
 		accountBean = (AccountBean) getIntent().getSerializableExtra("accountBean");
-		fragmentList.add(new FragmentBean("账号", new UserInfoFragment()));
-		fragmentList.add(new FragmentBean("绑定", new BindBaiduFragment()));
+		fragmentList.add(new FragmentBean("账号", new AccountFragment()));
 		fragmentList.add(new FragmentBean("记录", new SignLogFragment()));
 		fragmentList.add(new FragmentBean("插件", new PluginFragment()));
 		fragmentList.add(new FragmentBean("设置", new SettingFragment()));
@@ -129,28 +126,22 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void onBottomBarButtonClick(View v) {
-		UserInfoFragment userInfoFragment = (UserInfoFragment) fragmentList.get(0).fragment;
-		BindBaiduFragment bindBaiduFragment = (BindBaiduFragment) fragmentList.get(1).fragment;
-		if ((userInfoFragment.isAdded() && userInfoFragment.swipeLayout.isRefreshing()) || (bindBaiduFragment.isAdded() && bindBaiduFragment.swipeLayout.isRefreshing())) {
-			Toast.makeText(this, "正在刷新资料，请稍后...", Toast.LENGTH_LONG).show();
-			return;
-		}
 		switch (v.getId()) {
 			case R.id.userinfo_button:
 				setEnabled(0);
-				changeFragment(binded ? 0 : 1);
+				changeFragment(0);
 				break;
 			case R.id.signlog_button:
 				setEnabled(1);
-				changeFragment(2);
+				changeFragment(1);
 				break;
 			case R.id.plugin_button:
 				setEnabled(2);
-				changeFragment(3);
+				changeFragment(2);
 				break;
 			case R.id.setting_button:
 				setEnabled(3);
-				changeFragment(4);
+				changeFragment(3);
 				break;
 		}
 	}
@@ -163,17 +154,6 @@ public class MainActivity extends ActionBarActivity {
 		accountBean.avatar = avatar;
 		Fragment settingFragment = fragmentList.get(3).fragment;
 		if (settingFragment.isAdded()) ((SettingFragment) settingFragment).setAvatar(avatar);
-	}
-
-	public void refreshUserInfo() {
-		((UserInfoFragment) fragmentList.get(0).fragment).refreshUserInfo();
-	}
-
-	public void finishUserInfoRefresh() {
-		UserInfoFragment userInfoFragment = (UserInfoFragment) fragmentList.get(0).fragment;
-		BindBaiduFragment bindBaiduFragment = (BindBaiduFragment) fragmentList.get(1).fragment;
-		if (userInfoFragment.isAdded()) userInfoFragment.swipeLayout.setRefreshing(false);
-		if (bindBaiduFragment.isAdded()) bindBaiduFragment.swipeLayout.setRefreshing(false);
 	}
 
 	public int getCurrentFragmentId() {

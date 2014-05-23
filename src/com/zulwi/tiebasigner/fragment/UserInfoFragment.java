@@ -17,7 +17,6 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -43,7 +42,6 @@ import com.zulwi.tiebasigner.bean.JSONBean;
 import com.zulwi.tiebasigner.bean.TiebaBean;
 import com.zulwi.tiebasigner.exception.ClientApiException;
 import com.zulwi.tiebasigner.util.ClientApiUtil;
-import com.zulwi.tiebasigner.util.DialogUtil;
 import com.zulwi.tiebasigner.util.UserCacheUtil;
 import com.zulwi.tiebasigner.view.CircularImage;
 import com.zulwi.tiebasigner.view.ListTableView;
@@ -77,31 +75,8 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 	private TiebaListAdapter tiebaListAdapter;
 	private MainActivity activity;
 	private AccountBean accountBean;
-	private Dialog dialog;
 	public SwipeRefreshLayout swipeLayout;
 	private boolean loadedFlag = false;
-
-	private class getBaiduAccountInfo extends Thread {
-		public void run() {
-			ClientApiUtil clientApiUtil = new ClientApiUtil(activity, accountBean.siteUrl, accountBean.cookieString);
-			try {
-				JSONBean result;
-				UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);
-				String cacheString = cache.getDataCache("userinfo");
-				if (loadedFlag == false && cacheString != null) {
-					result = new JSONBean(new JSONObject(cache.getDataCache("userinfo")));
-				} else {
-					result = clientApiUtil.get("baidu_account_info");
-				}
-				handler.obtainMessage(ClientApiUtil.SUCCESSED, 0, 0, result).sendToTarget();
-			} catch (ClientApiException e) {
-				e.printStackTrace();
-				handler.obtainMessage(ClientApiUtil.ERROR, 0, 0, e).sendToTarget();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
 
 	private class loadUserAvatarThread implements Runnable {
 		private String url;
@@ -148,97 +123,89 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 					break;
 				case ClientApiUtil.SUCCESSED:
 					JSONBean data = (JSONBean) msg.obj;
-					JSONObject object = data.data;
-					if (data.status == 0) {
-						try {
-							baiduAccountUsername = object.getString("username");
-							baiduAccountId = object.getString("id");
-							baiduAccountIntro = object.getString("intro");
-							baiduAccountSex = object.getInt("sex");
-							baiduAccountTiebaAge = object.getString("tb_age");
-							baiduAccountFansNum = object.getInt("fans_num");
-							baiduAccountFollowNum = object.getInt("follow_num");
-							baiduAccountTiebaNum = object.getInt("tb_num");
-							baiduAccountAvatarUrl = object.getString("avatar");
-							Bitmap cacheAccountAvatar = UserCacheUtil.getImgCache(baiduAccountId, activity);
-							if (loadedFlag == false && cacheAccountAvatar != null) handler.obtainMessage(ClientApiUtil.LOAD_IMG, 0, 0, new BaiduAccountBean(baiduAccountId, cacheAccountAvatar)).sendToTarget();
-							else new Thread(new loadUserAvatarThread(baiduAccountId, baiduAccountAvatarUrl, 0, 0)).start();
-							usernameTextView.setText(baiduAccountUsername);
-							introTextView.setText(baiduAccountIntro);
-							switch (baiduAccountSex) {
-								case 1:
-									sexTextView.setText("♂");
-									sexTextView.setTextColor(Color.parseColor("#00B4FD"));
-									break;
-								case 2:
-									sexTextView.setText("♀");
-									sexTextView.setTextColor(Color.parseColor("#E53A37"));
-									break;
-								default:
-									sexTextView.setText("?");
-									sexTextView.setTextColor(Color.GRAY);
-							}
-							tiebaAgeTextView.setText(baiduAccountTiebaAge + getString(R.string.years));
-							tiebaTipsTextView.setText(getString(R.string.loading_tiebas).replace("0", String.valueOf(baiduAccountTiebaNum)));
-							followTipsTextView.setText(getString(R.string.loading_follows).replace("0", String.valueOf(baiduAccountFollowNum)));
-							fansTipsTextView.setText(getString(R.string.loading_fans).replace("0", String.valueOf(baiduAccountFansNum)));
-							JSONArray tiebas = object.getJSONArray("tiebas");
-							tiebaList.clear();
-							for (int i = 0; i < tiebas.length(); i++) {
-								JSONObject tieba = tiebas.getJSONObject(i);
-								tiebaList.add(new TiebaBean(tieba.getInt("forum_id"), tieba.getInt("level_id"), tieba.getString("forum_name")));
-							}
-							overviewTiebaList.clear();
-							for (int i = 0; i < tiebaList.size() && i < 4; i++) {
-								overviewTiebaList.add(tiebaList.get(i));
-							}
-							tiebaListAdapter = new TiebaListAdapter(getActivity(), overviewTiebaList);
-							tiebaListSwitcher.setVisibility(View.VISIBLE);
-							if (tiebaList.size() > 4) tiebaListSwitcher.setText(getString(R.string.show_more));
-							else if (tiebaList.size() <= 4 && tiebaList.size() != 0) tiebaListSwitcher.setVisibility(View.GONE);
-							tiebaTable.setAdapter(tiebaListAdapter);
-							for (ImageView imgView : followsAvatarImgView) {
-								imgView.setImageResource(android.R.color.transparent);
-							}
-							for (ImageView imgView : fansAvatarImgView) {
-								imgView.setImageResource(android.R.color.transparent);
-							}
-							JSONArray follow = object.getJSONObject("follow").getJSONArray("user_list");
-							for (int i = 0; i < follow.length() && i < 4; i++) {
-								JSONObject followInfo = follow.getJSONObject(i);
-								String userId = followInfo.getString("id");
-								Bitmap cacheAvatar = UserCacheUtil.getImgCache(userId, activity);
-								if (loadedFlag == false && cacheAvatar != null) handler.obtainMessage(ClientApiUtil.LOAD_IMG, 1, i, new BaiduAccountBean(userId, cacheAvatar)).sendToTarget();
-								else new Thread(new loadUserAvatarThread(userId, followInfo.getString("head_photo"), 1, i)).start();
-							}
-							fallowBar.setVisibility(follow.length() == 0 ? View.GONE : View.VISIBLE);
-							followTipsTextView.setVisibility(follow.length() == 0 ? View.GONE : View.VISIBLE);
-							JSONArray fans = object.getJSONObject("fans").getJSONArray("user_list");
-							for (int i = 0; i < fans.length() && i < 4; i++) {
-								JSONObject fansInfo = fans.getJSONObject(i);
-								String userId = fansInfo.getString("id");
-								Bitmap cacheAvatar = UserCacheUtil.getImgCache(userId, activity);
-								if (loadedFlag == false && cacheAvatar != null) handler.obtainMessage(ClientApiUtil.LOAD_IMG, 1, i, new BaiduAccountBean(userId, cacheAvatar)).sendToTarget();
-								else new Thread(new loadUserAvatarThread(userId, fansInfo.getString("head_photo"), 2, i)).start();
-							}
-							fansBar.setVisibility(fans.length() == 0 ? View.GONE : View.VISIBLE);
-							fansTipsTextView.setVisibility(follow.length() == 0 ? View.GONE : View.VISIBLE);
-							UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);
-							cache.saveDataCache("userinfo", data.jsonString);
-							if (!activity.binded) activity.changeFragment(0);
-							activity.binded = true;
-						} catch (JSONException ej) {
-							ej.printStackTrace();
-							tips = "JSON解析错误";
+					JSONObject object= data.data;
+					try {
+						baiduAccountUsername = object.getString("username");
+						baiduAccountId = object.getString("id");
+						baiduAccountIntro = object.getString("intro");
+						baiduAccountSex = object.getInt("sex");
+						baiduAccountTiebaAge = object.getString("tb_age");
+						baiduAccountFansNum = object.getInt("fans_num");
+						baiduAccountFollowNum = object.getInt("follow_num");
+						baiduAccountTiebaNum = object.getInt("tb_num");
+						baiduAccountAvatarUrl = object.getString("avatar");
+						Bitmap cacheAccountAvatar = UserCacheUtil.getImgCache(baiduAccountId, activity);
+						if (loadedFlag == false && cacheAccountAvatar != null) handler.obtainMessage(ClientApiUtil.LOAD_IMG, 0, 0, new BaiduAccountBean(baiduAccountId, cacheAccountAvatar)).sendToTarget();
+						else new Thread(new loadUserAvatarThread(baiduAccountId, baiduAccountAvatarUrl, 0, 0)).start();
+						usernameTextView.setText(baiduAccountUsername);
+						introTextView.setText(baiduAccountIntro);
+						switch (baiduAccountSex) {
+							case 1:
+								sexTextView.setText("♂");
+								sexTextView.setTextColor(Color.parseColor("#00B4FD"));
+								break;
+							case 2:
+								sexTextView.setText("♀");
+								sexTextView.setTextColor(Color.parseColor("#E53A37"));
+								break;
+							default:
+								sexTextView.setText("?");
+								sexTextView.setTextColor(Color.GRAY);
 						}
-					} else {
-						if (activity.binded) activity.changeFragment(1);
-						activity.binded = false;
+						tiebaAgeTextView.setText(baiduAccountTiebaAge + getString(R.string.years));
+						tiebaTipsTextView.setText(getString(R.string.loading_tiebas).replace("0", String.valueOf(baiduAccountTiebaNum)));
+						followTipsTextView.setText(getString(R.string.loading_follows).replace("0", String.valueOf(baiduAccountFollowNum)));
+						fansTipsTextView.setText(getString(R.string.loading_fans).replace("0", String.valueOf(baiduAccountFansNum)));
+						JSONArray tiebas = object.getJSONArray("tiebas");
+						tiebaList.clear();
+						for (int i = 0; i < tiebas.length(); i++) {
+							JSONObject tieba = tiebas.getJSONObject(i);
+							tiebaList.add(new TiebaBean(tieba.getInt("forum_id"), tieba.getInt("level_id"), tieba.getString("forum_name")));
+						}
+						overviewTiebaList.clear();
+						for (int i = 0; i < tiebaList.size() && i < 4; i++) {
+							overviewTiebaList.add(tiebaList.get(i));
+						}
+						tiebaListAdapter = new TiebaListAdapter(getActivity(), overviewTiebaList);
+						tiebaListSwitcher.setVisibility(View.VISIBLE);
+						if (tiebaList.size() > 4) tiebaListSwitcher.setText(getString(R.string.show_more));
+						else if (tiebaList.size() <= 4 && tiebaList.size() != 0) tiebaListSwitcher.setVisibility(View.GONE);
+						tiebaTable.setAdapter(tiebaListAdapter);
+						for (ImageView imgView : followsAvatarImgView) {
+							imgView.setImageResource(android.R.color.transparent);
+						}
+						for (ImageView imgView : fansAvatarImgView) {
+							imgView.setImageResource(android.R.color.transparent);
+						}
+						JSONArray follow = object.getJSONObject("follow").getJSONArray("user_list");
+						for (int i = 0; i < follow.length() && i < 4; i++) {
+							JSONObject followInfo = follow.getJSONObject(i);
+							String userId = followInfo.getString("id");
+							Bitmap cacheAvatar = UserCacheUtil.getImgCache(userId, activity);
+							if (loadedFlag == false && cacheAvatar != null) handler.obtainMessage(ClientApiUtil.LOAD_IMG, 1, i, new BaiduAccountBean(userId, cacheAvatar)).sendToTarget();
+							else new Thread(new loadUserAvatarThread(userId, followInfo.getString("head_photo"), 1, i)).start();
+						}
+						fallowBar.setVisibility(follow.length() == 0 ? View.GONE : View.VISIBLE);
+						followTipsTextView.setVisibility(follow.length() == 0 ? View.GONE : View.VISIBLE);
+						JSONArray fans = object.getJSONObject("fans").getJSONArray("user_list");
+						for (int i = 0; i < fans.length() && i < 4; i++) {
+							JSONObject fansInfo = fans.getJSONObject(i);
+							String userId = fansInfo.getString("id");
+							Bitmap cacheAvatar = UserCacheUtil.getImgCache(userId, activity);
+							if (loadedFlag == false && cacheAvatar != null) handler.obtainMessage(ClientApiUtil.LOAD_IMG, 1, i, new BaiduAccountBean(userId, cacheAvatar)).sendToTarget();
+							else new Thread(new loadUserAvatarThread(userId, fansInfo.getString("head_photo"), 2, i)).start();
+						}
+						fansBar.setVisibility(fans.length() == 0 ? View.GONE : View.VISIBLE);
+						fansTipsTextView.setVisibility(follow.length() == 0 ? View.GONE : View.VISIBLE);
 						UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);
 						cache.saveDataCache("userinfo", data.jsonString);
-						tips = "抱歉，请绑定百度账号";
+						if (!fragment.binded) fragment.changeFragment(0);
+						fragment.binded = true;
+					} catch (JSONException ej) {
+						ej.printStackTrace();
+						tips = "JSON解析错误";
 					}
-					activity.finishUserInfoRefresh();
+					swipeLayout.setRefreshing(false);
 					loadedFlag = true;
 					break;
 				case ClientApiUtil.LOAD_IMG:
@@ -262,14 +229,15 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 					tips = t.getMessage();
 					break;
 			}
-			dialog.dismiss();
 			if (tips != null && !tips.equals("")) Toast.makeText(activity, tips, Toast.LENGTH_SHORT).show();
 		}
 	};
+	private AccountFragment fragment;
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
+		this.fragment = (AccountFragment) getParentFragment();
 		this.activity = (MainActivity) activity;
 		this.accountBean = this.activity.getAccountBean();
 	}
@@ -315,9 +283,6 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 			public void onClick(View v, int which) {
 			}
 		});
-		dialog = DialogUtil.createLoadingDialog(activity, "正在获取百度账号信息", true);
-		dialog.show();
-		refreshUserInfo();
 		return view;
 	}
 
@@ -340,17 +305,16 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 
 	@Override
 	public void onRefresh() {
-		refreshUserInfo();
+		fragment.refreshUserInfo();
 	}
 
-	public void refreshUserInfo() {
-		new getBaiduAccountInfo().start();
-	}
-	
 	@Override
 	public void onDestroy() {
-	    super.onDestroy();
-	    System.out.println("UserInfo Destoring..");
+		super.onDestroy();
+		System.out.println("UserInfo Destoring..");
 	}
 
+	protected void setUp(JSONBean data) {
+		handler.obtainMessage(ClientApiUtil.SUCCESSED, 0, 0, data).sendToTarget();
+	}
 }
