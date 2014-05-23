@@ -18,7 +18,6 @@ public class AboutActivity extends ActionBarActivity {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setDisplayShowHomeEnabled(false);
-
 		setContentView(R.layout.activity_about);
 	}
 
