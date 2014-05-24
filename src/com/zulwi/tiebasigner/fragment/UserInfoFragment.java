@@ -77,7 +77,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 	public SwipeRefreshLayout swipeLayout;
 	private boolean loadedFlag = false;
 
-	private class loadUserAvatarThread implements Runnable {
+	private class loadUserAvatarThread extends Thread {
 		private String url;
 		private String userId;
 		private int imgViewGroup;
@@ -135,7 +135,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 						baiduAccountAvatarUrl = object.getString("avatar");
 						Bitmap cacheAccountAvatar = UserCacheUtil.getImgCache(baiduAccountId, activity);
 						if (loadedFlag == false && cacheAccountAvatar != null) handler.obtainMessage(ClientApiUtil.LOAD_IMG, 0, 0, new BaiduAccountBean(baiduAccountId, cacheAccountAvatar)).sendToTarget();
-						else new Thread(new loadUserAvatarThread(baiduAccountId, baiduAccountAvatarUrl, 0, 0)).start();
+						else new loadUserAvatarThread(baiduAccountId, baiduAccountAvatarUrl, 0, 0).start();
 						usernameTextView.setText(baiduAccountUsername);
 						introTextView.setText(baiduAccountIntro);
 						switch (baiduAccountSex) {
@@ -181,7 +181,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 							String userId = followInfo.getString("id");
 							Bitmap cacheAvatar = UserCacheUtil.getImgCache(userId, activity);
 							if (loadedFlag == false && cacheAvatar != null) handler.obtainMessage(ClientApiUtil.LOAD_IMG, 1, i, new BaiduAccountBean(userId, cacheAvatar)).sendToTarget();
-							else new Thread(new loadUserAvatarThread(userId, followInfo.getString("head_photo"), 1, i)).start();
+							else new loadUserAvatarThread(userId, followInfo.getString("head_photo"), 1, i).start();
 						}
 						fallowBar.setVisibility(follow.length() == 0 ? View.GONE : View.VISIBLE);
 						followTipsTextView.setVisibility(follow.length() == 0 ? View.GONE : View.VISIBLE);
@@ -191,7 +191,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 							String userId = fansInfo.getString("id");
 							Bitmap cacheAvatar = UserCacheUtil.getImgCache(userId, activity);
 							if (loadedFlag == false && cacheAvatar != null) handler.obtainMessage(ClientApiUtil.LOAD_IMG, 1, i, new BaiduAccountBean(userId, cacheAvatar)).sendToTarget();
-							else new Thread(new loadUserAvatarThread(userId, fansInfo.getString("head_photo"), 2, i)).start();
+							else new loadUserAvatarThread(userId, fansInfo.getString("head_photo"), 2, i).start();
 						}
 						fansBar.setVisibility(fans.length() == 0 ? View.GONE : View.VISIBLE);
 						fansTipsTextView.setVisibility(follow.length() == 0 ? View.GONE : View.VISIBLE);

@@ -36,8 +36,8 @@ public class LogFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_log, container, false);
 		fm = getChildFragmentManager();
-		fragmentList.add(new FragmentBean("签到记录", new MultiSignFragment()));
-		fragmentList.add(new FragmentBean("一键签到", new SignLogFragment()));
+		fragmentList.add(new FragmentBean("签到记录", new SignLogFragment()));
+		fragmentList.add(new FragmentBean("一键签到", new MultiSignFragment()));
 		sectionsPagerAdapter = new SectionsPagerAdapter(fm, fragmentList);
 		viewPager = (ViewPager) view.findViewById(R.id.sign_log_pager);
 		viewPager.setAdapter(sectionsPagerAdapter);

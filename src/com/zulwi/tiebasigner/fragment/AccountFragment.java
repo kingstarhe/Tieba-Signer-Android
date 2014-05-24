@@ -37,7 +37,7 @@ public class AccountFragment extends Fragment {
 			try {
 				JSONBean result;
 				UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);
-				String cacheString = cache.getDataCache("userinfo");
+				String cacheString = cache.getDataCache("user_info");
 				if (loadedFlag == false && cacheString != null) {
 					result = new JSONBean(new JSONObject(cache.getDataCache("userinfo")));
 				} else {
@@ -75,11 +75,11 @@ public class AccountFragment extends Fragment {
 					} else {
 						if (binded) changeFragment(0);
 						binded = false;
-						tips = "请绑定百度账号";
+						tips = data.message;
 						finishUserInfoRefresh();
 					}
 					UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);
-					cache.saveDataCache("userinfo", data.jsonString);
+					cache.saveDataCache("user_info", data.jsonString);
 					break;
 				default:
 					Exception t = (Exception) msg.obj;

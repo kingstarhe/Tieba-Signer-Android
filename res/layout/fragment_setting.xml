@@ -18,7 +18,6 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:background="@drawable/list_item"
-            android:descendantFocusability="blocksDescendants"
             android:padding="10dp" >
 
             <com.zulwi.tiebasigner.view.CircularImage
@@ -54,7 +53,6 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:background="@drawable/list_item_bottom"
-            android:descendantFocusability="blocksDescendants"
             android:padding="10dp" >
 
             <TextView

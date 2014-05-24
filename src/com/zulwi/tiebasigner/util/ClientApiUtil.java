@@ -53,8 +53,8 @@ public class ClientApiUtil {
 		this.cookie = cookie;
 	}
 
-	public JSONBean get(String action) throws ClientApiException {
-		String url = getApiPath(action);
+	public JSONBean get(String action, String apiParam) throws ClientApiException {
+		String url = getApiPath(action, apiParam);
 		get = new HttpGet(url);
 		get.addHeader("Client-Version", "1.0.0");
 		get.addHeader("Content-Type", "application/json");
@@ -88,8 +88,12 @@ public class ClientApiUtil {
 		}
 	}
 
-	public JSONBean post(String action, List<NameValuePair> postParams) throws ClientApiException {
-		String url = getApiPath(action);
+	public JSONBean get(String action) throws ClientApiException {
+		return get(action, null);
+	}
+
+	public JSONBean post(String action, List<NameValuePair> postParams, String apiParam) throws ClientApiException {
+		String url = getApiPath(action, apiParam);
 		post = new HttpPost(url);
 		post.addHeader("Client-Version", "1.0.0");
 		post.addHeader("User-Agent", "Android Client For Tieba Signer");
@@ -128,8 +132,12 @@ public class ClientApiUtil {
 		}
 	}
 
-	public String getApiPath(String action) {
-		return siteUrl + API_PATH + action;
+	public JSONBean post(String action, List<NameValuePair> postParams) throws ClientApiException {
+		return post(action, postParams, null);
+	}
+
+	public String getApiPath(String action, String apiParam) {
+		return siteUrl + API_PATH + action + (apiParam != null && !apiParam.equals("") ? "&" + apiParam : "");
 	}
 
 	public List<Cookie> getCookies() {
