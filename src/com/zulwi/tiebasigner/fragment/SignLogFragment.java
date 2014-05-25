@@ -182,7 +182,7 @@ public class SignLogFragment extends BaseFragment implements OnRefreshListener {
 				break;
 			case R.id.sign_log_next:
 				if (nextDate.equals("0")) {
-					Toast.makeText(activity, "没有上一页了", Toast.LENGTH_SHORT).show();
+					Toast.makeText(activity, "没有下一页了", Toast.LENGTH_SHORT).show();
 				} else {
 					setRefreshing(true);
 					new getSignLogThread(nextDate).start();
