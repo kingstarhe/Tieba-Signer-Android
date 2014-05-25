@@ -169,6 +169,7 @@ public class SignLogFragment extends BaseFragment implements OnRefreshListener {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		if (swipeLayout.isRefreshing()) return false;
 		switch (item.getItemId()) {
 			case R.id.sign_log_pre:
 				if (previousDate.equals("0")) {
