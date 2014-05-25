@@ -93,10 +93,10 @@ public class LogFragment extends Fragment {
 
 	protected void setFragmentTitle(int position, String title) {
 		fragmentList.get(position).title = title;
-		setTitle();
+		if (activity.getCurrentFragmentId() == 1) setTitle();
 	}
 
 	public void setTitle() {
-		if (activity.getCurrentFragmentId() != 1) activity.setTitle(sectionsPagerAdapter.getPageTitle(viewPager.getCurrentItem()));
+		activity.setTitle(sectionsPagerAdapter.getPageTitle(viewPager.getCurrentItem()));
 	}
 }
