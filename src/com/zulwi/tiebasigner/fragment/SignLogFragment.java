@@ -110,7 +110,8 @@ public class SignLogFragment extends BaseFragment implements OnRefreshListener {
 								stat[status + 2]++;
 								signLogList.add(new TiebaBean(log.getInt("tid"), log.getString("name"), log.getInt("exp")));
 							}
-							fragment.setFragmentTitle(0, currentDate + " " + String.valueOf(stat[4]) + "/" + String.valueOf(stat[0] + stat[1] + stat[2] + stat[3] + stat[4]));
+
+							fragment.setFragmentTitle(0, currentDate.substring(0, 4) + "-" + currentDate.substring(4, 6) + "-" + currentDate.substring(6) + "    " + String.valueOf(stat[4]) + "/" + String.valueOf(stat[0] + stat[1] + stat[2] + stat[3] + stat[4]));
 							signLogAdapter = new SignLogListAdapter(getActivity(), signLogList);
 							signLogListView.setAdapter(signLogAdapter);
 						} catch (JSONException e1) {
@@ -142,7 +143,7 @@ public class SignLogFragment extends BaseFragment implements OnRefreshListener {
 	}
 
 	@SuppressLint("SimpleDateFormat")
-    @Override
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_log_signlog, container, false);
 		signLogListView = (ListView) view.findViewById(R.id.sign_log_list);
