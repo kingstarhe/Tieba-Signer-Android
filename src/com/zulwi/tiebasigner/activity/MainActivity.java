@@ -100,7 +100,8 @@ public class MainActivity extends ActionBarActivity {
 		if (from == to && !to.fragment.isAdded()) ft.add(R.id.fragment_container, to.fragment);
 		else ft = to.fragment.isAdded() ? ft.hide(from.fragment).show(to.fragment) : ft.hide(from.fragment).add(R.id.fragment_container, to.fragment);
 		ft.commit();
-		setTitle(to.title);
+		if(to.fragment.isAdded() && position==1) ((LogFragment)to.fragment).setTitle();
+		else setTitle(to.title);
 		currentFragmentId = position;
 	}
 

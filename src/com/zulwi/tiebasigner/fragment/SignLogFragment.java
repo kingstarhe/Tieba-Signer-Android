@@ -13,7 +13,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
@@ -32,11 +31,10 @@ import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.bean.JSONBean;
 import com.zulwi.tiebasigner.bean.TiebaBean;
 import com.zulwi.tiebasigner.exception.ClientApiException;
-import com.zulwi.tiebasigner.fragment.LogFragment.setTitleInterFace;
 import com.zulwi.tiebasigner.util.ClientApiUtil;
 import com.zulwi.tiebasigner.util.UserCacheUtil;
 
-public class SignLogFragment extends BaseFragment implements OnRefreshListener,setTitleInterFace {
+public class SignLogFragment extends BaseFragment implements OnRefreshListener {
 	private ListView signLogListView;
 	private List<TiebaBean> signLogList = new ArrayList<TiebaBean>();
 	private SignLogListAdapter signLogAdapter;
@@ -96,6 +94,11 @@ public class SignLogFragment extends BaseFragment implements OnRefreshListener,s
 					loadedFlag = true;
 					if (json.status == 0) {
 						try {
+							stat[0] = 0;
+							stat[1] = 0;
+							stat[2] = 0;
+							stat[3] = 0;
+							stat[4] = 0;
 							signLogList.clear();
 							currentDate = json.data.getString("date");
 							previousDate = json.data.getString("previous_date");
@@ -107,7 +110,7 @@ public class SignLogFragment extends BaseFragment implements OnRefreshListener,s
 								stat[status + 2]++;
 								signLogList.add(new TiebaBean(log.getInt("tid"), log.getString("name"), log.getInt("exp")));
 							}
-							setTitle();
+							fragment.setFragmentTitle(0, currentDate + " " + String.valueOf(stat[4]) + "/" + String.valueOf(stat[0] + stat[1] + stat[2] + stat[3] + stat[4]));
 							signLogAdapter = new SignLogListAdapter(getActivity(), signLogList);
 							signLogListView.setAdapter(signLogAdapter);
 						} catch (JSONException e1) {
@@ -138,7 +141,8 @@ public class SignLogFragment extends BaseFragment implements OnRefreshListener,s
 		this.accountBean = this.activity.getAccountBean();
 	}
 
-	@Override
+	@SuppressLint("SimpleDateFormat")
+    @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_log_signlog, container, false);
 		signLogListView = (ListView) view.findViewById(R.id.sign_log_list);
@@ -158,23 +162,6 @@ public class SignLogFragment extends BaseFragment implements OnRefreshListener,s
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
-		fragment.currentFragmentId = 0;
-		setTitle();
-	}
-
-	public void setTitle() {
-		System.out.println(currentDate);
-		for (int s : stat) {
-			System.out.println(s);
-		}
-		String title = currentDate + " " + String.valueOf(stat[4]) + "/" + String.valueOf(stat[0] + stat[1] + stat[2] + stat[3] + stat[4]);
-		System.out.println(title);
-		activity.setTitle(title);
-	}
-
-	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.sign_log, menu);
 	}
@@ -189,11 +176,10 @@ public class SignLogFragment extends BaseFragment implements OnRefreshListener,s
 				break;
 			case R.id.sign_log_next:
 				if (nextDate.equals("0")) {
-					Toast.makeText(activity, "没有上一页了", Toast.LENGTH_SHORT).show();
+					Toast.makeText(activity, "没有下一页了", Toast.LENGTH_SHORT).show();
 				} else new getSignLogThread(nextDate).start();
 				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
 }

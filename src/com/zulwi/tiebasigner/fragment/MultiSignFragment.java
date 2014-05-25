@@ -8,19 +8,13 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.zulwi.tiebasigner.R;
-import com.zulwi.tiebasigner.activity.MainActivity;
-import com.zulwi.tiebasigner.fragment.LogFragment.setTitleInterFace;
 
-public class MultiSignFragment extends BaseFragment implements setTitleInterFace {
+public class MultiSignFragment extends BaseFragment {
 	private LinearLayout signLogOneKeySignButton;
-	private LogFragment fragment;
-	private MainActivity activity;
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		this.activity = (MainActivity) activity;
-		this.fragment = (LogFragment) getParentFragment();
 	}
 
 	@Override
@@ -35,14 +29,4 @@ public class MultiSignFragment extends BaseFragment implements setTitleInterFace
 		return view;
 	}
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		fragment.currentFragmentId = 1;
-		setTitle();
-	}
-
-	public void setTitle() {
-		activity.setTitle("一键签到");
-	}
 }

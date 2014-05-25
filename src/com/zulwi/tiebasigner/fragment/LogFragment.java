@@ -3,29 +3,31 @@ package com.zulwi.tiebasigner.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.zulwi.tiebasigner.R;
-import com.zulwi.tiebasigner.bean.FragmentBean;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.zulwi.tiebasigner.R;
+import com.zulwi.tiebasigner.bean.FragmentBean;
 
 public class LogFragment extends Fragment {
 	private FragmentManager fm;
 	private SectionsPagerAdapter sectionsPagerAdapter;
 	private ViewPager viewPager;
 	private List<FragmentBean> fragmentList = new ArrayList<FragmentBean>();
-	protected int currentFragmentId = 0;
+	private Activity activity;
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
+		this.activity = activity;
 	}
 
 	@Override
@@ -37,7 +39,7 @@ public class LogFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-
+		setTitle();
 	}
 
 	@Override
@@ -48,35 +50,51 @@ public class LogFragment extends Fragment {
 		fragmentList.add(new FragmentBean("一键签到", new MultiSignFragment()));
 		sectionsPagerAdapter = new SectionsPagerAdapter(fm, fragmentList);
 		viewPager = (ViewPager) view.findViewById(R.id.sign_log_pager);
+		viewPager.setOnPageChangeListener(new OnPageChangeListener() {
+			@Override
+			public void onPageSelected(int arg0) {
+				setTitle();
+			}
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+			}
+			
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+			}
+		});
 		viewPager.setAdapter(sectionsPagerAdapter);
 		return view;
 	}
 
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
-		private List<FragmentBean> list;
 
 		public SectionsPagerAdapter(FragmentManager fm, List<FragmentBean> list) {
 			super(fm);
-			this.list = list;
 		}
 
 		@Override
 		public Fragment getItem(int position) {
-			return list.get(position).fragment;
+			return fragmentList.get(position).fragment;
 		}
 
 		@Override
 		public int getCount() {
-			return list.size();
+			return fragmentList.size();
 		}
 
 		@Override
 		public CharSequence getPageTitle(int position) {
-			return list.get(position).title;
+			return fragmentList.get(position).title;
 		}
 	}
 
-	public interface setTitleInterFace {
-		void setTitle();
-	};
+	protected void setFragmentTitle(int position, String title) {
+		fragmentList.get(position).title = title;
+		setTitle();
+	}
+	
+	public void setTitle(){
+		activity.setTitle(sectionsPagerAdapter.getPageTitle(viewPager.getCurrentItem()));
+	}
 }
