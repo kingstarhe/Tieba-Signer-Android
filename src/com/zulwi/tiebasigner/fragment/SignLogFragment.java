@@ -26,7 +26,7 @@ import android.widget.Toast;
 
 import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.activity.MainActivity;
-import com.zulwi.tiebasigner.adapter.SignLogListAdapter;
+import com.zulwi.tiebasigner.adapter.LogListAdapter;
 import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.bean.JSONBean;
 import com.zulwi.tiebasigner.bean.TiebaBean;
@@ -36,8 +36,11 @@ import com.zulwi.tiebasigner.util.UserCacheUtil;
 
 public class SignLogFragment extends BaseFragment implements OnRefreshListener {
 	private ListView signLogListView;
+	private SwipeRefreshLayout logSwipeLayout;
+	private SwipeRefreshLayout tipsSwipeLayout;
+	private LogFragment fragment;
 	private List<TiebaBean> signLogList = new ArrayList<TiebaBean>();
-	private SignLogListAdapter signLogAdapter;
+	private LogListAdapter logListAdapter;
 	private MainActivity activity;
 	private AccountBean accountBean;
 	private boolean loadedFlag = false;
@@ -82,7 +85,7 @@ public class SignLogFragment extends BaseFragment implements OnRefreshListener {
 		public void handleMessage(android.os.Message msg) {
 			super.handleMessage(msg);
 			String tips = null;
-			swipeLayout.setRefreshing(false);
+			setRefreshing(false);
 			switch (msg.what) {
 				case ClientApiUtil.ERROR:
 					ClientApiException e = (ClientApiException) msg.obj;
@@ -94,11 +97,7 @@ public class SignLogFragment extends BaseFragment implements OnRefreshListener {
 					loadedFlag = true;
 					if (json.status == 0) {
 						try {
-							stat[0] = 0;
-							stat[1] = 0;
-							stat[2] = 0;
-							stat[3] = 0;
-							stat[4] = 0;
+							stat[4] = stat[3] = stat[2] = stat[1] = stat[0] = 0;
 							signLogList.clear();
 							currentDate = json.data.getString("date");
 							previousDate = json.data.getString("previous_date");
@@ -108,12 +107,13 @@ public class SignLogFragment extends BaseFragment implements OnRefreshListener {
 								JSONObject log = logs.getJSONObject(i);
 								int status = log.getInt("status");
 								stat[status + 2]++;
-								signLogList.add(new TiebaBean(log.getInt("tid"), log.getString("name"), log.getInt("exp")));
+								signLogList.add(new TiebaBean(log.getInt("tid"), log.getString("name"), log.getInt("status")));
 							}
-
-							fragment.setFragmentTitle(0, currentDate.substring(0, 4) + "-" + currentDate.substring(4, 6) + "-" + currentDate.substring(6) + "    " + String.valueOf(stat[4]) + "/" + String.valueOf(stat[0] + stat[1] + stat[2] + stat[3] + stat[4]));
-							signLogAdapter = new SignLogListAdapter(getActivity(), signLogList);
-							signLogListView.setAdapter(signLogAdapter);
+							tipsSwipeLayout.setVisibility(signLogList.size() != 0 ? View.GONE : View.VISIBLE);
+							logSwipeLayout.setVisibility(signLogList.size() == 0 ? View.GONE : View.VISIBLE);
+							if (currentDate.length() == 8) fragment.setFragmentTitle(0, currentDate.substring(0, 4) + "-" + currentDate.substring(4, 6) + "-" + currentDate.substring(6) + "    " + String.valueOf(stat[4]) + "/" + String.valueOf(stat[0] + stat[1] + stat[2] + stat[3] + stat[4]));
+							logListAdapter = new LogListAdapter(getActivity(), signLogList);
+							signLogListView.setAdapter(logListAdapter);
 						} catch (JSONException e1) {
 							tips = "JSON解析失败";
 						}
@@ -131,8 +131,6 @@ public class SignLogFragment extends BaseFragment implements OnRefreshListener {
 			if (tips != null && !tips.equals("")) Toast.makeText(activity, tips, Toast.LENGTH_SHORT).show();
 		}
 	};
-	private SwipeRefreshLayout swipeLayout;
-	private LogFragment fragment;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -147,10 +145,13 @@ public class SignLogFragment extends BaseFragment implements OnRefreshListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_log_signlog, container, false);
 		signLogListView = (ListView) view.findViewById(R.id.sign_log_list);
-		swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
-		swipeLayout.setOnRefreshListener(this);
-		swipeLayout.setColorScheme(R.color.holo_blue_bright, R.color.holo_green_light, R.color.holo_orange_light, R.color.holo_red_light);
-		swipeLayout.setRefreshing(true);
+		logSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.log_swipe_container);
+		logSwipeLayout.setOnRefreshListener(this);
+		logSwipeLayout.setColorScheme(R.color.holo_blue_bright, R.color.holo_green_light, R.color.holo_orange_light, R.color.holo_red_light);
+		logSwipeLayout.setRefreshing(true);
+		tipsSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.tip_swipe_container);
+		tipsSwipeLayout.setOnRefreshListener(this);
+		tipsSwipeLayout.setColorScheme(R.color.holo_blue_bright, R.color.holo_green_light, R.color.holo_orange_light, R.color.holo_red_light);
 		Date date = new Date();
 		currentDate = new SimpleDateFormat("yyyyMMdd").format(date);
 		onRefresh();
@@ -169,25 +170,30 @@ public class SignLogFragment extends BaseFragment implements OnRefreshListener {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (swipeLayout.isRefreshing()) return false;
+		if (logSwipeLayout.isRefreshing()) return false;
 		switch (item.getItemId()) {
 			case R.id.sign_log_pre:
 				if (previousDate.equals("0")) {
 					Toast.makeText(activity, "没有上一页了", Toast.LENGTH_SHORT).show();
 				} else {
-					swipeLayout.setRefreshing(true);
+					setRefreshing(true);
 					new getSignLogThread(previousDate).start();
 				}
 				break;
 			case R.id.sign_log_next:
 				if (nextDate.equals("0")) {
-					Toast.makeText(activity, "没有下一页了", Toast.LENGTH_SHORT).show();
+					Toast.makeText(activity, "没有上一页了", Toast.LENGTH_SHORT).show();
 				} else {
-					swipeLayout.setRefreshing(true);
+					setRefreshing(true);
 					new getSignLogThread(nextDate).start();
 				}
 				break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void setRefreshing(boolean isRefreshing) {
+		tipsSwipeLayout.setRefreshing(isRefreshing);
+		logSwipeLayout.setRefreshing(isRefreshing);
 	}
 }

@@ -74,5 +74,6 @@
     <string name="vcode">验证码</string>
     <string name="pre_date">前一天</string>
     <string name="next_date">后一天</string>
+    <string name="no_log">没有记录</string>
 
 </resources>
