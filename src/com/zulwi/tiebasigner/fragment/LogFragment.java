@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.zulwi.tiebasigner.R;
+import com.zulwi.tiebasigner.activity.MainActivity;
 import com.zulwi.tiebasigner.bean.FragmentBean;
 
 public class LogFragment extends Fragment {
@@ -22,12 +23,12 @@ public class LogFragment extends Fragment {
 	private SectionsPagerAdapter sectionsPagerAdapter;
 	private ViewPager viewPager;
 	private List<FragmentBean> fragmentList = new ArrayList<FragmentBean>();
-	private Activity activity;
+	private MainActivity activity;
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		this.activity = activity;
+		this.activity = (MainActivity) activity;
 	}
 
 	@Override
@@ -55,10 +56,11 @@ public class LogFragment extends Fragment {
 			public void onPageSelected(int arg0) {
 				setTitle();
 			}
+
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
 			}
-			
+
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
 			}
@@ -93,8 +95,8 @@ public class LogFragment extends Fragment {
 		fragmentList.get(position).title = title;
 		setTitle();
 	}
-	
-	public void setTitle(){
-		activity.setTitle(sectionsPagerAdapter.getPageTitle(viewPager.getCurrentItem()));
+
+	public void setTitle() {
+		if (activity.getCurrentFragmentId() != 1) activity.setTitle(sectionsPagerAdapter.getPageTitle(viewPager.getCurrentItem()));
 	}
 }
