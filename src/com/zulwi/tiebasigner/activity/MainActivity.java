@@ -16,8 +16,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -26,9 +24,9 @@ import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.bean.FragmentBean;
 import com.zulwi.tiebasigner.fragment.AccountFragment;
+import com.zulwi.tiebasigner.fragment.LogFragment;
 import com.zulwi.tiebasigner.fragment.PluginFragment;
 import com.zulwi.tiebasigner.fragment.SettingFragment;
-import com.zulwi.tiebasigner.fragment.LogFragment;
 
 public class MainActivity extends ActionBarActivity {
 	private FragmentManager fm;
@@ -63,19 +61,6 @@ public class MainActivity extends ActionBarActivity {
 		bottonBarButton.add((Button) findViewById(R.id.plugin_button));
 		bottonBarButton.add((Button) findViewById(R.id.setting_button));
 		bottonBarButton.get(0).performClick();
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		if (id == R.id.action_settings) { return true; }
-		return super.onOptionsItemSelected(item);
 	}
 
 	@Override

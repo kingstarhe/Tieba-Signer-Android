@@ -15,6 +15,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,6 +45,8 @@ public class ClientApiUtil {
 
 	public ClientApiUtil(Context context, String siteUrl) {
 		client = new DefaultHttpClient();
+		client.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 20000);
+		client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 30000);
 		this.context = context;
 		this.siteUrl = siteUrl;
 	}

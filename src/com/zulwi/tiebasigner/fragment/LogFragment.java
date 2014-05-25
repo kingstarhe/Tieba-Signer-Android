@@ -21,6 +21,7 @@ public class LogFragment extends Fragment {
 	private SectionsPagerAdapter sectionsPagerAdapter;
 	private ViewPager viewPager;
 	private List<FragmentBean> fragmentList = new ArrayList<FragmentBean>();
+	protected int currentFragmentId = 0;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -30,6 +31,13 @@ public class LogFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
 	}
 
 	@Override
@@ -42,41 +50,6 @@ public class LogFragment extends Fragment {
 		viewPager = (ViewPager) view.findViewById(R.id.sign_log_pager);
 		viewPager.setAdapter(sectionsPagerAdapter);
 		return view;
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-	}
-
-	@Override
-	public void onDetach() {
-		super.onDetach();
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
 	}
 
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -103,4 +76,7 @@ public class LogFragment extends Fragment {
 		}
 	}
 
+	public interface setTitleInterFace {
+		void setTitle();
+	};
 }

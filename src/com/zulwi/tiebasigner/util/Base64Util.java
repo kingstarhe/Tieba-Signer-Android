@@ -94,7 +94,7 @@ public class Base64Util {
 			if (b2 == -1) {
 				break;
 			}
-			buf.write((int) ((b1 << 2) | ((b2 & 0x30) >>> 4)));
+			buf.write((b1 << 2) | ((b2 & 0x30) >>> 4));
 
 			/* b3 */
 			do {
@@ -107,7 +107,7 @@ public class Base64Util {
 			if (b3 == -1) {
 				break;
 			}
-			buf.write((int) (((b2 & 0x0f) << 4) | ((b3 & 0x3c) >>> 2)));
+			buf.write(((b2 & 0x0f) << 4) | ((b3 & 0x3c) >>> 2));
 
 			/* b4 */
 			do {
@@ -120,7 +120,7 @@ public class Base64Util {
 			if (b4 == -1) {
 				break;
 			}
-			buf.write((int) (((b3 & 0x03) << 6) | b4));
+			buf.write(((b3 & 0x03) << 6) | b4);
 		}
 		return buf.toByteArray();
 	}

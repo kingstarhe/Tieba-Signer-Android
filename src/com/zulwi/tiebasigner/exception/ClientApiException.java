@@ -28,7 +28,8 @@ public class ClientApiException extends Exception {
 		this.code = STATUS_ERROR;
 	}
 
-	public String getMessage() {
+	@Override
+    public String getMessage() {
 		String message = "";
 		switch (code) {
 			case NETWORK_FAIL:

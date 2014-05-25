@@ -72,5 +72,7 @@
     <string name="bd_band_tip">我们不会保存您的 Cookie 信息，但无法保证助手站点不会盗用，这可能会有潜在的风险</string>
     <string name="bd_checkbox">我已经知道这会有潜在的风险</string>
     <string name="vcode">验证码</string>
+    <string name="pre_date">前一天</string>
+    <string name="next_date">后一天</string>
 
 </resources>

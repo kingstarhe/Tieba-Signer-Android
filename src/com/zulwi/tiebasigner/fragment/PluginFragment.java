@@ -4,12 +4,11 @@ import com.zulwi.tiebasigner.R;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class PluginFragment extends Fragment {
+public class PluginFragment extends BaseFragment {
 
 	@Override
 	public void onAttach(Activity activity) {

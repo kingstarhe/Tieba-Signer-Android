@@ -1134,26 +1134,28 @@ containing a value of this type.
         public static final int icon_sitepost=0x7f02006f;
         public static final int icon_userinfo_focus=0x7f020070;
         public static final int icon_userinfo_normal=0x7f020071;
-        public static final int list_item=0x7f020072;
-        public static final int list_item_bg=0x7f020073;
-        public static final int list_item_bg_bottom=0x7f020074;
-        public static final int list_item_bg_top=0x7f020075;
-        public static final int list_item_bottom=0x7f020076;
-        public static final int list_item_top=0x7f020077;
-        public static final int loading=0x7f020078;
-        public static final int loading_bg=0x7f020079;
-        public static final int login_banner=0x7f02007a;
-        public static final int nav_list_item=0x7f02007b;
-        public static final int one_key_button=0x7f02007c;
-        public static final int plugin_button=0x7f02007d;
-        public static final int setting_button=0x7f02007e;
-        public static final int signlog_button=0x7f02007f;
-        public static final int site_list_item=0x7f020080;
-        public static final int site_list_text=0x7f020081;
-        public static final int splash=0x7f020082;
-        public static final int tips_bg=0x7f020083;
-        public static final int transparent=0x7f020084;
-        public static final int userinfo_button=0x7f020085;
+        public static final int left_triangle=0x7f020072;
+        public static final int list_item=0x7f020073;
+        public static final int list_item_bg=0x7f020074;
+        public static final int list_item_bg_bottom=0x7f020075;
+        public static final int list_item_bg_top=0x7f020076;
+        public static final int list_item_bottom=0x7f020077;
+        public static final int list_item_top=0x7f020078;
+        public static final int loading=0x7f020079;
+        public static final int loading_bg=0x7f02007a;
+        public static final int login_banner=0x7f02007b;
+        public static final int nav_list_item=0x7f02007c;
+        public static final int one_key_button=0x7f02007d;
+        public static final int plugin_button=0x7f02007e;
+        public static final int right_triangle=0x7f02007f;
+        public static final int setting_button=0x7f020080;
+        public static final int signlog_button=0x7f020081;
+        public static final int site_list_item=0x7f020082;
+        public static final int site_list_text=0x7f020083;
+        public static final int splash=0x7f020084;
+        public static final int tips_bg=0x7f020085;
+        public static final int transparent=0x7f020086;
+        public static final int userinfo_button=0x7f020087;
     }
     public static final class id {
         public static final int account_avatar=0x7f05007b;
@@ -1185,13 +1187,13 @@ containing a value of this type.
         public static final int container=0x7f05003c;
         public static final int default_activity_button=0x7f050028;
         public static final int del_list=0x7f050087;
-        public static final int del_site=0x7f05008a;
+        public static final int del_site=0x7f05008c;
         public static final int dialog=0x7f05000e;
         public static final int dialog_view=0x7f050084;
         public static final int disableHome=0x7f050008;
         public static final int dropdown=0x7f05000f;
         public static final int edit_query=0x7f050030;
-        public static final int edit_site=0x7f050089;
+        public static final int edit_site=0x7f05008b;
         public static final int end=0x7f050013;
         public static final int expand_activities_button=0x7f050026;
         public static final int expanded_menu=0x7f05002c;
@@ -1254,7 +1256,9 @@ containing a value of this type.
         public static final int showHome=0x7f050004;
         public static final int showTitle=0x7f050006;
         public static final int sign_log_list=0x7f050059;
+        public static final int sign_log_next=0x7f05008a;
         public static final int sign_log_pager=0x7f050055;
+        public static final int sign_log_pre=0x7f050089;
         public static final int sign_log_sign=0x7f050056;
         public static final int signlog_button=0x7f05004b;
         public static final int site=0x7f050047;
@@ -1377,7 +1381,8 @@ containing a value of this type.
     public static final class menu {
         public static final int edit_sites=0x7f0c0000;
         public static final int main=0x7f0c0001;
-        public static final int sites_context=0x7f0c0002;
+        public static final int sign_log=0x7f0c0002;
+        public static final int sites_context=0x7f0c0003;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
@@ -1466,11 +1471,13 @@ containing a value of this type.
         public static final int male=0x7f0a0026;
         public static final int navigation_drawer_close=0x7f0a0022;
         public static final int navigation_drawer_open=0x7f0a0021;
+        public static final int next_date=0x7f0a0055;
         public static final int no_tieba=0x7f0a002e;
         public static final int one_key_sign_tips=0x7f0a0033;
         public static final int one_key_sign_title=0x7f0a0032;
         public static final int piece=0x7f0a002b;
         public static final int plugin=0x7f0a001f;
+        public static final int pre_date=0x7f0a0054;
         public static final int release=0x7f0a003b;
         public static final int release_date=0x7f0a003c;
         public static final int setting=0x7f0a000f;

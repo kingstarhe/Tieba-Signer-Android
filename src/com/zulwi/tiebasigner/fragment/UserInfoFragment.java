@@ -11,6 +11,7 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreConnectionPNames;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,7 +23,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
@@ -46,7 +46,7 @@ import com.zulwi.tiebasigner.util.UserCacheUtil;
 import com.zulwi.tiebasigner.view.CircularImage;
 import com.zulwi.tiebasigner.view.ListTableView;
 
-public class UserInfoFragment extends Fragment implements View.OnClickListener, OnRefreshListener {
+public class UserInfoFragment extends BaseFragment implements View.OnClickListener, OnRefreshListener {
 	private CircularImage userAvatar;
 	private ListTableView tiebaTable;
 	private TextView tiebaListSwitcher;
@@ -90,11 +90,14 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 			this.which = which;
 		}
 
-		public void run() {
-			HttpClient httpclient = new DefaultHttpClient();
+		@Override
+        public void run() {
+			HttpClient httpClient = new DefaultHttpClient();
+			httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 20000);
+			httpClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 30000);
 			HttpGet httpget = new HttpGet(url);
 			try {
-				HttpResponse resp = httpclient.execute(httpget);
+				HttpResponse resp = httpClient.execute(httpget);
 				if (HttpStatus.SC_OK == resp.getStatusLine().getStatusCode()) {
 					HttpEntity entity = resp.getEntity();
 					InputStream in = entity.getContent();
@@ -104,7 +107,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 			} catch (IOException e) {
 				e.printStackTrace();
 			} finally {
-				httpclient.getConnectionManager().shutdown();
+				httpClient.getConnectionManager().shutdown();
 			}
 		}
 	}

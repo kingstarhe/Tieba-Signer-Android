@@ -20,7 +20,8 @@ public class CircularImage extends MaskedImage {
 		super(paramContext, paramAttributeSet, paramInt);
 	}
 
-	public Bitmap createMask() {
+	@Override
+    public Bitmap createMask() {
 		int i = getWidth();
 		int j = getHeight();
 		Bitmap.Config localConfig = Bitmap.Config.ARGB_8888;

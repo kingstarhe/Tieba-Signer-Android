@@ -32,6 +32,7 @@ public class AccountFragment extends Fragment {
 	private boolean loadedFlag = false;
 
 	private class getBaiduAccountInfo extends Thread {
+		@Override
 		public void run() {
 			ClientApiUtil clientApiUtil = new ClientApiUtil(activity, accountBean.siteUrl, accountBean.cookieString);
 			try {
@@ -64,6 +65,7 @@ public class AccountFragment extends Fragment {
 					ClientApiException e = (ClientApiException) msg.obj;
 					tips = e.getMessage();
 					loadedFlag = true;
+					finishUserInfoRefresh();
 					break;
 				case ClientApiUtil.SUCCESSED:
 					JSONBean data = (JSONBean) msg.obj;
@@ -100,6 +102,7 @@ public class AccountFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
 	}
 
 	@Override
