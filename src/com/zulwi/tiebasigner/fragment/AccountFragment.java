@@ -40,7 +40,7 @@ public class AccountFragment extends Fragment {
 				UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);
 				String cacheString = cache.getDataCache("user_info");
 				if (loadedFlag == false && cacheString != null) {
-					result = new JSONBean(new JSONObject(cache.getDataCache("userinfo")));
+					result = new JSONBean(new JSONObject(cache.getDataCache("user_info")));
 				} else {
 					result = clientApiUtil.get("baidu_account_info");
 				}

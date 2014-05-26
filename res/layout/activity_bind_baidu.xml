@@ -42,8 +42,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:visibility="gone"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:visibility="gone" >
 
         <EditText
             android:id="@+id/vcode"
@@ -54,18 +54,27 @@
             android:inputType="text" />
 
         <ImageView
+            android:id="@+id/vcode_image"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:onClick="onClick"
             android:layout_weight="1"
             android:contentDescription="@null" />
     </LinearLayout>
 
     <CheckBox
-        android:id="@+id/checkbox"
+        android:id="@+id/checkbox_risk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text="@string/bd_checkbox"
+        android:text="@string/bd_checkbox_risk"
+        android:textColor="#666666" />
+
+    <CheckBox
+        android:id="@+id/checkbox_free"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/bd_checkbox_free"
         android:textColor="#666666" />
 
     <Button
