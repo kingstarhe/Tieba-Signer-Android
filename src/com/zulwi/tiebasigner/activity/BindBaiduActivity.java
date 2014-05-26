@@ -2,7 +2,6 @@ package com.zulwi.tiebasigner.activity;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -11,16 +10,11 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreConnectionPNames;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,10 +37,12 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.zulwi.tiebasigner.R;
-import com.zulwi.tiebasigner.exception.StatusCodeException;
+import com.zulwi.tiebasigner.bean.HttpResultBean;
+import com.zulwi.tiebasigner.exception.HttpResultException;
 import com.zulwi.tiebasigner.util.ClientApiUtil;
 import com.zulwi.tiebasigner.util.CodeUtil;
 import com.zulwi.tiebasigner.util.DialogUtil;
+import com.zulwi.tiebasigner.util.HttpUtil;
 
 public class BindBaiduActivity extends ActionBarActivity {
 	private EditText usernameEditText;
@@ -75,12 +71,11 @@ public class BindBaiduActivity extends ActionBarActivity {
 		@Override
 		public void run() {
 			super.run();
-			HttpClient client = new DefaultHttpClient();
-			HttpPost post = new HttpPost("http://c.tieba.baidu.com/c/s/login");
-			post.addHeader("Content-Type", "application/x-www-form-urlencoded");
-			post.addHeader("User-Agent", "BaiduTieba for Android 6.0.1");
-			post.addHeader("Host", "c.tieba.baidu.com");
-			post.addHeader("Connection", "Keep-Alive");
+			List<NameValuePair> header = new ArrayList<NameValuePair>();
+			header.add(new BasicNameValuePair("Content-Type", "application/x-www-form-urlencoded"));
+			header.add(new BasicNameValuePair("User-Agent", "BaiduTieba for Android 6.0.1"));
+			header.add(new BasicNameValuePair("Host", "c.tieba.baidu.com"));
+			header.add(new BasicNameValuePair("Connection", "Keep-Alive"));
 			List<NameValuePair> postParams = new ArrayList<NameValuePair>();
 			postParams.add(new BasicNameValuePair("_client_id", "wappc_1388018171504_766"));
 			postParams.add(new BasicNameValuePair("_client_type", "1"));
@@ -107,30 +102,11 @@ public class BindBaiduActivity extends ActionBarActivity {
 			}
 			postParams.add(new BasicNameValuePair("sign", CodeUtil.MD5(signString.toString() + "tiebaclient!!!").toUpperCase()));
 			try {
-				post.setEntity(new UrlEncodedFormEntity(postParams, HTTP.UTF_8));
-				HttpResponse response = client.execute(post);
-				int statusCode = response.getStatusLine().getStatusCode();
-				if (statusCode != 200) {
-					throw new StatusCodeException("HTTP状态码错误！", statusCode);
-				} else {
-					HttpEntity entity = response.getEntity();
-					String result = EntityUtils.toString(entity, "utf-8");
-					handler.obtainMessage(ClientApiUtil.SUCCESSED, 0, 0, result).sendToTarget();
-				}
-			} catch (UnsupportedEncodingException e) {
+				HttpResultBean resultBean = HttpUtil.post("http://c.tieba.baidu.com/c/s/login", postParams, header);
+				handler.obtainMessage(ClientApiUtil.SUCCESSED, 0, 0, resultBean.result).sendToTarget();
+			} catch (HttpResultException e) {
 				e.printStackTrace();
-				handler.obtainMessage(ClientApiUtil.ERROR, 0, 0, "UnsupportedEncodingException").sendToTarget();
-			} catch (ClientProtocolException e) {
-				e.printStackTrace();
-				handler.obtainMessage(ClientApiUtil.ERROR, 0, 0, "ClientProtocolException").sendToTarget();
-			} catch (IOException e) {
-				e.printStackTrace();
-				handler.obtainMessage(ClientApiUtil.ERROR, 0, 0, "IOException").sendToTarget();
-			} catch (StatusCodeException e) {
-				e.printStackTrace();
-				handler.obtainMessage(ClientApiUtil.ERROR, 0, 0, "StatusCodeException").sendToTarget();
-			} finally {
-				client.getConnectionManager().shutdown();
+				handler.obtainMessage(ClientApiUtil.ERROR, 0, 0, e).sendToTarget();
 			}
 		}
 	}
@@ -236,9 +212,12 @@ public class BindBaiduActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		if (id == R.id.action_settings) { return true; }
-		return super.onOptionsItemSelected(item);
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				this.finish();
+			default:
+				return super.onOptionsItemSelected(item);
+		}
 	}
 
 	public void onClick(View view) {

@@ -51,6 +51,7 @@ public class MainActivity extends ActionBarActivity {
 		actionBar.setDisplayShowHomeEnabled(false);
 		setContentView(R.layout.activity_main);
 		accountBean = (AccountBean) getIntent().getSerializableExtra("accountBean");
+		System.out.println(accountBean.formhash);
 		fragmentList.add(new FragmentBean("账号", new AccountFragment()));
 		fragmentList.add(new FragmentBean("记录", new LogFragment()));
 		fragmentList.add(new FragmentBean("插件", new PluginFragment()));
