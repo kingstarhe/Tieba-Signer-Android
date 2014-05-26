@@ -30,7 +30,7 @@ import com.zulwi.tiebasigner.adapter.LogListAdapter;
 import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.bean.JSONBean;
 import com.zulwi.tiebasigner.bean.TiebaBean;
-import com.zulwi.tiebasigner.exception.ClientApiException;
+import com.zulwi.tiebasigner.exception.HttpResultException;
 import com.zulwi.tiebasigner.util.ClientApiUtil;
 import com.zulwi.tiebasigner.util.UserCacheUtil;
 
@@ -59,7 +59,7 @@ public class SignLogFragment extends BaseFragment implements OnRefreshListener {
 		@Override
 		@SuppressLint("SimpleDateFormat")
 		public void run() {
-			ClientApiUtil clientApiUtil = new ClientApiUtil(activity, accountBean.siteUrl, accountBean.cookieString);
+			ClientApiUtil clientApiUtil = new ClientApiUtil(activity, accountBean);
 			try {
 				JSONBean result;
 				UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);
@@ -70,7 +70,7 @@ public class SignLogFragment extends BaseFragment implements OnRefreshListener {
 					result = clientApiUtil.get("sign_log", "date=" + date);
 				}
 				handler.obtainMessage(ClientApiUtil.SUCCESSED, 0, 0, result).sendToTarget();
-			} catch (ClientApiException e) {
+			} catch (HttpResultException e) {
 				e.printStackTrace();
 				handler.obtainMessage(ClientApiUtil.ERROR, 0, 0, e).sendToTarget();
 			} catch (Exception e) {
@@ -88,7 +88,7 @@ public class SignLogFragment extends BaseFragment implements OnRefreshListener {
 			setRefreshing(false);
 			switch (msg.what) {
 				case ClientApiUtil.ERROR:
-					ClientApiException e = (ClientApiException) msg.obj;
+					HttpResultException e = (HttpResultException) msg.obj;
 					tips = e.getMessage();
 					loadedFlag = true;
 					break;

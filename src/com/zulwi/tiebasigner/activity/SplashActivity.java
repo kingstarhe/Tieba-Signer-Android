@@ -33,7 +33,7 @@ public class SplashActivity extends Activity {
 		Cursor accountCursor = dbHelper.rawQuery("SELECT accounts.*, sites.name, sites.url FROM accounts LEFT JOIN sites ON accounts.sid=sites.id WHERE accounts.current=1 LIMIT 1;", null);
 		if (accountCursor.getCount() > 0) {
 			accountCursor.moveToFirst();
-			AccountBean accountBean = new AccountBean(accountCursor.getInt(0), accountCursor.getInt(1), accountCursor.getInt(2), accountCursor.getString(3), accountCursor.getString(4), accountCursor.getString(5), accountCursor.getInt(6), accountCursor.getString(7), accountCursor.getString(8));
+			AccountBean accountBean = new AccountBean(accountCursor.getInt(0), accountCursor.getInt(1), accountCursor.getInt(2), accountCursor.getString(3), accountCursor.getString(4), accountCursor.getString(5), accountCursor.getString(6), accountCursor.getInt(7), accountCursor.getString(8), accountCursor.getString(9));
 			accountCursor.close();
 			Intent intent = new Intent(SplashActivity.this, MainActivity.class);
 			intent.putExtra("accountBean", accountBean);

@@ -19,7 +19,7 @@ import com.zulwi.tiebasigner.activity.MainActivity;
 import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.bean.FragmentBean;
 import com.zulwi.tiebasigner.bean.JSONBean;
-import com.zulwi.tiebasigner.exception.ClientApiException;
+import com.zulwi.tiebasigner.exception.HttpResultException;
 import com.zulwi.tiebasigner.util.ClientApiUtil;
 import com.zulwi.tiebasigner.util.UserCacheUtil;
 
@@ -34,7 +34,7 @@ public class AccountFragment extends Fragment {
 	private class getBaiduAccountInfo extends Thread {
 		@Override
 		public void run() {
-			ClientApiUtil clientApiUtil = new ClientApiUtil(activity, accountBean.siteUrl, accountBean.cookieString);
+			ClientApiUtil clientApiUtil = new ClientApiUtil(activity, accountBean);
 			try {
 				JSONBean result;
 				UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);
@@ -45,7 +45,7 @@ public class AccountFragment extends Fragment {
 					result = clientApiUtil.get("baidu_account_info");
 				}
 				handler.obtainMessage(ClientApiUtil.SUCCESSED, 0, 0, result).sendToTarget();
-			} catch (ClientApiException e) {
+			} catch (HttpResultException e) {
 				e.printStackTrace();
 				handler.obtainMessage(ClientApiUtil.ERROR, 0, 0, e).sendToTarget();
 			} catch (Exception e) {
@@ -62,7 +62,7 @@ public class AccountFragment extends Fragment {
 			String tips = null;
 			switch (msg.what) {
 				case ClientApiUtil.ERROR:
-					ClientApiException e = (ClientApiException) msg.obj;
+					HttpResultException e = (HttpResultException) msg.obj;
 					tips = e.getMessage();
 					loadedFlag = true;
 					finishUserInfoRefresh();

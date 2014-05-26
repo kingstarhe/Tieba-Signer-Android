@@ -32,7 +32,7 @@ public class EditAccountActivity extends ActionBarActivity {
 		BaseDBHelper dbHelper = new BaseDBHelper(this);
 		Cursor accountCursor = dbHelper.rawQuery("select accounts.*, sites.name, sites.url from accounts left join sites on accounts.sid=sites.id;", null);
 		for (accountCursor.moveToFirst(); !(accountCursor.isAfterLast()); accountCursor.moveToNext()) {
-			accountList.add(new AccountBean(accountCursor.getInt(0), accountCursor.getInt(1), accountCursor.getInt(2), accountCursor.getString(3), accountCursor.getString(4), accountCursor.getString(5), accountCursor.getInt(6), accountCursor.getString(7), accountCursor.getString(8)));
+			accountList.add(new AccountBean(accountCursor.getInt(0), accountCursor.getInt(1), accountCursor.getInt(2), accountCursor.getString(3), accountCursor.getString(4), accountCursor.getString(5), accountCursor.getString(6), accountCursor.getInt(7), accountCursor.getString(8), accountCursor.getString(9)));
 		}
 		accountCursor.close();
 		dbHelper.close();

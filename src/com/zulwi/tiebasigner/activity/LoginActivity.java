@@ -27,7 +27,7 @@ import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.bean.SiteBean;
 import com.zulwi.tiebasigner.db.BaseDBHelper;
-import com.zulwi.tiebasigner.exception.ClientApiException;
+import com.zulwi.tiebasigner.exception.HttpResultException;
 import com.zulwi.tiebasigner.util.AccountUtil;
 import com.zulwi.tiebasigner.util.ClientApiUtil;
 import com.zulwi.tiebasigner.util.DialogUtil;
@@ -42,51 +42,6 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 	private List<SiteBean> siteMapList;
 	private BaseDBHelper sitesDBHelper = new BaseDBHelper(this);
 	private int lastSelectedPosition;
-
-	@SuppressLint("HandlerLeak")
-	private Handler handler = new Handler() {
-		@Override
-		public void handleMessage(android.os.Message msg) {
-			super.handleMessage(msg);
-			String tips = null;
-			switch (msg.what) {
-				case ClientApiUtil.ERROR:
-					ClientApiException e = (ClientApiException) msg.obj;
-					tips = e.getMessage();
-					break;
-				case ClientApiUtil.SUCCESSED:
-					AccountBean accountBean = (AccountBean) msg.obj;
-					tips = "欢迎回来，" + accountBean.username + "！";
-					BaseDBHelper dbHelper = new BaseDBHelper(LoginActivity.this);
-					dbHelper.execSQL("delete from accounts where username=\'" + accountBean.username + "\'");
-					dbHelper.execSQL("update accounts set current=0 where current=1");
-					ContentValues value = new ContentValues();
-					int sid = siteMapList.get(lastSelectedPosition).id;
-					Cursor siteCursor = dbHelper.rawQuery("select * from sites where id=" + sid, null);
-					if (siteCursor.getCount() > 0) {
-						siteCursor.moveToFirst();
-						value.put("uid", accountBean.uid);
-						value.put("sid", sid);
-						value.put("username", accountBean.username);
-						value.put("email", accountBean.email);
-						value.put("cookie", accountBean.cookieString);
-						value.put("current", 1);
-						dbHelper.insert("accounts", value);
-						accountBean.sid = sid;
-						accountBean.siteName = siteCursor.getString(1);
-						accountBean.siteUrl = siteCursor.getString(2);
-						siteCursor.close();
-						dbHelper.close();
-						startMainActivity(accountBean);
-					} else {
-						tips = "站点信息错误！";
-					}
-					break;
-			}
-			progressDialog.dismiss();
-			Toast.makeText(LoginActivity.this, tips, Toast.LENGTH_SHORT).show();
-		}
-	};
 
 	private class LoginThread implements Runnable {
 		private String username;
@@ -105,7 +60,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 				AccountUtil accountUtil = new AccountUtil(username, password, url);
 				AccountBean accountBean = accountUtil.doLogin();
 				handler.obtainMessage(ClientApiUtil.SUCCESSED, 0, 0, accountBean).sendToTarget();
-			} catch (ClientApiException e) {
+			} catch (HttpResultException e) {
 				e.printStackTrace();
 				handler.obtainMessage(ClientApiUtil.ERROR, 0, 0, e).sendToTarget();
 			} catch (Exception e) {
@@ -113,6 +68,52 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 			}
 		}
 	}
+
+	@SuppressLint("HandlerLeak")
+	private Handler handler = new Handler() {
+		@Override
+		public void handleMessage(android.os.Message msg) {
+			super.handleMessage(msg);
+			String tips = null;
+			switch (msg.what) {
+				case ClientApiUtil.ERROR:
+					HttpResultException e = (HttpResultException) msg.obj;
+					tips = e.getMessage();
+					break;
+				case ClientApiUtil.SUCCESSED:
+					AccountBean accountBean = (AccountBean) msg.obj;
+					tips = "欢迎回来，" + accountBean.username + "！";
+					BaseDBHelper dbHelper = new BaseDBHelper(LoginActivity.this);
+					dbHelper.execSQL("delete from accounts where username=\'" + accountBean.username + "\'");
+					dbHelper.execSQL("update accounts set current=0 where current=1");
+					ContentValues value = new ContentValues();
+					int sid = siteMapList.get(lastSelectedPosition).id;
+					Cursor siteCursor = dbHelper.rawQuery("select * from sites where id=" + sid, null);
+					if (siteCursor.getCount() > 0) {
+						siteCursor.moveToFirst();
+						value.put("uid", accountBean.uid);
+						value.put("sid", sid);
+						value.put("username", accountBean.username);
+						value.put("email", accountBean.email);
+						value.put("cookie", accountBean.cookieString);
+						value.put("formhash", accountBean.formhash);
+						value.put("current", 1);
+						dbHelper.insert("accounts", value);
+						accountBean.sid = sid;
+						accountBean.siteName = siteCursor.getString(1);
+						accountBean.siteUrl = siteCursor.getString(2);
+						siteCursor.close();
+						dbHelper.close();
+						startMainActivity(accountBean);
+					} else {
+						tips = "站点信息错误！";
+					}
+					break;
+			}
+			progressDialog.dismiss();
+			Toast.makeText(LoginActivity.this, tips, Toast.LENGTH_SHORT).show();
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

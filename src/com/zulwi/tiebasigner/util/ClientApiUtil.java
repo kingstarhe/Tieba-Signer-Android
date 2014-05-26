@@ -22,8 +22,9 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
+import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.bean.JSONBean;
-import com.zulwi.tiebasigner.exception.ClientApiException;
+import com.zulwi.tiebasigner.exception.HttpResultException;
 import com.zulwi.tiebasigner.exception.StatusCodeException;
 
 public class ClientApiUtil {
@@ -34,8 +35,7 @@ public class ClientApiUtil {
 	private Context context;
 	private String result = "无返回";
 	private List<Cookie> cookies;
-	private String cookie;
-	private String siteUrl;
+	private AccountBean accountBean;
 	public final static int ADD_SITE = 0;
 	public final static int EDIT_SITE = 1;
 	public final static String API_PATH = "/plugin.php?id=zw_client_api&a=";
@@ -43,32 +43,27 @@ public class ClientApiUtil {
 	public final static int SUCCESSED = 1;
 	public final static int LOAD_IMG = 2;
 
-	public ClientApiUtil(Context context, String siteUrl) {
+	public ClientApiUtil(Context context, AccountBean accountBean) {
 		client = new DefaultHttpClient();
 		client.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 20000);
 		client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 30000);
 		this.context = context;
-		this.siteUrl = siteUrl;
+		this.accountBean = accountBean;
 	}
 
-	public ClientApiUtil(Context context, String siteUrl, String cookie) {
-		this(context, siteUrl);
-		this.cookie = cookie;
-	}
-
-	public JSONBean get(String action, String apiParam) throws ClientApiException {
+	public JSONBean get(String action, String apiParam) throws HttpResultException {
 		String url = getApiPath(action, apiParam);
 		get = new HttpGet(url);
 		get.addHeader("Client-Version", "1.0.0");
 		get.addHeader("Content-Type", "application/json");
 		get.addHeader("User-Agent", "Android Client For Tieba Signer");
-		if (cookie != null) get.addHeader("Cookie", cookie);
+		if (accountBean.cookieString != null) get.addHeader("Cookie", accountBean.cookieString);
 		try {
 			HttpResponse response = client.execute(get);
 			int statusCode = response.getStatusLine().getStatusCode();
 			cookies = ((AbstractHttpClient) client).getCookieStore().getCookies();
 			if (statusCode != 200) {
-				throw new ClientApiException(new StatusCodeException("HTTP状态码错误！", statusCode));
+				throw new HttpResultException(new StatusCodeException("HTTP状态码错误！", statusCode));
 			} else {
 				HttpEntity entity = response.getEntity();
 				result = EntityUtils.toString(entity, "utf-8");
@@ -76,26 +71,26 @@ public class ClientApiUtil {
 				int status = jsonObject.getInt("status");
 				String message = jsonObject.getString("msg");
 				JSONObject data = jsonObject.getJSONObject("data");
-				if (status == -1) throw new ClientApiException(ClientApiException.AUTH_FAIL);
+				if (status == -1) throw new HttpResultException(HttpResultException.AUTH_FAIL);
 				return new JSONBean(status, message, data, result);
 			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
-			throw new ClientApiException(ClientApiException.NETWORK_FAIL);
+			throw new HttpResultException(HttpResultException.NETWORK_FAIL);
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new ClientApiException(ClientApiException.NETWORK_FAIL);
+			throw new HttpResultException(HttpResultException.NETWORK_FAIL);
 		} catch (JSONException e) {
 			e.printStackTrace();
-			throw new ClientApiException(ClientApiException.PARSE_ERROR);
+			throw new HttpResultException(HttpResultException.PARSE_ERROR);
 		}
 	}
 
-	public JSONBean get(String action) throws ClientApiException {
+	public JSONBean get(String action) throws HttpResultException {
 		return get(action, null);
 	}
 
-	public JSONBean post(String action, List<NameValuePair> postParams, String apiParam) throws ClientApiException {
+	public JSONBean post(String action, List<NameValuePair> postParams, String apiParam) throws HttpResultException {
 		String url = getApiPath(action, apiParam);
 		post = new HttpPost(url);
 		post.addHeader("Client-Version", "1.0.0");
@@ -104,15 +99,15 @@ public class ClientApiUtil {
 			post.setEntity(new UrlEncodedFormEntity(postParams, "UTF-8"));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
-			throw new ClientApiException(ClientApiException.NETWORK_FAIL);
+			throw new HttpResultException(HttpResultException.NETWORK_FAIL);
 		}
-		if (cookie != null) post.addHeader("Cookie", cookie);
+		if (accountBean.cookieString != null) post.addHeader("Cookie", accountBean.cookieString);
 		try {
 			HttpResponse response = client.execute(post);
 			int statusCode = response.getStatusLine().getStatusCode();
 			cookies = ((AbstractHttpClient) client).getCookieStore().getCookies();
 			if (statusCode != 200) {
-				throw new ClientApiException(new StatusCodeException("HTTP状态码错误！", statusCode));
+				throw new HttpResultException(new StatusCodeException("HTTP状态码错误！", statusCode));
 			} else {
 				HttpEntity entity = response.getEntity();
 				result = EntityUtils.toString(entity, "utf-8");
@@ -120,27 +115,27 @@ public class ClientApiUtil {
 				int status = jsonObject.getInt("status");
 				String message = jsonObject.getString("msg");
 				JSONObject data = jsonObject.getJSONObject("data");
-				if (status == -1) throw new ClientApiException(ClientApiException.AUTH_FAIL);
+				if (status == -1) throw new HttpResultException(HttpResultException.AUTH_FAIL);
 				return new JSONBean(status, message, data, result);
 			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
-			throw new ClientApiException(ClientApiException.NETWORK_FAIL);
+			throw new HttpResultException(HttpResultException.NETWORK_FAIL);
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new ClientApiException(ClientApiException.NETWORK_FAIL);
+			throw new HttpResultException(HttpResultException.NETWORK_FAIL);
 		} catch (JSONException e) {
 			e.printStackTrace();
-			throw new ClientApiException(ClientApiException.PARSE_ERROR);
+			throw new HttpResultException(HttpResultException.PARSE_ERROR);
 		}
 	}
 
-	public JSONBean post(String action, List<NameValuePair> postParams) throws ClientApiException {
+	public JSONBean post(String action, List<NameValuePair> postParams) throws HttpResultException {
 		return post(action, postParams, null);
 	}
 
 	public String getApiPath(String action, String apiParam) {
-		return siteUrl + API_PATH + action + (apiParam != null && !apiParam.equals("") ? "&" + apiParam : "");
+		return accountBean.siteUrl + API_PATH + action + (apiParam != null && !apiParam.equals("") ? "&" + apiParam : "") + "&formhash=" + accountBean.formhash;
 	}
 
 	public List<Cookie> getCookies() {

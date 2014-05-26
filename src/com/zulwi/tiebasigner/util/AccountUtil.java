@@ -7,10 +7,12 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.zulwi.tiebasigner.bean.AccountBean;
+import com.zulwi.tiebasigner.bean.HttpResultBean;
 import com.zulwi.tiebasigner.bean.JSONBean;
-import com.zulwi.tiebasigner.exception.ClientApiException;
+import com.zulwi.tiebasigner.exception.HttpResultException;
 
 @SuppressWarnings("serial")
 public class AccountUtil implements Serializable {
@@ -34,25 +36,28 @@ public class AccountUtil implements Serializable {
 		return username;
 	}
 
-	public AccountBean doLogin() throws ClientApiException {
-		ClientApiUtil site = new ClientApiUtil(null, siteUrl);
-		List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-		NameValuePair pair1 = new BasicNameValuePair("username", username);
-		NameValuePair pair2 = new BasicNameValuePair("password", password);
-		postParams.add(pair1);
-		postParams.add(pair2);
-		JSONBean result = site.post("do_login", postParams);
-		cookieString = site.getCookieString();
-		System.out.println(result.status);
-		if (result.status != 0) throw new ClientApiException(result.message, ClientApiException.AUTH_FAIL);
+	public AccountBean doLogin() throws HttpResultException {
+		List<NameValuePair> header = new ArrayList<NameValuePair>();
+		header.add(new BasicNameValuePair("Client-Version", "1.0.0"));
+		header.add(new BasicNameValuePair("User-Agent", "Android Client For Tieba Signer"));
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("username", username));
+		params.add(new BasicNameValuePair("password", password));
+		HttpResultBean resultBean = HttpUtil.post(siteUrl + "/plugin.php?id=zw_client_api&a=do_login", params, header);
+		cookieString = resultBean.cookieString;
+		System.out.println(resultBean.status);
 		try {
-			int uid = result.data.getInt("uid");
-			String username = result.data.getString("username");
-			String email = result.data.getString("email");
-			return new AccountBean(uid, username, email, siteUrl, cookieString);
+			JSONObject json = new JSONObject(resultBean.result);
+			JSONBean jsonBean = new JSONBean(json);
+			if (jsonBean.status != 0) throw new HttpResultException(jsonBean.message, HttpResultException.AUTH_FAIL);
+			int uid = jsonBean.data.getInt("uid");
+			String username = jsonBean.data.getString("username");
+			String email = jsonBean.data.getString("email");
+			String formhash = jsonBean.data.getString("formhash");
+			return new AccountBean(uid, username, email, siteUrl, cookieString, formhash);
 		} catch (JSONException e) {
 			e.printStackTrace();
-			throw new ClientApiException(ClientApiException.PARSE_ERROR);
+			throw new HttpResultException(HttpResultException.PARSE_ERROR);
 		}
 	}
 

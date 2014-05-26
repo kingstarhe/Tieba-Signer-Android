@@ -1,6 +1,12 @@
 package com.zulwi.tiebasigner.activity;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -26,12 +32,14 @@ import android.widget.Toast;
 
 import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.adapter.SiteListAdapter;
+import com.zulwi.tiebasigner.bean.HttpResultBean;
 import com.zulwi.tiebasigner.bean.JSONBean;
 import com.zulwi.tiebasigner.bean.SiteBean;
 import com.zulwi.tiebasigner.db.BaseDBHelper;
-import com.zulwi.tiebasigner.exception.ClientApiException;
+import com.zulwi.tiebasigner.exception.HttpResultException;
 import com.zulwi.tiebasigner.util.ClientApiUtil;
 import com.zulwi.tiebasigner.util.DialogUtil;
+import com.zulwi.tiebasigner.util.HttpUtil;
 
 public class EditSitesActivity extends ActionBarActivity {
 	private ListView siteList;
@@ -53,7 +61,7 @@ public class EditSitesActivity extends ActionBarActivity {
 			if (msg.what != ClientApiUtil.SUCCESSED && msg.arg1 == ClientApiUtil.EDIT_SITE) EditDialog.show();
 			switch (msg.what) {
 				case ClientApiUtil.ERROR:
-					ClientApiException e = (ClientApiException) msg.obj;
+					Exception e = (Exception) msg.obj;
 					tips = e.getMessage();
 					break;
 				case ClientApiUtil.SUCCESSED:
@@ -267,14 +275,21 @@ public class EditSitesActivity extends ActionBarActivity {
 				if (position == -1) {
 					int countName = sitesDBHelper.rawQuery("select * from sites where name=\'" + name + "\'", null).getCount();
 					int countUrl = sitesDBHelper.rawQuery("select * from sites where url=\'" + url + "\'", null).getCount();
-					if (countName != 0 || countUrl != 0) throw new ClientApiException("添加失败！请检查是否已有重复名称或URL");
+					if (countName != 0 || countUrl != 0) throw new HttpResultException("添加失败！请检查是否已有重复名称或URL");
 				}
-				ClientApiUtil clientApiUtil = new ClientApiUtil(EditSitesActivity.this, url);
-				JSONBean result = clientApiUtil.get("api_info");
-				if (result.status == -1) throw new ClientApiException("状态码错误！");
+				List<NameValuePair> header = new ArrayList<NameValuePair>();
+				header.add(new BasicNameValuePair("Client-Version", "1.0.0"));
+				header.add(new BasicNameValuePair("User-Agent", "Android Client For Tieba Signer"));
+				HttpResultBean resultBean = HttpUtil.get(url + "/plugin.php?id=zw_client_api&a=api_info", header);
+				JSONBean jsonBean = new JSONBean(new JSONObject(resultBean.result));
+				if (jsonBean.status == -1) throw new HttpResultException("状态码错误！");
 				handler.obtainMessage(ClientApiUtil.SUCCESSED, position == -1 ? ClientApiUtil.ADD_SITE : ClientApiUtil.EDIT_SITE, 0, position == -1 ? new SiteBean(name, url) : new SiteBean(name, url, position)).sendToTarget();
-			} catch (ClientApiException e) {
+			} catch (HttpResultException e) {
+				e.printStackTrace();
 				handler.obtainMessage(ClientApiUtil.ERROR, position == -1 ? ClientApiUtil.ADD_SITE : ClientApiUtil.EDIT_SITE, 0, e).sendToTarget();
+			} catch (JSONException e) {
+				e.printStackTrace();
+				handler.obtainMessage(ClientApiUtil.ERROR, position == -1 ? ClientApiUtil.ADD_SITE : ClientApiUtil.EDIT_SITE, 0, new HttpResultException(HttpResultException.PARSE_ERROR)).sendToTarget();
 			}
 		}
 	}

@@ -40,7 +40,7 @@ import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.bean.BaiduAccountBean;
 import com.zulwi.tiebasigner.bean.JSONBean;
 import com.zulwi.tiebasigner.bean.TiebaBean;
-import com.zulwi.tiebasigner.exception.ClientApiException;
+import com.zulwi.tiebasigner.exception.HttpResultException;
 import com.zulwi.tiebasigner.util.ClientApiUtil;
 import com.zulwi.tiebasigner.util.UserCacheUtil;
 import com.zulwi.tiebasigner.view.CircularImage;
@@ -120,7 +120,7 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 			String tips = null;
 			switch (msg.what) {
 				case ClientApiUtil.ERROR:
-					ClientApiException e = (ClientApiException) msg.obj;
+					HttpResultException e = (HttpResultException) msg.obj;
 					tips = e.getMessage();
 					break;
 				case ClientApiUtil.SUCCESSED:
