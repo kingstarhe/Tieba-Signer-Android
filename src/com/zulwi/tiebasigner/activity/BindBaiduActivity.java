@@ -15,11 +15,15 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.util.EncodingUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -27,9 +31,15 @@ import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Base64;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -37,14 +47,18 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.zulwi.tiebasigner.R;
+import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.bean.HttpResultBean;
+import com.zulwi.tiebasigner.bean.JSONBean;
 import com.zulwi.tiebasigner.exception.HttpResultException;
 import com.zulwi.tiebasigner.util.ClientApiUtil;
-import com.zulwi.tiebasigner.util.CodeUtil;
+import com.zulwi.tiebasigner.util.CodingUtil;
 import com.zulwi.tiebasigner.util.DialogUtil;
 import com.zulwi.tiebasigner.util.HttpUtil;
 
+@SuppressLint("DefaultLocale")
 public class BindBaiduActivity extends ActionBarActivity {
+	private AccountBean accountBean;
 	private EditText usernameEditText;
 	private EditText passwordEditText;
 	private EditText vCodeEditText;
@@ -55,6 +69,7 @@ public class BindBaiduActivity extends ActionBarActivity {
 	private ImageView vCodeImageView;
 	private String vCodeMd5;
 	private String vCodeImageUrl;
+	private int sid;
 
 	private class loginThread extends Thread {
 		private String username;
@@ -100,13 +115,31 @@ public class BindBaiduActivity extends ActionBarActivity {
 			for (int i = 0; i < postParams.size(); i++) {
 				signString.append(postParams.get(i).getName() + "=" + postParams.get(i).getValue());
 			}
-			postParams.add(new BasicNameValuePair("sign", CodeUtil.MD5(signString.toString() + "tiebaclient!!!").toUpperCase()));
+			postParams.add(new BasicNameValuePair("sign", CodingUtil.MD5(signString.toString() + "tiebaclient!!!").toUpperCase()));
 			try {
 				HttpResultBean resultBean = HttpUtil.post("http://c.tieba.baidu.com/c/s/login", postParams, header);
 				handler.obtainMessage(ClientApiUtil.SUCCESSED, 0, 0, resultBean.result).sendToTarget();
 			} catch (HttpResultException e) {
 				e.printStackTrace();
 				handler.obtainMessage(ClientApiUtil.ERROR, 0, 0, e).sendToTarget();
+			}
+		}
+	}
+
+	private class getSiteSid extends Thread {
+		@Override
+		public void run() {
+			super.run();
+			ClientApiUtil api = new ClientApiUtil(BindBaiduActivity.this, accountBean);
+			try {
+				JSONBean jsonBean = api.get("cloud_info");
+				sid = jsonBean.data.getInt("sid");
+			} catch (HttpResultException e) {
+				e.printStackTrace();
+				handler.obtainMessage(ClientApiUtil.ERROR, 0, 0, e).sendToTarget();
+			} catch (JSONException e) {
+				e.printStackTrace();
+				handler.obtainMessage(ClientApiUtil.ERROR, 0, 0, new HttpResultException("站点 SID 获取失败，将无法正常绑定百度账号！")).sendToTarget();
 			}
 		}
 	}
@@ -142,8 +175,9 @@ public class BindBaiduActivity extends ActionBarActivity {
 		}
 	}
 
-	@SuppressLint("HandlerLeak")
+	@SuppressLint({ "HandlerLeak", "SetJavaScriptEnabled", "DefaultLocale" })
 	private Handler handler = new Handler() {
+		@SuppressLint("DefaultLocale")
 		@Override
 		public void handleMessage(android.os.Message msg) {
 			super.handleMessage(msg);
@@ -158,9 +192,37 @@ public class BindBaiduActivity extends ActionBarActivity {
 					try {
 						JSONObject json = new JSONObject(result);
 						int errorCode = json.getInt("error_code");
+						String baiduId = new Random(10000000).nextInt(99999999) + "" + new Random(10000000).nextInt(99999999) + "" + new Random(10000000).nextInt(99999999) + "" + new Random(10000000).nextInt(99999999);
+						String baiduCookie = "BAIDUID=" + baiduId.toUpperCase() + ":FG=1;BDUSS=" + json.getJSONObject("user").getString("BDUSS") + ";";
+						System.out.println("baiduCookie: " + baiduCookie);
 						vCodeLayout.setVisibility(View.GONE);
 						if (errorCode == 0) {
-							tips = "登录成功";
+							tips = "登录成功，正在发送 Cookie 至助手站点...";
+							System.out.println(sid);
+							LayoutInflater inflater = getLayoutInflater();
+							View layout = inflater.inflate(R.layout.dialog_send_cookie, (ViewGroup) findViewById(R.layout.dialog_send_cookie));
+							AlertDialog.Builder builder = new AlertDialog.Builder(BindBaiduActivity.this);
+							AlertDialog sendCookieDialog = builder.setTitle("发送 Cookie").setView(layout).setPositiveButton("关闭", new OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									dialog.dismiss();
+									Toast.makeText(BindBaiduActivity.this, "完成绑定，请检查cookie是否有效！", Toast.LENGTH_LONG).show();
+								}
+							}).create();
+							WebView webView = (WebView) layout.findViewById(R.id.send_cookie);
+							CookieSyncManager.createInstance(BindBaiduActivity.this);
+							CookieManager cookieManager = CookieManager.getInstance();
+							cookieManager.setAcceptCookie(true);
+							cookieManager.setCookie(accountBean.siteUrl, accountBean.cookieString);
+							CookieSyncManager.getInstance().sync();
+							String url = "https://api.ikk.me/v2/manual_bind.php?sid=" + sid + "&formhash=" + accountBean.formhash;
+							System.out.println(url);
+							WebSettings webSettings = webView.getSettings();
+							webSettings.setJavaScriptEnabled(true);
+							webSettings.setSupportMultipleWindows(false);
+							webSettings.setJavaScriptCanOpenWindowsAutomatically(false);
+							webView.postUrl(url, EncodingUtils.getBytes("cookie=" + baiduCookie + ";", "UTF-8"));
+							sendCookieDialog.show();
 						} else if (errorCode == 5) {
 							JSONObject anti = json.getJSONObject("anti");
 							vCodeMd5 = anti.getString("vcode_md5");
@@ -191,6 +253,8 @@ public class BindBaiduActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		accountBean = (AccountBean) getIntent().getSerializableExtra("accountBean");
+		new getSiteSid().start();
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setDisplayShowHomeEnabled(false);

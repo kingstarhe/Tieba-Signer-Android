@@ -13,11 +13,13 @@ import android.view.ViewGroup;
 import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.activity.BindBaiduActivity;
 import com.zulwi.tiebasigner.activity.MainActivity;
+import com.zulwi.tiebasigner.bean.AccountBean;
 
 public class BindBaiduFragment extends BaseFragment implements OnClickListener, OnRefreshListener{
 	private MainActivity activity;
 	protected SwipeRefreshLayout swipeLayout;
 	private AccountFragment fragment;	
+	private AccountBean accountBean;
 	
 	public BindBaiduFragment() {
 	}
@@ -27,6 +29,7 @@ public class BindBaiduFragment extends BaseFragment implements OnClickListener, 
 		super.onAttach(activity);
 		this.activity = (MainActivity) activity;
 		this.fragment = (AccountFragment)getParentFragment();
+		this.accountBean = this.activity.getAccountBean();
 	}
 
 	@Override
@@ -52,7 +55,9 @@ public class BindBaiduFragment extends BaseFragment implements OnClickListener, 
 
 	@Override
 	public void onClick(View v) {
-		startActivityForResult(new Intent(activity, BindBaiduActivity.class), 1);
+		Intent intent = new Intent(activity, BindBaiduActivity.class);
+		intent.putExtra("accountBean", accountBean);
+		startActivityForResult(intent, 1);
 	}
 	
 	@Override
