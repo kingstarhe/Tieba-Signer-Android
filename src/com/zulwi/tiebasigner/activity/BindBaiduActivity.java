@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -14,6 +15,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
 import android.annotation.SuppressLint;
@@ -34,6 +36,7 @@ import android.widget.Toast;
 import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.exception.StatusCodeException;
 import com.zulwi.tiebasigner.util.ClientApiUtil;
+import com.zulwi.tiebasigner.util.CodeUtil;
 import com.zulwi.tiebasigner.util.DialogUtil;
 
 public class BindBaiduActivity extends ActionBarActivity {
@@ -48,45 +51,47 @@ public class BindBaiduActivity extends ActionBarActivity {
 		private String password;
 
 		public loginThread(String username, String password) {
-			this.username =username;
-			this.password =password;
+			this.username = username;
+			this.password = password;
 		}
-		
+
+		@SuppressLint("DefaultLocale")
 		@Override
 		public void run() {
-		    super.run();
-		    HttpClient client = new DefaultHttpClient();
-		    HttpPost post = new HttpPost("http://c.tieba.baidu.com/c/s/login");
-			post.addHeader("Content-Type", "application/x-www-form-urlencoded");
-			post.addHeader("User-Agent", "BaiduTieba for Android 6.0.1");
-			post.addHeader("Host", "c.tieba.baidu.com");
-			post.addHeader("Connection", "Keep-Alive");
+			super.run();
+			HttpClient client = new DefaultHttpClient();
+			HttpPost post = new HttpPost("http://c.tieba.baidu.com/c/s/login");
+			// post.addHeader("Content-Type",
+			// "application/x-www-form-urlencoded");
+			// post.addHeader("User-Agent", "BaiduTieba for Android 6.0.1");
+			// post.addHeader("Host", "c.tieba.baidu.com");
+			// post.addHeader("Connection", "Keep-Alive");
 			List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-			postParams.add(new BasicNameValuePair("_client_id", "wappc_1381896899508_641"));
-			postParams.add(new BasicNameValuePair("_client_type", "4"));
+			postParams.add(new BasicNameValuePair("_client_id", "wappc_1388018171504_766"));
+			postParams.add(new BasicNameValuePair("_client_type", "1"));
 			postParams.add(new BasicNameValuePair("_client_version", "6.0.1"));
-			postParams.add(new BasicNameValuePair("_phone_imei", "709ece505ee4e7337d927fb74adb3535"));
-			postParams.add(new BasicNameValuePair("cuid", "44CF42C6E5583F7FDF2EC5A2CE538A62|254808586242424"));
+			postParams.add(new BasicNameValuePair("_phone_imei", "841d9bb5540813bed5fa9a08144d0a11"));
+			postParams.add(new BasicNameValuePair("cuid", "8E752B2A26409EA5C4937FFE28D77528|342648859043605"));
 			postParams.add(new BasicNameValuePair("from", "baidu_appstore"));
 			postParams.add(new BasicNameValuePair("isphone", "0"));
 			postParams.add(new BasicNameValuePair("model", "M1"));
-			postParams.add(new BasicNameValuePair("password", Base64.encodeToString(password.getBytes(), Base64.DEFAULT).trim()));
+			postParams.add(new BasicNameValuePair("passwd", Base64.encodeToString(password.getBytes(), Base64.DEFAULT).trim()));
 			postParams.add(new BasicNameValuePair("stErrorNums", "0"));
 			postParams.add(new BasicNameValuePair("stMethod", "1"));
 			postParams.add(new BasicNameValuePair("stMode", "1"));
-			postParams.add(new BasicNameValuePair("stSize", "292"));
-			postParams.add(new BasicNameValuePair("stTime", "488"));
+			postParams.add(new BasicNameValuePair("stSize", String.valueOf(new Random(50).nextInt(2000))));
+			postParams.add(new BasicNameValuePair("stTime", String.valueOf(new Random(50).nextInt(200))));
 			postParams.add(new BasicNameValuePair("stTimesNum", "0"));
-			postParams.add(new BasicNameValuePair("timestamp","1400857242724"));
+			postParams.add(new BasicNameValuePair("timestamp", String.valueOf(System.currentTimeMillis())));
 			postParams.add(new BasicNameValuePair("un", username));
-			postParams.add(new BasicNameValuePair("sign", "6FDEA5177DB857BC4325746816ECB537"));
-			System.out.println("pw:"+Base64.encodeToString(password.getBytes(), Base64.DEFAULT));
-			System.out.println("before setEntity");
+			StringBuilder signString = new StringBuilder();
+			for (int i = 0; i < postParams.size(); i++) {
+				signString.append(postParams.get(i).getName() + "=" + postParams.get(i).getValue());
+			}
+			postParams.add(new BasicNameValuePair("sign", CodeUtil.MD5(signString.toString() + "tiebaclient!!!").toUpperCase()));
 			try {
-				post.setEntity(new UrlEncodedFormEntity(postParams, "UTF-8"));
-				System.out.println("entity"+EntityUtils.toString(post.getEntity()));
+				post.setEntity(new UrlEncodedFormEntity(postParams, HTTP.UTF_8));
 				HttpResponse response = client.execute(post);
-				System.out.println("executed");
 				int statusCode = response.getStatusLine().getStatusCode();
 				if (statusCode != 200) {
 					throw new StatusCodeException("HTTP状态码错误！", statusCode);
@@ -120,7 +125,7 @@ public class BindBaiduActivity extends ActionBarActivity {
 			String tips = null;
 			switch (msg.what) {
 				case ClientApiUtil.ERROR:
-					//Exception e = (Exception) msg.obj;
+					// Exception e = (Exception) msg.obj;
 					tips = (String) msg.obj;
 					break;
 				case ClientApiUtil.SUCCESSED:
