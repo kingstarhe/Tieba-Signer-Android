@@ -63,6 +63,10 @@ public class BindBaiduFragment extends BaseFragment implements OnClickListener, 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    super.onActivityResult(requestCode, resultCode, data);
+	    if(requestCode==1&&resultCode == 1) {
+	    	swipeLayout.setRefreshing(true);
+	    	onRefresh();
+	    }
 	}
 
 	@Override

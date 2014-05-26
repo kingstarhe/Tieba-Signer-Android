@@ -193,7 +193,9 @@ public class BindBaiduActivity extends ActionBarActivity {
 						JSONObject json = new JSONObject(result);
 						int errorCode = json.getInt("error_code");
 						String baiduId = new Random(10000000).nextInt(99999999) + "" + new Random(10000000).nextInt(99999999) + "" + new Random(10000000).nextInt(99999999) + "" + new Random(10000000).nextInt(99999999);
-						String baiduCookie = "BAIDUID=" + baiduId.toUpperCase() + ":FG=1;BDUSS=" + json.getJSONObject("user").getString("BDUSS") + ";";
+						String bduss = json.getJSONObject("user").getString("BDUSS");
+						bduss = bduss.substring(0, bduss.lastIndexOf("|"));
+						String baiduCookie = "BAIDUID=" + baiduId.toUpperCase() + ":FG=1;BDUSS=" + bduss + ";";
 						System.out.println("baiduCookie: " + baiduCookie);
 						vCodeLayout.setVisibility(View.GONE);
 						if (errorCode == 0) {
@@ -207,6 +209,7 @@ public class BindBaiduActivity extends ActionBarActivity {
 								public void onClick(DialogInterface dialog, int which) {
 									dialog.dismiss();
 									Toast.makeText(BindBaiduActivity.this, "完成绑定，请检查cookie是否有效！", Toast.LENGTH_LONG).show();
+									setResult(1);
 								}
 							}).create();
 							WebView webView = (WebView) layout.findViewById(R.id.send_cookie);

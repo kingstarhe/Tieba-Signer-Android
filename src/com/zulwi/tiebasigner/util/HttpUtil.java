@@ -16,6 +16,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.util.EntityUtils;
 
 import com.zulwi.tiebasigner.bean.HttpResultBean;
@@ -25,6 +26,8 @@ import com.zulwi.tiebasigner.exception.StatusCodeException;
 public class HttpUtil {
 	public static HttpResultBean post(String url, List<NameValuePair> params, String paramsEncoding, List<NameValuePair> header) throws HttpResultException {
 		HttpClient client = new DefaultHttpClient();
+		client.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 20000);
+		client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 30000);
 		HttpPost post = new HttpPost(url);
 		if (header != null && header.size() != 0) {
 			for (int i = 0; i < header.size(); i++) {
@@ -59,6 +62,8 @@ public class HttpUtil {
 
 	public static HttpResultBean get(String url, List<NameValuePair> header) throws HttpResultException {
 		HttpClient client = new DefaultHttpClient();
+		client.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 20000);
+		client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 30000);
 		HttpGet get = new HttpGet(url);
 		if (header != null && header.size() != 0) {
 			for (int i = 0; i < header.size(); i++) {
