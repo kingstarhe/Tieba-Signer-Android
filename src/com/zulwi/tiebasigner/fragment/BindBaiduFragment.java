@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
@@ -18,7 +19,7 @@ import com.zulwi.tiebasigner.activity.BindBaiduActivity;
 import com.zulwi.tiebasigner.activity.MainActivity;
 import com.zulwi.tiebasigner.bean.AccountBean;
 
-public class BindBaiduFragment extends BaseFragment implements OnClickListener, OnRefreshListener {
+public class BindBaiduFragment extends Fragment implements OnClickListener, OnRefreshListener {
 	private MainActivity activity;
 	protected SwipeRefreshLayout swipeLayout;
 	private AccountFragment fragment;

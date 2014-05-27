@@ -200,12 +200,11 @@ public class BindBaiduActivity extends ActionBarActivity {
 							CookieSyncManager.createInstance(BindBaiduActivity.this);
 							CookieManager cookieManager = CookieManager.getInstance();
 							cookieManager.setAcceptCookie(true);
-							cookieManager.removeSessionCookie();
 							System.out.println(accountBean.siteUrl);
 							System.out.println("cookies" + accountBean.cookieString);
 							String[] cookies = accountBean.cookieString.split(";");
 							for (String cookie : cookies) {
-								if (!cookie.trim().equals("")) cookieManager.setCookie(accountBean.siteUrl, cookie);
+								if (!cookie.trim().equals("")) cookieManager.setCookie(accountBean.siteUrl, cookie+"; ");
 								System.out.println("cookie:" + cookie);
 							}
 							CookieSyncManager.getInstance().sync();
