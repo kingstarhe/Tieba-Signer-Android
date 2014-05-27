@@ -93,14 +93,6 @@ public class MainActivity extends ActionBarActivity {
 		registerReceiver(broadcastReceiver, intentFilter);
 	}
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == 1 && resultCode == 1) {
-			((AccountFragment) fragmentList.get(0).fragment).refreshUserInfo();
-		}
-	}
-
 	public void changeFragment(int position) {
 		FragmentBean from = fragmentList.get(currentFragmentId);
 		FragmentBean to = fragmentList.get(position);

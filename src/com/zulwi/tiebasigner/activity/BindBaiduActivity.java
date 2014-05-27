@@ -24,6 +24,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -196,6 +197,18 @@ public class BindBaiduActivity extends ActionBarActivity {
 						vCodeLayout.setVisibility(View.GONE);
 						if (errorCode == 0) {
 							tips = "登录成功，正在发送 Cookie 至助手站点...";
+							CookieSyncManager.createInstance(BindBaiduActivity.this);
+							CookieManager cookieManager = CookieManager.getInstance();
+							cookieManager.setAcceptCookie(true);
+							cookieManager.removeSessionCookie();
+							System.out.println(accountBean.siteUrl);
+							System.out.println("cookies" + accountBean.cookieString);
+							String[] cookies = accountBean.cookieString.split(";");
+							for (String cookie : cookies) {
+								if (!cookie.trim().equals("")) cookieManager.setCookie(accountBean.siteUrl, cookie);
+								System.out.println("cookie:" + cookie);
+							}
+							CookieSyncManager.getInstance().sync();
 							String baiduId = new Random(10000000).nextInt(99999999) + "" + new Random(10000000).nextInt(99999999) + "" + new Random(10000000).nextInt(99999999) + "" + new Random(10000000).nextInt(99999999);
 							String bduss = json.getJSONObject("user").getString("BDUSS");
 							bduss = bduss.substring(0, bduss.lastIndexOf("|"));
@@ -209,24 +222,12 @@ public class BindBaiduActivity extends ActionBarActivity {
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
 									dialog.dismiss();
-									Toast.makeText(BindBaiduActivity.this, "完成绑定，请检查cookie是否有效！", Toast.LENGTH_LONG).show();
-									setResult(1);
+									setResult(1, new Intent());
+									sendBroadcast(new Intent("com.zulwi.tiebasigner.REFRESH_USERINFO"));
+									BindBaiduActivity.this.finish();
 								}
-							}).create();
+							}).setCancelable(false).create();
 							WebView webView = (WebView) layout.findViewById(R.id.send_cookie);
-							CookieSyncManager.createInstance(BindBaiduActivity.this);
-							CookieManager cookieManager = CookieManager.getInstance();
-							cookieManager.setAcceptCookie(true);
-							cookieManager.removeSessionCookie();
-							System.out.println(accountBean.siteUrl);
-							System.out.println("cookies" + accountBean.cookieString);
-							String[] cookies = accountBean.cookieString.split(";");
-							for (String cookie : cookies) {
-								cookieManager.setCookie(accountBean.siteUrl, cookie);
-								System.out.println("cookie:" + cookie);
-							}
-							CookieSyncManager.getInstance().sync();
-							System.out.println(cookieManager.getCookie(accountBean.siteUrl));
 							String url = "https://api.ikk.me/v2/manual_bind.php?sid=" + sid + "&formhash=" + accountBean.formhash;
 							System.out.println(url);
 							webView.setWebViewClient(new WebViewClient() {

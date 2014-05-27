@@ -1,7 +1,10 @@
 package com.zulwi.tiebasigner.fragment;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -20,6 +23,13 @@ public class BindBaiduFragment extends BaseFragment implements OnClickListener, 
 	protected SwipeRefreshLayout swipeLayout;
 	private AccountFragment fragment;
 	private AccountBean accountBean;
+	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			swipeLayout.setRefreshing(true);
+			onRefresh();
+		}
+	};
 
 	public BindBaiduFragment() {
 	}
@@ -54,6 +64,14 @@ public class BindBaiduFragment extends BaseFragment implements OnClickListener, 
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("com.zulwi.tiebasigner.REFRESH_USERINFO");
+		activity.registerReceiver(broadcastReceiver, intentFilter);
+	}
+
+	@Override
 	public void onClick(View v) {
 		Intent intent = new Intent(activity, BindBaiduActivity.class);
 		System.out.println(accountBean.cookieString);
@@ -63,7 +81,6 @@ public class BindBaiduFragment extends BaseFragment implements OnClickListener, 
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == 1 && resultCode == 1) {
 			swipeLayout.setRefreshing(true);
 			onRefresh();
@@ -73,6 +90,12 @@ public class BindBaiduFragment extends BaseFragment implements OnClickListener, 
 	@Override
 	public void onRefresh() {
 		fragment.refreshUserInfo();
+	}
+	
+	@Override
+	public void onDestroy() {
+		activity.unregisterReceiver(broadcastReceiver);
+	    super.onDestroy();
 	}
 
 }

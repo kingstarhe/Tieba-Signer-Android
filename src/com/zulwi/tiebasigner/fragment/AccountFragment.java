@@ -4,6 +4,10 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -30,7 +34,13 @@ public class AccountFragment extends Fragment {
 	private MainActivity activity;
 	private AccountBean accountBean;
 	private boolean loadedFlag = false;
-
+	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			refreshUserInfo();
+		}
+	};
+	
 	private class getBaiduAccountInfo extends Thread {
 		@Override
 		public void run() {
@@ -103,6 +113,14 @@ public class AccountFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("com.zulwi.tiebasigner.REFRESH_USERINFO");
+		activity.registerReceiver(broadcastReceiver, intentFilter);
 	}
 
 	@Override
