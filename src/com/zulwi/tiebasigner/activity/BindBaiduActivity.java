@@ -40,6 +40,7 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -192,14 +193,14 @@ public class BindBaiduActivity extends ActionBarActivity {
 					try {
 						JSONObject json = new JSONObject(result);
 						int errorCode = json.getInt("error_code");
-						String baiduId = new Random(10000000).nextInt(99999999) + "" + new Random(10000000).nextInt(99999999) + "" + new Random(10000000).nextInt(99999999) + "" + new Random(10000000).nextInt(99999999);
-						String bduss = json.getJSONObject("user").getString("BDUSS");
-						bduss = bduss.substring(0, bduss.lastIndexOf("|"));
-						String baiduCookie = "BAIDUID=" + baiduId.toUpperCase() + ":FG=1;BDUSS=" + bduss + ";";
-						System.out.println("baiduCookie: " + baiduCookie);
 						vCodeLayout.setVisibility(View.GONE);
 						if (errorCode == 0) {
 							tips = "登录成功，正在发送 Cookie 至助手站点...";
+							String baiduId = new Random(10000000).nextInt(99999999) + "" + new Random(10000000).nextInt(99999999) + "" + new Random(10000000).nextInt(99999999) + "" + new Random(10000000).nextInt(99999999);
+							String bduss = json.getJSONObject("user").getString("BDUSS");
+							bduss = bduss.substring(0, bduss.lastIndexOf("|"));
+							String baiduCookie = "BAIDUID=" + baiduId.toUpperCase() + ":FG=1;BDUSS=" + bduss + ";";
+							System.out.println("baiduCookie: " + baiduCookie);
 							System.out.println(sid);
 							LayoutInflater inflater = getLayoutInflater();
 							View layout = inflater.inflate(R.layout.dialog_send_cookie, (ViewGroup) findViewById(R.layout.dialog_send_cookie));
@@ -216,10 +217,25 @@ public class BindBaiduActivity extends ActionBarActivity {
 							CookieSyncManager.createInstance(BindBaiduActivity.this);
 							CookieManager cookieManager = CookieManager.getInstance();
 							cookieManager.setAcceptCookie(true);
-							cookieManager.setCookie(accountBean.siteUrl, accountBean.cookieString);
+							cookieManager.removeSessionCookie();
+							System.out.println(accountBean.siteUrl);
+							System.out.println("cookies" + accountBean.cookieString);
+							String[] cookies = accountBean.cookieString.split(";");
+							for (String cookie : cookies) {
+								cookieManager.setCookie(accountBean.siteUrl, cookie);
+								System.out.println("cookie:" + cookie);
+							}
 							CookieSyncManager.getInstance().sync();
+							System.out.println(cookieManager.getCookie(accountBean.siteUrl));
 							String url = "https://api.ikk.me/v2/manual_bind.php?sid=" + sid + "&formhash=" + accountBean.formhash;
 							System.out.println(url);
+							webView.setWebViewClient(new WebViewClient() {
+								@Override
+								public boolean shouldOverrideUrlLoading(WebView view, String url) {
+									view.loadUrl(url);
+									return true;
+								}
+							});
 							WebSettings webSettings = webView.getSettings();
 							webSettings.setJavaScriptEnabled(true);
 							webSettings.setSupportMultipleWindows(false);

@@ -15,12 +15,12 @@ import com.zulwi.tiebasigner.activity.BindBaiduActivity;
 import com.zulwi.tiebasigner.activity.MainActivity;
 import com.zulwi.tiebasigner.bean.AccountBean;
 
-public class BindBaiduFragment extends BaseFragment implements OnClickListener, OnRefreshListener{
+public class BindBaiduFragment extends BaseFragment implements OnClickListener, OnRefreshListener {
 	private MainActivity activity;
 	protected SwipeRefreshLayout swipeLayout;
-	private AccountFragment fragment;	
+	private AccountFragment fragment;
 	private AccountBean accountBean;
-	
+
 	public BindBaiduFragment() {
 	}
 
@@ -28,7 +28,7 @@ public class BindBaiduFragment extends BaseFragment implements OnClickListener, 
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		this.activity = (MainActivity) activity;
-		this.fragment = (AccountFragment)getParentFragment();
+		this.fragment = (AccountFragment) getParentFragment();
 		this.accountBean = this.activity.getAccountBean();
 	}
 
@@ -56,22 +56,23 @@ public class BindBaiduFragment extends BaseFragment implements OnClickListener, 
 	@Override
 	public void onClick(View v) {
 		Intent intent = new Intent(activity, BindBaiduActivity.class);
-		intent.putExtra("accountBean", accountBean);
+		System.out.println(accountBean.cookieString);
+		intent.putExtra("accountBean", new AccountBean(accountBean.uid, accountBean.username, accountBean.email, accountBean.siteUrl, accountBean.cookieString, accountBean.formhash));
 		startActivityForResult(intent, 1);
-	}
-	
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    super.onActivityResult(requestCode, resultCode, data);
-	    if(requestCode==1&&resultCode == 1) {
-	    	swipeLayout.setRefreshing(true);
-	    	onRefresh();
-	    }
 	}
 
 	@Override
-    public void onRefresh() {
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == 1 && resultCode == 1) {
+			swipeLayout.setRefreshing(true);
+			onRefresh();
+		}
+	}
+
+	@Override
+	public void onRefresh() {
 		fragment.refreshUserInfo();
-    }
+	}
 
 }

@@ -129,7 +129,7 @@ public class AccountFragment extends Fragment {
 		else ((UserInfoFragment) (fragmentList[1].fragment)).swipeLayout.setRefreshing(false);
 	}
 
-	protected void refreshUserInfo() {
+	public void refreshUserInfo() {
 		new getBaiduAccountInfo().start();
 	}
 

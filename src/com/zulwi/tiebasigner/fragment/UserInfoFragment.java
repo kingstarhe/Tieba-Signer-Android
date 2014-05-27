@@ -11,7 +11,6 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.CoreConnectionPNames;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -93,8 +92,6 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 		@Override
         public void run() {
 			HttpClient httpClient = new DefaultHttpClient();
-			httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 20000);
-			httpClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 30000);
 			HttpGet httpget = new HttpGet(url);
 			try {
 				HttpResponse resp = httpClient.execute(httpget);

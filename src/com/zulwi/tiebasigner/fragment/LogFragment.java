@@ -40,7 +40,7 @@ public class LogFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		setTitle();
+		if (activity.getCurrentFragmentId() == 1) setTitle();
 	}
 
 	@Override
