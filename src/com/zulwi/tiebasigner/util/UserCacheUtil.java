@@ -1,6 +1,9 @@
 package com.zulwi.tiebasigner.util;
 
-import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +20,9 @@ public class UserCacheUtil {
 	private int sid;
 	private Context context;
 	private Map<String, String> userCache = new HashMap<String, String>();
+	private final static String sdcardPath = "/Zulwi/TiebaSigner";
+	private final static String imgCachePath = sdcardPath + "/cache/img";
+	private final static String avatarCachePath = imgCachePath + "/avatar";
 
 	public UserCacheUtil(Context context, int sid, int uid) {
 		this.context = context;
@@ -65,43 +71,34 @@ public class UserCacheUtil {
 		dbHelper.close();
 	}
 
-	public static Bitmap getImgCache(String key, Context context) {
-		CacheDBHelper dbHelper = new CacheDBHelper(context);
-		Cursor cursor = dbHelper.rawQuery("SELECT value FROM img_cache WHERE key=\'" + key + "\'", null);
-		if (cursor.getCount() > 0) {
-			cursor.moveToFirst();
-			byte[] img = cursor.getBlob(0);
-			dbHelper.close();
-			cursor.close();
-			return BitmapFactory.decodeByteArray(img, 0, img.length);
-		} else {
-			cursor.close();
-			dbHelper.close();
-			return null;
+	public static Bitmap getAvatarCache(String key, Context context) {
+		File dir = new File(android.os.Environment.getExternalStorageDirectory() + avatarCachePath);
+		if (!dir.exists()) dir.mkdir();
+		String avatarFilePath = avatarCachePath + "/" + key + ".png";
+		File avatarFile = new File(avatarFilePath);
+		if (avatarFile.exists()) {
+			Bitmap bm = BitmapFactory.decodeFile(avatarFilePath);
+			return bm;
 		}
+		return null;
 	}
 
-	public static boolean saveImgCache(String key, Bitmap img, Context context) {
-		CacheDBHelper dbHelper = new CacheDBHelper(context);
-		Cursor cursor = dbHelper.rawQuery("SELECT id, value FROM img_cache WHERE key=\'" + key + "\'", null);
-		ContentValues values = new ContentValues();
-		final ByteArrayOutputStream os = new ByteArrayOutputStream();
-		img.compress(Bitmap.CompressFormat.PNG, 100, os);
-		values.put("value", os.toByteArray());
-		if (cursor.getCount() > 0) {
-			cursor.moveToFirst();
-			dbHelper.update("user_cache", values, "WHERE id=" + cursor.getInt(0));
-		} else {
-			values.put("key", key);
-			long id = dbHelper.insert("user_cache", values);
-			if (id < 0) {
-				cursor.close();
-				dbHelper.close();
-				return false;
-			}
+	public static boolean saveAvatarCache(String key, Bitmap img, Context context) {
+		File dir = new File(android.os.Environment.getExternalStorageDirectory() + avatarCachePath);
+		if (!dir.exists()) dir.mkdir();
+		File avatarFile = new File(avatarCachePath + "/" + key + ".png");
+		if (avatarFile.exists()) avatarFile.delete();
+		try {
+			FileOutputStream out = new FileOutputStream(avatarFile);
+			img.compress(Bitmap.CompressFormat.PNG, 90, out);
+			out.flush();
+			out.close();
+			return true;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		cursor.close();
-		dbHelper.close();
-		return true;
+		return false;
 	}
 }
