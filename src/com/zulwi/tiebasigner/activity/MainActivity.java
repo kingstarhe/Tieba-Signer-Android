@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -42,6 +43,7 @@ public class MainActivity extends ActionBarActivity {
 			finish();
 		}
 	};
+	public Menu menu;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -145,6 +147,12 @@ public class MainActivity extends ActionBarActivity {
 
 	public int getCurrentFragmentId() {
 		return currentFragmentId;
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		this.menu = menu;
+	    return super.onCreateOptionsMenu(menu);
 	}
 
 }

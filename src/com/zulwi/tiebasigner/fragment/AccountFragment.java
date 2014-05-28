@@ -44,7 +44,7 @@ public class AccountFragment extends Fragment {
 	private class getBaiduAccountInfo extends Thread {
 		@Override
 		public void run() {
-			ClientApiUtil clientApiUtil = new ClientApiUtil(activity, accountBean);
+			ClientApiUtil clientApiUtil = new ClientApiUtil(accountBean);
 			try {
 				JSONBean result;
 				UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);

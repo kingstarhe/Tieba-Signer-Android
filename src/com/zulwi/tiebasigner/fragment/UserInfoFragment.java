@@ -130,7 +130,7 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 
 	private class unbindBaiduThread extends Thread {
 		public void run() {
-			ClientApiUtil clientApiUtil = new ClientApiUtil(activity, accountBean);
+			ClientApiUtil clientApiUtil = new ClientApiUtil(accountBean);
 			try {
 				JSONBean result;
 				result = clientApiUtil.get("unbind_baidu");

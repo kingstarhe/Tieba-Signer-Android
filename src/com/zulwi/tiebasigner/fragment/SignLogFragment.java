@@ -59,7 +59,7 @@ public class SignLogFragment extends BaseFragment implements OnRefreshListener {
 		@Override
 		@SuppressLint("SimpleDateFormat")
 		public void run() {
-			ClientApiUtil clientApiUtil = new ClientApiUtil(activity, accountBean);
+			ClientApiUtil clientApiUtil = new ClientApiUtil(accountBean);
 			try {
 				JSONBean result;
 				UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);

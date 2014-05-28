@@ -99,4 +99,5 @@ public class LogFragment extends Fragment {
 	public void setTitle() {
 		activity.setTitle(sectionsPagerAdapter.getPageTitle(viewPager.getCurrentItem()));
 	}
+	
 }

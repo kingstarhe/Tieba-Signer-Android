@@ -132,7 +132,7 @@ public class BindBaiduActivity extends ActionBarActivity {
 		@Override
 		public void run() {
 			super.run();
-			ClientApiUtil api = new ClientApiUtil(BindBaiduActivity.this, accountBean);
+			ClientApiUtil api = new ClientApiUtil(accountBean);
 			try {
 				JSONBean jsonBean = api.get("cloud_info");
 				sid = jsonBean.data.getInt("sid");
