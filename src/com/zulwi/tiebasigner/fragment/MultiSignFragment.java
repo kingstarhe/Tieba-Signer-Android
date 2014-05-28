@@ -2,6 +2,7 @@ package com.zulwi.tiebasigner.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,7 @@ import android.widget.LinearLayout;
 
 import com.zulwi.tiebasigner.R;
 
-public class MultiSignFragment extends BaseFragment {
+public class MultiSignFragment extends Fragment {
 	private LinearLayout signLogOneKeySignButton;
 
 	@Override

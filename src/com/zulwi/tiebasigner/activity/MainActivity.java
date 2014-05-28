@@ -14,7 +14,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -34,7 +33,6 @@ public class MainActivity extends ActionBarActivity {
 	private Button[] bottonBarButtons = new Button[4];
 	private int currentFragmentId = 0;
 	private AccountBean accountBean;
-	private static long lastClickTime;
 	private Dialog dialog;
 
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -45,7 +43,6 @@ public class MainActivity extends ActionBarActivity {
 			finish();
 		}
 	};
-	public Menu menu;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +116,6 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void onBottomBarButtonClick(View v) {
-		if (isFastDoubleClick()) return;
 		switch (v.getId()) {
 			case R.id.userinfo_button:
 				setEnabled(0);
@@ -152,20 +148,6 @@ public class MainActivity extends ActionBarActivity {
 
 	public int getCurrentFragmentId() {
 		return currentFragmentId;
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		this.menu = menu;
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	private static boolean isFastDoubleClick() {
-		long time = System.currentTimeMillis();
-		long timeD = time - lastClickTime;
-		if (0 < timeD && timeD < 500) { return true; }
-		lastClickTime = time;
-		return false;
 	}
 
 	public void showLoadingDialog(boolean show) {

@@ -13,12 +13,10 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -34,7 +32,7 @@ import com.zulwi.tiebasigner.exception.HttpResultException;
 import com.zulwi.tiebasigner.util.ClientApiUtil;
 import com.zulwi.tiebasigner.util.UserCacheUtil;
 
-public class SignLogFragment extends BaseFragment implements OnRefreshListener {
+public class SignLogFragment extends Fragment implements OnRefreshListener {
 	private ListView signLogListView;
 	private SwipeRefreshLayout logSwipeLayout;
 	private SwipeRefreshLayout tipsSwipeLayout;
@@ -163,16 +161,18 @@ public class SignLogFragment extends BaseFragment implements OnRefreshListener {
 		new getSignLogThread(currentDate).start();
 	}
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.sign_log, menu);
+	private void setRefreshing(boolean isRefreshing) {
+		tipsSwipeLayout.setRefreshing(isRefreshing);
+		logSwipeLayout.setRefreshing(isRefreshing);
+	}
+	
+	public boolean isRefreshing(){
+		return logSwipeLayout.isRefreshing();
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (logSwipeLayout.isRefreshing()) return false;
-		switch (item.getItemId()) {
-			case R.id.sign_log_pre:
+	public void switchLog(int switchMode) {
+		switch (switchMode) {
+			case 0:
 				if (previousDate.equals("0")) {
 					Toast.makeText(activity, "没有上一页了", Toast.LENGTH_SHORT).show();
 				} else {
@@ -180,7 +180,7 @@ public class SignLogFragment extends BaseFragment implements OnRefreshListener {
 					new getSignLogThread(previousDate).start();
 				}
 				break;
-			case R.id.sign_log_next:
+			case 1:
 				if (nextDate.equals("0")) {
 					Toast.makeText(activity, "没有下一页了", Toast.LENGTH_SHORT).show();
 				} else {
@@ -189,11 +189,5 @@ public class SignLogFragment extends BaseFragment implements OnRefreshListener {
 				}
 				break;
 		}
-		return super.onOptionsItemSelected(item);
-	}
-
-	private void setRefreshing(boolean isRefreshing) {
-		tipsSwipeLayout.setRefreshing(isRefreshing);
-		logSwipeLayout.setRefreshing(isRefreshing);
 	}
 }

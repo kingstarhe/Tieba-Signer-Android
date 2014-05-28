@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,7 @@ import com.zulwi.tiebasigner.activity.MainActivity;
 import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.view.CircularImage;
 
-public class SettingFragment extends BaseFragment implements View.OnClickListener {
+public class SettingFragment extends Fragment implements View.OnClickListener {
 	private MainActivity activity;
 	private AccountBean accountBean;
 	private TextView usernameTextView;

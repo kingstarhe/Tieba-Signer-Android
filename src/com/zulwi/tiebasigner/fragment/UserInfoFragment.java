@@ -29,6 +29,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
@@ -55,7 +56,7 @@ import com.zulwi.tiebasigner.util.UserCacheUtil;
 import com.zulwi.tiebasigner.view.CircularImage;
 import com.zulwi.tiebasigner.view.ListTableView;
 
-public class UserInfoFragment extends BaseFragment implements View.OnClickListener, OnRefreshListener {
+public class UserInfoFragment extends Fragment implements View.OnClickListener, OnRefreshListener {
 	private CircularImage userAvatar;
 	private ListTableView tiebaTable;
 	private TextView tiebaListSwitcher;
@@ -129,6 +130,7 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 	}
 
 	private class unbindBaiduThread extends Thread {
+		@Override
 		public void run() {
 			ClientApiUtil clientApiUtil = new ClientApiUtil(accountBean);
 			try {
@@ -294,6 +296,7 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
 	}
 
 	@Override
