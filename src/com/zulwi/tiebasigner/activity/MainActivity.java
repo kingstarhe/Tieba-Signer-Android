@@ -32,6 +32,7 @@ public class MainActivity extends ActionBarActivity {
 	private FragmentBean[] fragments = new FragmentBean[4];
 	private Button[] bottonBarButtons = new Button[4];
 	private int currentFragmentId = 0;
+	private static long lastClickTime;  
 	private AccountBean accountBean;
 	private Dialog dialog;
 
@@ -116,6 +117,7 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void onBottomBarButtonClick(View v) {
+		if(isFastDoubleClick()) return;
 		switch (v.getId()) {
 			case R.id.userinfo_button:
 				setEnabled(0);
@@ -154,5 +156,15 @@ public class MainActivity extends ActionBarActivity {
 		if (show) dialog.show();
 		else dialog.dismiss();
 	}
+	
+	public static boolean isFastDoubleClick() {  
+        long time = System.currentTimeMillis();  
+        long timeD = time - lastClickTime;  
+        if ( 0 < timeD && timeD < 500) {     
+            return true;     
+        }     
+        lastClickTime = time;     
+        return false;     
+    }  
 
 }
