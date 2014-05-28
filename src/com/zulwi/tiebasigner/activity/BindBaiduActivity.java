@@ -71,7 +71,7 @@ public class BindBaiduActivity extends ActionBarActivity {
 	private ImageView vCodeImageView;
 	private String vCodeMd5;
 	private String vCodeImageUrl;
-	private int sid;
+	private int sid = 0;
 
 	private class loginThread extends Thread {
 		private String username;
@@ -136,10 +136,7 @@ public class BindBaiduActivity extends ActionBarActivity {
 			try {
 				JSONBean jsonBean = api.get("cloud_info");
 				sid = jsonBean.data.getInt("sid");
-			} catch (HttpResultException e) {
-				e.printStackTrace();
-				handler.obtainMessage(ClientApiUtil.ERROR, 0, 0, e).sendToTarget();
-			} catch (JSONException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				handler.obtainMessage(ClientApiUtil.ERROR, 0, 0, new HttpResultException("站点 SID 获取失败，将无法正常绑定百度账号！")).sendToTarget();
 			}
@@ -204,7 +201,7 @@ public class BindBaiduActivity extends ActionBarActivity {
 							System.out.println("cookies" + accountBean.cookieString);
 							String[] cookies = accountBean.cookieString.split(";");
 							for (String cookie : cookies) {
-								if (!cookie.trim().equals("")) cookieManager.setCookie(accountBean.siteUrl, cookie+"; ");
+								if (!cookie.trim().equals("")) cookieManager.setCookie(accountBean.siteUrl, cookie + "; ");
 								System.out.println("cookie:" + cookie);
 							}
 							CookieSyncManager.getInstance().sync();
@@ -316,6 +313,11 @@ public class BindBaiduActivity extends ActionBarActivity {
 				String vCode = vCodeEditText.getText().toString().trim();
 				if (username.equals("") || password.equals("") || (needVCode && vCode.equals(""))) {
 					Toast.makeText(this, needVCode ? "用户名、密码、验证码均不能为空！" : "用户名或密码不能为空！", Toast.LENGTH_LONG).show();
+					return;
+				}
+				if (sid == 0) {
+					Toast.makeText(this, "站点 SID 获取失败，请稍后重试", Toast.LENGTH_LONG).show();
+					new getSiteSid().start();
 					return;
 				}
 				progressDialog.show();
