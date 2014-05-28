@@ -26,6 +26,19 @@ public class UserCacheUtil {
 	private final static String imgCachePath = appPath + "/cache/img";
 	private final static String avatarCachePath = imgCachePath + "/avatar";
 
+	{
+		File dir = new File(avatarCachePath);
+		if (!dir.exists()) dir.mkdirs();
+		dir = new File(avatarCachePath, ".nomedia");
+		if (!dir.exists()) {
+			try {
+				dir.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public UserCacheUtil(Context context, int sid, int uid) {
 		this.context = context;
 		this.uid = uid;
@@ -74,8 +87,7 @@ public class UserCacheUtil {
 	}
 
 	public static Bitmap getAvatarCache(String key, Context context) {
-		File dir = new File(avatarCachePath);
-		if (!dir.exists()) dir.mkdirs();
+
 		String avatarFilePath = avatarCachePath + "/" + key + ".png";
 		File avatarFile = new File(avatarFilePath);
 		if (avatarFile.exists()) {
@@ -86,8 +98,6 @@ public class UserCacheUtil {
 	}
 
 	public static boolean saveAvatarCache(String key, Bitmap img, Context context) {
-		File dir = new File(avatarCachePath);
-		if (!dir.exists()) dir.mkdirs();
 		File avatarFile = new File(avatarCachePath, key + ".png");
 		if (avatarFile.exists()) avatarFile.delete();
 		try {
