@@ -52,7 +52,7 @@ public class AccountFragment extends Fragment {
 				if (loadedFlag == false && cacheString != null) {
 					result = new JSONBean(new JSONObject(cache.getDataCache("user_info")));
 				} else {
-					result = clientApiUtil.get("baidu_account_info");
+					result = clientApiUtil.get("baidu_info");
 				}
 				handler.obtainMessage(ClientApiUtil.SUCCESSED, 0, 0, result).sendToTarget();
 			} catch (HttpResultException e) {

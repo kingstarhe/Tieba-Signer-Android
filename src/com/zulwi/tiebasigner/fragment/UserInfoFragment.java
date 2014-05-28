@@ -351,15 +351,15 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 		followsAndFollowAvatarImgView[1][2] = (ImageView) view.findViewById(R.id.fans_avatar_3);
 		followsAndFollowAvatarImgView[1][3] = (ImageView) view.findViewById(R.id.fans_avatar_4);
 		tiebaTable = (ListTableView) view.findViewById(R.id.userinfo_tieba_list);
-		tiebaListSwitcher = (TextView) view.findViewById(R.id.userinfo_more_tieba);
-		tiebaListSwitcher.setOnClickListener(this);
-		view.findViewById(R.id.userinfo_follows).setOnClickListener(this);
-		view.findViewById(R.id.userinfo_fans).setOnClickListener(this);
 		tiebaTable.setOnClickListener(new ListTableView.onClickListener() {
 			@Override
 			public void onClick(View v, int which) {
 			}
 		});
+		tiebaListSwitcher = (TextView) view.findViewById(R.id.userinfo_more_tieba);
+		tiebaListSwitcher.setOnClickListener(this);
+		view.findViewById(R.id.userinfo_follows).setOnClickListener(this);
+		view.findViewById(R.id.userinfo_fans).setOnClickListener(this);
 		return view;
 	}
 
