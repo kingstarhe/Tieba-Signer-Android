@@ -20,7 +20,6 @@ public class CacheDBHelper extends SQLiteOpenHelper {
 		this.db = db;
 		db.execSQL("CREATE TABLE IF NOT EXISTS user_cache(id INTEGER PRIMARY KEY AUTOINCREMENT, sid INTEGER, uid INTEGER, key VARCHAR(20), value TEXT)");
 		db.execSQL("CREATE TABLE IF NOT EXISTS sys_cache(id INTEGER PRIMARY KEY AUTOINCREMENT, key VARCHAR(20), value TEXT)");
-		db.execSQL("CREATE TABLE IF NOT EXISTS img_cache(id INTEGER PRIMARY KEY AUTOINCREMENT, key VARCHAR(20), value BLOB)");
 	}
 
 	@Override
