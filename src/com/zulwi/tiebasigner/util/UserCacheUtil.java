@@ -11,6 +11,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 
 import com.zulwi.tiebasigner.db.CacheDBHelper;
@@ -20,8 +21,9 @@ public class UserCacheUtil {
 	private int sid;
 	private Context context;
 	private Map<String, String> userCache = new HashMap<String, String>();
-	private final static String sdcardPath = "/Zulwi/TiebaSigner";
-	private final static String imgCachePath = sdcardPath + "/cache/img";
+	private final static String sdcardPath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
+	private final static String appPath = sdcardPath + "/Zulwi/TiebaSigner";
+	private final static String imgCachePath = appPath + "/cache/img";
 	private final static String avatarCachePath = imgCachePath + "/avatar";
 
 	public UserCacheUtil(Context context, int sid, int uid) {
@@ -72,8 +74,8 @@ public class UserCacheUtil {
 	}
 
 	public static Bitmap getAvatarCache(String key, Context context) {
-		File dir = new File(android.os.Environment.getExternalStorageDirectory() + avatarCachePath);
-		if (!dir.exists()) dir.mkdir();
+		File dir = new File(avatarCachePath);
+		if (!dir.exists()) dir.mkdirs();
 		String avatarFilePath = avatarCachePath + "/" + key + ".png";
 		File avatarFile = new File(avatarFilePath);
 		if (avatarFile.exists()) {
@@ -84,13 +86,13 @@ public class UserCacheUtil {
 	}
 
 	public static boolean saveAvatarCache(String key, Bitmap img, Context context) {
-		File dir = new File(android.os.Environment.getExternalStorageDirectory() + avatarCachePath);
-		if (!dir.exists()) dir.mkdir();
-		File avatarFile = new File(avatarCachePath + "/" + key + ".png");
+		File dir = new File(avatarCachePath);
+		if (!dir.exists()) dir.mkdirs();
+		File avatarFile = new File(avatarCachePath, key + ".png");
 		if (avatarFile.exists()) avatarFile.delete();
 		try {
 			FileOutputStream out = new FileOutputStream(avatarFile);
-			img.compress(Bitmap.CompressFormat.PNG, 90, out);
+			img.compress(CompressFormat.PNG, 90, out);
 			out.flush();
 			out.close();
 			return true;
@@ -101,4 +103,5 @@ public class UserCacheUtil {
 		}
 		return false;
 	}
+
 }
