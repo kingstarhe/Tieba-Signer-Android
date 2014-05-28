@@ -18,7 +18,6 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -52,7 +51,6 @@ import com.zulwi.tiebasigner.bean.JSONBean;
 import com.zulwi.tiebasigner.bean.TiebaBean;
 import com.zulwi.tiebasigner.exception.HttpResultException;
 import com.zulwi.tiebasigner.util.ClientApiUtil;
-import com.zulwi.tiebasigner.util.DialogUtil;
 import com.zulwi.tiebasigner.util.UserCacheUtil;
 import com.zulwi.tiebasigner.view.CircularImage;
 import com.zulwi.tiebasigner.view.ListTableView;
@@ -87,6 +85,8 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 	private AccountBean accountBean;
 	public SwipeRefreshLayout swipeLayout;
 	private boolean loadedFlag = false;
+	private final static int LOAD_USERINFO = 0;
+	private final static int UNBIND_BAIDU = LOAD_USERINFO + 1;
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -134,7 +134,7 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 			try {
 				JSONBean result;
 				result = clientApiUtil.get("unbind_baidu");
-				handler.obtainMessage(ClientApiUtil.SUCCESSED, 1, 0, result).sendToTarget();
+				handler.obtainMessage(ClientApiUtil.SUCCESSED, UNBIND_BAIDU, 0, result).sendToTarget();
 			} catch (HttpResultException e) {
 				e.printStackTrace();
 				handler.obtainMessage(ClientApiUtil.ERROR, 0, 0, e).sendToTarget();
@@ -160,7 +160,7 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 					JSONBean json = (JSONBean) msg.obj;
 					JSONObject object = json.data;
 					switch (msg.arg1) {
-						case 0:
+						case LOAD_USERINFO:
 							try {
 								baiduAccountUsername = object.getString("username");
 								baiduAccountId = object.getString("id");
@@ -244,7 +244,7 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 							swipeLayout.setRefreshing(false);
 							loadedFlag = true;
 							break;
-						case 1:
+						case UNBIND_BAIDU:
 							if (json.status == 0) {
 								onRefresh();
 							} else swipeLayout.setRefreshing(false);
@@ -269,12 +269,11 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 					tips = t.getMessage();
 					break;
 			}
-			dialog.dismiss();
+			activity.showLoadingDialog(false);
 			if (tips != null && !tips.equals("")) Toast.makeText(activity, tips, Toast.LENGTH_SHORT).show();
 		}
 	};
 	private AccountFragment fragment;
-	private Dialog dialog;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -308,7 +307,7 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 			new AlertDialog.Builder(activity).setTitle("取消绑定").setMessage("确认要解除绑定吗？\n(解除绑定后自动签到将停止，所有记录将被清除)").setPositiveButton("确认", new OnClickListener() {
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {
-					dialog.show();
+					activity.showLoadingDialog(true);
 					swipeLayout.setRefreshing(true);
 					new unbindBaiduThread().start();
 				}
@@ -353,8 +352,6 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 		tiebaListSwitcher.setOnClickListener(this);
 		view.findViewById(R.id.userinfo_follows).setOnClickListener(this);
 		view.findViewById(R.id.userinfo_fans).setOnClickListener(this);
-		dialog = DialogUtil.createLoadingDialog(activity, "请稍后", false);
-		dialog.show();
 		tiebaTable.setOnClickListener(new ListTableView.onClickListener() {
 			@Override
 			public void onClick(View v, int which) {
@@ -386,7 +383,7 @@ public class UserInfoFragment extends BaseFragment implements View.OnClickListen
 	}
 
 	protected void setUp(JSONBean data) {
-		handler.obtainMessage(ClientApiUtil.SUCCESSED, 0, 0, data).sendToTarget();
+		handler.obtainMessage(ClientApiUtil.SUCCESSED, LOAD_USERINFO, 0, data).sendToTarget();
 	}
 
 	@Override

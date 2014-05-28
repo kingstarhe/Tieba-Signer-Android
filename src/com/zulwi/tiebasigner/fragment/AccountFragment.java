@@ -92,6 +92,7 @@ public class AccountFragment extends Fragment {
 					}
 					UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);
 					cache.saveDataCache("user_info", data.jsonString);
+					activity.showLoadingDialog(false);
 					break;
 				default:
 					Exception t = (Exception) msg.obj;

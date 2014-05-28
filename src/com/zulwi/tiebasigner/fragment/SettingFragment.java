@@ -14,10 +14,12 @@ import android.widget.TextView;
 import com.zulwi.tiebasigner.activity.AboutActivity;
 import com.zulwi.tiebasigner.activity.EditAccountActivity;
 import com.zulwi.tiebasigner.activity.MainActivity;
+import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.view.CircularImage;
 
 public class SettingFragment extends BaseFragment implements View.OnClickListener {
 	private MainActivity activity;
+	private AccountBean accountBean;
 	private TextView usernameTextView;
 	private TextView emailTextView;
 	private TextView siteNameTextView;
@@ -28,6 +30,7 @@ public class SettingFragment extends BaseFragment implements View.OnClickListene
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		this.activity = (MainActivity) activity;
+		this.accountBean = this.activity.getAccountBean();
 	}
 
 	@Override
@@ -47,7 +50,7 @@ public class SettingFragment extends BaseFragment implements View.OnClickListene
 		siteNameTextView.setText(activity.getAccountBean().siteName);
 		siteUrlTextView.setText(activity.getAccountBean().siteUrl);
 		avatarCircularImage = (CircularImage) view.findViewById(R.id.setting_avatar);
-		avatarCircularImage.setImageBitmap(activity.getAccountBean().avatar);
+		if (accountBean.avatar != null) avatarCircularImage.setImageBitmap(accountBean.avatar);
 		view.findViewById(R.id.setting_userinfo).setOnClickListener(this);
 		view.findViewById(R.id.setting_siteinfo).setOnClickListener(this);
 		view.findViewById(R.id.setting_remind).setOnClickListener(this);
@@ -57,7 +60,6 @@ public class SettingFragment extends BaseFragment implements View.OnClickListene
 		view.findViewById(R.id.setting_about).setOnClickListener(this);
 		return view;
 	}
-
 
 	@Override
 	public void onStart() {
@@ -85,9 +87,9 @@ public class SettingFragment extends BaseFragment implements View.OnClickListene
 		}
 		if (intent != null) startActivity(intent);
 	}
-	
-	public void setAvatar(Bitmap avatar){
-		avatarCircularImage.setImageBitmap(avatar);
+
+	public void setAvatar(Bitmap avatar) {
+		if (avatar != null) avatarCircularImage.setImageBitmap(avatar);
 	}
 
 }

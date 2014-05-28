@@ -1,9 +1,7 @@
 package com.zulwi.tiebasigner.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,13 +26,17 @@ import com.zulwi.tiebasigner.fragment.AccountFragment;
 import com.zulwi.tiebasigner.fragment.LogFragment;
 import com.zulwi.tiebasigner.fragment.PluginFragment;
 import com.zulwi.tiebasigner.fragment.SettingFragment;
+import com.zulwi.tiebasigner.util.DialogUtil;
 
 public class MainActivity extends ActionBarActivity {
 	private FragmentManager fm;
-	private List<FragmentBean> fragmentList = new ArrayList<FragmentBean>();
-	private List<Button> bottonBarButton = new ArrayList<Button>();
+	private FragmentBean[] fragments = new FragmentBean[4];
+	private Button[] bottonBarButtons = new Button[4];
 	private int currentFragmentId = 0;
 	private AccountBean accountBean;
+	private static long lastClickTime;
+	private Dialog dialog;
+
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -54,16 +56,18 @@ public class MainActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_main);
 		accountBean = (AccountBean) getIntent().getSerializableExtra("accountBean");
 		System.out.println(accountBean.formhash);
-		fragmentList.add(new FragmentBean("账号", new AccountFragment()));
-		fragmentList.add(new FragmentBean("记录", new LogFragment()));
-		fragmentList.add(new FragmentBean("插件", new PluginFragment()));
-		fragmentList.add(new FragmentBean("设置", new SettingFragment()));
+		fragments[0] = new FragmentBean("账号", new AccountFragment());
+		fragments[1] = new FragmentBean("记录", new LogFragment());
+		fragments[2] = new FragmentBean("插件", new PluginFragment());
+		fragments[3] = new FragmentBean("设置", new SettingFragment());
 		fm = getSupportFragmentManager();
-		bottonBarButton.add((Button) findViewById(R.id.userinfo_button));
-		bottonBarButton.add((Button) findViewById(R.id.signlog_button));
-		bottonBarButton.add((Button) findViewById(R.id.plugin_button));
-		bottonBarButton.add((Button) findViewById(R.id.setting_button));
-		bottonBarButton.get(0).performClick();
+		bottonBarButtons[0] = (Button) findViewById(R.id.userinfo_button);
+		bottonBarButtons[1] = (Button) findViewById(R.id.signlog_button);
+		bottonBarButtons[2] = (Button) findViewById(R.id.plugin_button);
+		bottonBarButtons[3] = (Button) findViewById(R.id.setting_button);
+		bottonBarButtons[0].performClick();
+		dialog = DialogUtil.createLoadingDialog(this, "加载中，请稍后", false);
+		dialog.show();
 	}
 
 	@Override
@@ -96,8 +100,8 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void changeFragment(int position) {
-		FragmentBean from = fragmentList.get(currentFragmentId);
-		FragmentBean to = fragmentList.get(position);
+		FragmentBean from = fragments[currentFragmentId];
+		FragmentBean to = fragments[position];
 		FragmentTransaction ft = fm.beginTransaction();
 		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		if (from == to && !to.fragment.isAdded()) ft.add(R.id.fragment_container, to.fragment);
@@ -109,12 +113,13 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void setEnabled(int position) {
-		for (int i = 0; i < bottonBarButton.size(); i++) {
-			bottonBarButton.get(i).setEnabled(position == i ? false : true);
+		for (int i = 0; i < bottonBarButtons.length; i++) {
+			bottonBarButtons[i].setEnabled(position == i ? false : true);
 		}
 	}
 
 	public void onBottomBarButtonClick(View v) {
+		if (isFastDoubleClick()) return;
 		switch (v.getId()) {
 			case R.id.userinfo_button:
 				setEnabled(0);
@@ -141,18 +146,31 @@ public class MainActivity extends ActionBarActivity {
 
 	public void setAccountAvatar(Bitmap avatar) {
 		accountBean.avatar = avatar;
-		Fragment settingFragment = fragmentList.get(3).fragment;
+		Fragment settingFragment = fragments[3].fragment;
 		if (settingFragment.isAdded()) ((SettingFragment) settingFragment).setAvatar(avatar);
 	}
 
 	public int getCurrentFragmentId() {
 		return currentFragmentId;
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		this.menu = menu;
-	    return super.onCreateOptionsMenu(menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	private static boolean isFastDoubleClick() {
+		long time = System.currentTimeMillis();
+		long timeD = time - lastClickTime;
+		if (0 < timeD && timeD < 500) { return true; }
+		lastClickTime = time;
+		return false;
+	}
+
+	public void showLoadingDialog(boolean show) {
+		if (show) dialog.show();
+		else dialog.dismiss();
 	}
 
 }
