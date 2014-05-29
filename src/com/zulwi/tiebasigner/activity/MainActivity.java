@@ -32,14 +32,14 @@ public class MainActivity extends ActionBarActivity {
 	private FragmentBean[] fragments = new FragmentBean[4];
 	private Button[] bottonBarButtons = new Button[4];
 	private int currentFragmentId = 0;
-	private static long lastClickTime;  
+	private static long lastClickTime;
 	private AccountBean accountBean;
 	private Dialog dialog;
 
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Toast.makeText(MainActivity.this, "请重新登录", Toast.LENGTH_LONG).show();
+			Toast.makeText(MainActivity.this, intent.getStringExtra("message"), Toast.LENGTH_LONG).show();
 			unregisterReceiver(broadcastReceiver);
 			finish();
 		}
@@ -93,7 +93,7 @@ public class MainActivity extends ActionBarActivity {
 	protected void onResume() {
 		super.onResume();
 		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction("com.zulwi.tiebasigner.LOGOUT");
+		intentFilter.addAction("com.zulwi.tiebasigner.FINISH_MAIN");
 		registerReceiver(broadcastReceiver, intentFilter);
 	}
 
@@ -117,7 +117,7 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void onBottomBarButtonClick(View v) {
-		if(isFastDoubleClick()) return;
+		if (isFastDoubleClick()) return;
 		switch (v.getId()) {
 			case R.id.userinfo_button:
 				setEnabled(0);
@@ -156,15 +156,13 @@ public class MainActivity extends ActionBarActivity {
 		if (show) dialog.show();
 		else dialog.dismiss();
 	}
-	
-	public static boolean isFastDoubleClick() {  
-        long time = System.currentTimeMillis();  
-        long timeD = time - lastClickTime;  
-        if ( 0 < timeD && timeD < 500) {     
-            return true;     
-        }     
-        lastClickTime = time;     
-        return false;     
-    }  
+
+	public static boolean isFastDoubleClick() {
+		long time = System.currentTimeMillis();
+		long timeD = time - lastClickTime;
+		if (0 < timeD && timeD < 500) { return true; }
+		lastClickTime = time;
+		return false;
+	}
 
 }

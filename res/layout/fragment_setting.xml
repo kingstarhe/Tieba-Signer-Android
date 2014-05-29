@@ -23,7 +23,9 @@
             <com.zulwi.tiebasigner.view.CircularImage
                 android:id="@+id/setting_avatar"
                 android:layout_width="50dp"
-                android:layout_height="50dp" />
+                android:layout_height="50dp"
+                android:src="@drawable/avatar"
+                 />
 
             <TextView
                 android:id="@+id/setting_username"

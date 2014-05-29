@@ -151,5 +151,11 @@ public class AccountFragment extends Fragment {
 	public void refreshUserInfo() {
 		new getBaiduAccountInfo().start();
 	}
+	
+	@Override
+	public void onDestroy() {
+	    super.onDestroy();
+	    activity.unregisterReceiver(broadcastReceiver);
+	}
 
 }

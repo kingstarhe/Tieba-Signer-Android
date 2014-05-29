@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.bean.AccountBean;
+import com.zulwi.tiebasigner.view.CircularImage;
 
 @SuppressWarnings("serial")
 public class AccountListAdapter extends BaseAdapter implements Serializable {
@@ -52,6 +53,7 @@ public class AccountListAdapter extends BaseAdapter implements Serializable {
 		if (convertView == null) {
 			viewHolder = new ViewHolder();
 			convertView = inflater.inflate(R.layout.list_account, null);
+			viewHolder.accountAvatar = (CircularImage) convertView.findViewById(R.id.account_avatar);
 			viewHolder.accountInfo = (TextView) convertView.findViewById(R.id.account_info);
 			viewHolder.siteInfo = (TextView) convertView.findViewById(R.id.site_info);
 			convertView.setTag(viewHolder);
@@ -59,6 +61,7 @@ public class AccountListAdapter extends BaseAdapter implements Serializable {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 		AccountBean bean = list.get(position);
+		if (bean.avatar != null) viewHolder.accountAvatar.setImageBitmap(bean.avatar);
 		viewHolder.accountInfo.setText(bean.username);
 		Uri url = Uri.parse(bean.siteUrl);
 		viewHolder.siteInfo.setText(bean.siteName + " - " + url.getHost() + url.getPath());
@@ -66,6 +69,7 @@ public class AccountListAdapter extends BaseAdapter implements Serializable {
 	}
 
 	private static class ViewHolder {
+		CircularImage accountAvatar;
 		TextView accountInfo;
 		TextView siteInfo;
 	}

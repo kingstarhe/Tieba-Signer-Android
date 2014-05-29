@@ -77,5 +77,6 @@
     <string name="next_date">后一天</string>
     <string name="no_log">没有记录</string>
     <string name="supported_plugin">该站点支持的插件</string>
+    <string name="add_account">添加账号</string>
 
 </resources>
