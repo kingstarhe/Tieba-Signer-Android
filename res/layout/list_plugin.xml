@@ -21,8 +21,12 @@
         android:layout_height="fill_parent"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:gravity="center"
         android:background="@color/zulwi_blue"
+        android:gravity="center"
+        android:paddingBottom="2dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="2dp"
         android:textColor="@android:color/white"
         android:textSize="13sp" />
 
