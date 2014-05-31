@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -17,13 +20,16 @@ import android.os.Handler;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.zulwi.tiebasigner.R;
+import com.zulwi.tiebasigner.adapter.AccountSpinnerAdapter;
 import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.bean.SiteBean;
 import com.zulwi.tiebasigner.db.BaseDBHelper;
@@ -31,15 +37,17 @@ import com.zulwi.tiebasigner.exception.HttpResultException;
 import com.zulwi.tiebasigner.util.AccountUtil;
 import com.zulwi.tiebasigner.util.ClientApiUtil;
 import com.zulwi.tiebasigner.util.DialogUtil;
+import com.zulwi.tiebasigner.util.UserCacheUtil;
 
 public class LoginActivity extends Activity implements OnItemSelectedListener {
 	private Spinner siteSpinner;
 	private Dialog progressDialog;
-	private EditText usernameEditor;
+	private AutoCompleteTextView usernameEditor;
 	private EditText passwordEditor;
 	private String[] siteUrlList;
 	private String[] siteNameList;
-	private List<SiteBean> siteMapList;
+	private List<SiteBean> siteList = new ArrayList<SiteBean>();
+	private List<AccountBean> accountList = new ArrayList<AccountBean>();
 	private BaseDBHelper sitesDBHelper = new BaseDBHelper(this);
 	private int lastSelectedPosition;
 
@@ -87,7 +95,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 					dbHelper.execSQL("delete from accounts where username=\'" + accountBean.username + "\'");
 					dbHelper.execSQL("update accounts set current=0 where current=1");
 					ContentValues value = new ContentValues();
-					int sid = siteMapList.get(lastSelectedPosition).id;
+					int sid = siteList.get(lastSelectedPosition).id;
 					Cursor siteCursor = dbHelper.rawQuery("select * from sites where id=" + sid, null);
 					if (siteCursor.getCount() > 0) {
 						siteCursor.moveToFirst();
@@ -120,27 +128,27 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_login);
-		usernameEditor = (EditText) findViewById(R.id.username);
+		usernameEditor = (AutoCompleteTextView) findViewById(R.id.username);
 		passwordEditor = (EditText) findViewById(R.id.password);
 		progressDialog = DialogUtil.createLoadingDialog(this, "正在登录,请稍后...", false);
 		flushSiteList();
 	}
 
 	public void flushSiteList() {
-		siteMapList = new ArrayList<SiteBean>();
-		Cursor cursor = sitesDBHelper.query("sites");
-		if (cursor.getCount() > 0) {
-			for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
-				siteMapList.add(new SiteBean(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2)));
+		siteList.clear();
+		Cursor siteCursor = sitesDBHelper.query("sites");
+		if (siteCursor.getCount() > 0) {
+			for (siteCursor.moveToFirst(); !(siteCursor.isAfterLast()); siteCursor.moveToNext()) {
+				siteList.add(new SiteBean(Integer.parseInt(siteCursor.getString(0)), siteCursor.getString(1), siteCursor.getString(2)));
 			}
-			cursor.close();
+			siteCursor.close();
 		}
-		int size = siteMapList.size();
+		int size = siteList.size();
 		siteNameList = new String[size + 1];
 		siteUrlList = new String[size];
 		for (int i = 0; i < size; i++) {
-			siteNameList[i] = siteMapList.get(i).name;
-			siteUrlList[i] = siteMapList.get(i).url;
+			siteNameList[i] = siteList.get(i).name;
+			siteUrlList[i] = siteList.get(i).url;
 		}
 		siteNameList[size] = "管理站点";
 		siteSpinner = (Spinner) findViewById(R.id.site);
@@ -155,7 +163,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 
 	public void startEditSiteActivity() {
 		Intent intent = new Intent(LoginActivity.this, EditSitesActivity.class);
-		intent.putExtra("siteMapList", (Serializable) siteMapList);
+		intent.putExtra("siteMapList", (Serializable) siteList);
 		startActivityForResult(intent, 1);
 	}
 
@@ -190,6 +198,38 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 			siteSpinner.setSelection(lastSelectedPosition);
 			return;
 		}
+		accountList.clear();
+		Cursor accountCursor = sitesDBHelper.rawQuery("select accounts.*, sites.name, sites.url from accounts left join sites on accounts.sid=sites.id", null);
+		for (accountCursor.moveToFirst(); !(accountCursor.isAfterLast()); accountCursor.moveToNext()) {
+			AccountBean accountBean = new AccountBean(accountCursor.getInt(0), accountCursor.getInt(1), accountCursor.getInt(2), accountCursor.getString(3), accountCursor.getString(4), accountCursor.getString(5), accountCursor.getString(6), accountCursor.getInt(7), accountCursor.getString(8), accountCursor.getString(9));
+			UserCacheUtil cache = new UserCacheUtil(this, accountCursor.getInt(1), accountCursor.getInt(2));
+			String userInfo = cache.getDataCache("user_info");
+			if (userInfo != null & !userInfo.trim().equals("")) {
+				try {
+					JSONObject jsonObject = new JSONObject(userInfo);
+					int status = jsonObject.getInt("status");
+					if (status == 0) {
+						JSONObject data = jsonObject.getJSONObject("data");
+						String baiduAccountId = data.getString("id");
+						accountBean.avatar = UserCacheUtil.getAvatarCache(baiduAccountId, this);
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+			accountList.add(accountBean);
+		}
+		accountCursor.close();
+		AccountSpinnerAdapter spinnerAdapter = new AccountSpinnerAdapter(this, accountList);
+		usernameEditor.setAdapter(spinnerAdapter);
+		usernameEditor.setOnItemClickListener(new OnItemClickListener() {
+			@SuppressWarnings("unchecked")
+            @Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				AdapterView<AccountSpinnerAdapter> adapter = (AdapterView<AccountSpinnerAdapter>) parent;
+				usernameEditor.setText(adapter.getAdapter().getItem(position).username);
+			}
+		});
 		lastSelectedPosition = which;
 	}
 
@@ -226,8 +266,14 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 			Toast.makeText(this, "助手账号或助手密码不能为空！", Toast.LENGTH_SHORT).show();
 			return;
 		}
+		Cursor cursor = sitesDBHelper.rawQuery("SELECT * FROM accounts WHERE sid=" + siteList.get(lastSelectedPosition).id + " AND username=\'" + username + "\';", null);
+		int count = cursor.getCount();
+		cursor.close();
+		if (count > 0) {
+			Toast.makeText(this, "该账号已存在，可直接登录", Toast.LENGTH_SHORT).show();
+			return;
+		}
 		progressDialog.show();
 		new Thread(new LoginThread(username, password, siteUrlList[lastSelectedPosition])).start();
 	}
-
 }

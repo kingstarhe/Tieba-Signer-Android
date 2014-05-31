@@ -16,7 +16,7 @@ import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.view.CircularImage;
 
 @SuppressWarnings("serial")
-public class AccountListAdapter extends BaseAdapter implements Serializable {
+public class AccountListAdapter extends BaseAdapter implements Serializable{
 	private Context context;
 	private LayoutInflater inflater;
 	public List<AccountBean> list;
@@ -73,4 +73,5 @@ public class AccountListAdapter extends BaseAdapter implements Serializable {
 		TextView accountInfo;
 		TextView siteInfo;
 	}
+
 }

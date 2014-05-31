@@ -30,4 +30,10 @@
 		<nature>com.android.ide.eclipse.adt.AndroidNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<variableList>
+		<variable>
+			<name>api19</name>
+			<value>file:/D:/ADT/sdk/sources/android-19</value>
+		</variable>
+	</variableList>
 </projectDescription>
