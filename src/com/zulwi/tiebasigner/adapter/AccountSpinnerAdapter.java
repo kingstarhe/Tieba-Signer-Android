@@ -2,6 +2,7 @@ package com.zulwi.tiebasigner.adapter;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
+
 import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.view.CircularImage;
@@ -116,7 +118,8 @@ public class AccountSpinnerAdapter extends BaseAdapter implements Filterable {
 			return results;
 		}
 
-		@Override
+		@SuppressWarnings("unchecked")
+        @Override
 		protected void publishResults(CharSequence constraint, FilterResults results) {
 			resultList = (List<AccountBean>) results.values;
 			if (results.count > 0) notifyDataSetChanged();

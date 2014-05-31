@@ -95,7 +95,8 @@ public class EditSitesActivity extends ActionBarActivity {
 		nameTextView = (TextView) findViewById(R.id.addSiteName);
 		siteList = (ListView) findViewById(R.id.siteList);
 		Intent intent = getIntent();
-		siteMapList = (List<SiteBean>) intent.getSerializableExtra("siteMapList");
+		siteMapList = (List<SiteBean>) intent.getSerializableExtra("siteList");
+		siteMapList.remove(siteMapList.size() - 1);
 		siteListAdapter = new SiteListAdapter(this, siteMapList);
 		siteList.setAdapter(siteListAdapter);
 		registerForContextMenu(siteList);
