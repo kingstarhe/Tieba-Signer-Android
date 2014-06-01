@@ -6,6 +6,7 @@ import java.util.List;
 import com.zulwi.tiebasigner.R;
 import com.zulwi.tiebasigner.bean.SiteBean;
 import com.zulwi.tiebasigner.db.BaseDBHelper;
+import com.zulwi.tiebasigner.db.CacheDBHelper;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -74,7 +75,12 @@ public class SiteListAdapter extends BaseAdapter implements Serializable {
 	}
 
 	public int remove(int position) {
-		int del = sitesDBHelper.delete("sites", list.get(position).id);
+		int sid = list.get(position).id;
+		int del = sitesDBHelper.delete("sites", sid);
+		sitesDBHelper.execSQL("DELETE FROM accounts where sid=" + sid);
+		CacheDBHelper cacheDBHelper = new CacheDBHelper(context);
+		cacheDBHelper.execSQL("DELETE FROM user_cache where sid=" + sid);
+		cacheDBHelper.close();
 		if (del != 0) {
 			list.remove(position);
 			notifyDataSetChanged();
@@ -84,6 +90,10 @@ public class SiteListAdapter extends BaseAdapter implements Serializable {
 
 	public void removeAll() {
 		sitesDBHelper.deleteAll("sites");
+		sitesDBHelper.deleteAll("accounts");
+		CacheDBHelper cacheDBHelper = new CacheDBHelper(context);
+		cacheDBHelper.execSQL("DELETE FROM user_cache");
+		cacheDBHelper.close();
 		list.removeAll(list);
 		notifyDataSetChanged();
 	}

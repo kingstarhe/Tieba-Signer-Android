@@ -16,7 +16,7 @@ import android.graphics.BitmapFactory;
 
 import com.zulwi.tiebasigner.db.CacheDBHelper;
 
-public class UserCacheUtil {
+public class CacheUtil {
 	private int uid;
 	private int sid;
 	private Context context;
@@ -39,7 +39,7 @@ public class UserCacheUtil {
 		}
 	}
 
-	public UserCacheUtil(Context context, int sid, int uid) {
+	public CacheUtil(Context context, int sid, int uid) {
 		this.context = context;
 		this.uid = uid;
 		this.sid = sid;
@@ -82,7 +82,13 @@ public class UserCacheUtil {
 
 	public void deleteDataCache(String key) {
 		CacheDBHelper dbHelper = new CacheDBHelper(this.context);
-		dbHelper.execSQL("DELETE FROM user_cache WHERE key=\'" + key + "\'");
+		dbHelper.execSQL("DELETE FROM user_cache WHERE key=\'" + key + "\' AND sid=" + sid + " AND uid=" + uid);
+		dbHelper.close();
+	}
+
+	public void deleteAllDataCache() {
+		CacheDBHelper dbHelper = new CacheDBHelper(this.context);
+		dbHelper.execSQL("DELETE FROM user_cache WHERE sid=" + sid + " AND uid=" + uid);
 		dbHelper.close();
 	}
 

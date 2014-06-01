@@ -52,7 +52,7 @@ import com.zulwi.tiebasigner.bean.JSONBean;
 import com.zulwi.tiebasigner.bean.TiebaBean;
 import com.zulwi.tiebasigner.exception.HttpResultException;
 import com.zulwi.tiebasigner.util.ClientApiUtil;
-import com.zulwi.tiebasigner.util.UserCacheUtil;
+import com.zulwi.tiebasigner.util.CacheUtil;
 import com.zulwi.tiebasigner.view.CircularImage;
 import com.zulwi.tiebasigner.view.ListTableView;
 
@@ -173,7 +173,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 								baiduAccountFollowNum = object.getInt("follow_num");
 								baiduAccountTiebaNum = object.getInt("tb_num");
 								baiduAccountAvatarUrl = object.getString("avatar");
-								Bitmap cacheAccountAvatar = UserCacheUtil.getAvatarCache(baiduAccountId, activity);
+								Bitmap cacheAccountAvatar = CacheUtil.getAvatarCache(baiduAccountId, activity);
 								if (loadedFlag == false && cacheAccountAvatar != null) handler.obtainMessage(ClientApiUtil.LOAD_IMG, 0, 0, new BaiduAccountBean(baiduAccountId, cacheAccountAvatar)).sendToTarget();
 								else new loadUserAvatarThread(baiduAccountId, baiduAccountAvatarUrl, 0, 0).start();
 								usernameTextView.setText(baiduAccountUsername);
@@ -219,7 +219,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 								for (int i = 0; i < follow.length() && i < 4; i++) {
 									JSONObject followInfo = follow.getJSONObject(i);
 									String userId = followInfo.getString("id");
-									Bitmap cacheAvatar = UserCacheUtil.getAvatarCache(userId, activity);
+									Bitmap cacheAvatar = CacheUtil.getAvatarCache(userId, activity);
 									if (loadedFlag == false && cacheAvatar != null) handler.obtainMessage(ClientApiUtil.LOAD_IMG, 1, i, new BaiduAccountBean(userId, cacheAvatar)).sendToTarget();
 									else new loadUserAvatarThread(userId, followInfo.getString("head_photo"), 1, i).start();
 								}
@@ -229,7 +229,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 								for (int i = 0; i < fans.length() && i < 4; i++) {
 									JSONObject fansInfo = fans.getJSONObject(i);
 									String userId = fansInfo.getString("id");
-									Bitmap cacheAvatar = UserCacheUtil.getAvatarCache(userId, activity);
+									Bitmap cacheAvatar = CacheUtil.getAvatarCache(userId, activity);
 									if (loadedFlag == false && cacheAvatar != null) handler.obtainMessage(ClientApiUtil.LOAD_IMG, 2, i, new BaiduAccountBean(userId, cacheAvatar)).sendToTarget();
 									else new loadUserAvatarThread(userId, fansInfo.getString("head_photo"), 2, i).start();
 								}
@@ -254,7 +254,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 					break;
 				case ClientApiUtil.LOAD_IMG:
 					BaiduAccountBean baiduAccountBean = (BaiduAccountBean) msg.obj;
-					UserCacheUtil.saveAvatarCache(baiduAccountBean.userId, baiduAccountBean.avatar, activity);
+					CacheUtil.saveAvatarCache(baiduAccountBean.userId, baiduAccountBean.avatar, activity);
 					switch (msg.arg1) {
 						case 0:
 							userAvatar.setImageBitmap(baiduAccountBean.avatar);

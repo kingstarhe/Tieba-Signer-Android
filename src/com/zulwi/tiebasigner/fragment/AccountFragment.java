@@ -25,7 +25,7 @@ import com.zulwi.tiebasigner.bean.FragmentBean;
 import com.zulwi.tiebasigner.bean.JSONBean;
 import com.zulwi.tiebasigner.exception.HttpResultException;
 import com.zulwi.tiebasigner.util.ClientApiUtil;
-import com.zulwi.tiebasigner.util.UserCacheUtil;
+import com.zulwi.tiebasigner.util.CacheUtil;
 
 public class AccountFragment extends Fragment {
 	private FragmentBean[] fragmentList = new FragmentBean[2];
@@ -47,7 +47,7 @@ public class AccountFragment extends Fragment {
 			ClientApiUtil clientApiUtil = new ClientApiUtil(accountBean);
 			try {
 				JSONBean result;
-				UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);
+				CacheUtil cache = new CacheUtil(activity, accountBean.sid, accountBean.uid);
 				String cacheString = cache.getDataCache("user_info");
 				if (loadedFlag == false && cacheString != null) {
 					System.out.println("cache" + cacheString);
@@ -91,7 +91,7 @@ public class AccountFragment extends Fragment {
 						tips = data.message;
 						finishUserInfoRefresh();
 					}
-					UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);
+					CacheUtil cache = new CacheUtil(activity, accountBean.sid, accountBean.uid);
 					cache.saveDataCache("user_info", data.jsonString);
 					activity.showLoadingDialog(false);
 					break;

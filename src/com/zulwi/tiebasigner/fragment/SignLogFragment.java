@@ -30,7 +30,7 @@ import com.zulwi.tiebasigner.bean.JSONBean;
 import com.zulwi.tiebasigner.bean.TiebaBean;
 import com.zulwi.tiebasigner.exception.HttpResultException;
 import com.zulwi.tiebasigner.util.ClientApiUtil;
-import com.zulwi.tiebasigner.util.UserCacheUtil;
+import com.zulwi.tiebasigner.util.CacheUtil;
 
 public class SignLogFragment extends Fragment implements OnRefreshListener {
 	private ListView signLogListView;
@@ -60,7 +60,7 @@ public class SignLogFragment extends Fragment implements OnRefreshListener {
 			ClientApiUtil clientApiUtil = new ClientApiUtil(accountBean);
 			try {
 				JSONBean result;
-				UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);
+				CacheUtil cache = new CacheUtil(activity, accountBean.sid, accountBean.uid);
 				String cacheString = cache.getDataCache("signlog");
 				if (loadedFlag == false && cacheString != null) {
 					result = new JSONBean(new JSONObject(cache.getDataCache("userinfo")));
@@ -118,7 +118,7 @@ public class SignLogFragment extends Fragment implements OnRefreshListener {
 					} else {
 						tips = json.message;
 					}
-					UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);
+					CacheUtil cache = new CacheUtil(activity, accountBean.sid, accountBean.uid);
 					cache.saveDataCache("sign_log", json.jsonString);
 					break;
 				default:

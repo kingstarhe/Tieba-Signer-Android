@@ -33,7 +33,7 @@ import com.zulwi.tiebasigner.db.BaseDBHelper;
 import com.zulwi.tiebasigner.exception.HttpResultException;
 import com.zulwi.tiebasigner.util.ClientApiUtil;
 import com.zulwi.tiebasigner.util.DialogUtil;
-import com.zulwi.tiebasigner.util.UserCacheUtil;
+import com.zulwi.tiebasigner.util.CacheUtil;
 
 public class EditAccountActivity extends ActionBarActivity {
 	private ListView accountListView;
@@ -106,7 +106,7 @@ public class EditAccountActivity extends ActionBarActivity {
 		Cursor accountCursor = dbHelper.rawQuery("select accounts.*, sites.name, sites.url from accounts left join sites on accounts.sid=sites.id;", null);
 		for (accountCursor.moveToFirst(); !(accountCursor.isAfterLast()); accountCursor.moveToNext()) {
 			AccountBean accountBean = new AccountBean(accountCursor.getInt(0), accountCursor.getInt(1), accountCursor.getInt(2), accountCursor.getString(3), accountCursor.getString(4), accountCursor.getString(5), accountCursor.getString(6), accountCursor.getInt(7), accountCursor.getString(8), accountCursor.getString(9));
-			UserCacheUtil cache = new UserCacheUtil(this, accountCursor.getInt(1), accountCursor.getInt(2));
+			CacheUtil cache = new CacheUtil(this, accountCursor.getInt(1), accountCursor.getInt(2));
 			String userInfo = cache.getDataCache("user_info");
 			if (userInfo != null & !userInfo.trim().equals("")) {
 				try {
@@ -115,7 +115,7 @@ public class EditAccountActivity extends ActionBarActivity {
 					if (status == 0) {
 						JSONObject data = jsonObject.getJSONObject("data");
 						String baiduAccountId = data.getString("id");
-						accountBean.avatar = UserCacheUtil.getAvatarCache(baiduAccountId, this);
+						accountBean.avatar = CacheUtil.getAvatarCache(baiduAccountId, this);
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -164,8 +164,10 @@ public class EditAccountActivity extends ActionBarActivity {
 				confirm.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
+						new CacheUtil(EditAccountActivity.this, accountBean.sid, accountBean.uid).deleteAllDataCache();
 						BaseDBHelper dbHelper = new BaseDBHelper(EditAccountActivity.this);
 						dbHelper.execSQL("DELETE FROM accounts where id=" + accountBean.id);
+						dbHelper.close();
 						((AccountListAdapter) accountListView.getAdapter()).remove(menuInfo.position);
 						if (currentAccountBean.id == accountBean.id) startLoginActivity("请重新登录");
 					}

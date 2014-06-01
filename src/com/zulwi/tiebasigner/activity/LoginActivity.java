@@ -40,7 +40,7 @@ import com.zulwi.tiebasigner.exception.HttpResultException;
 import com.zulwi.tiebasigner.util.AccountUtil;
 import com.zulwi.tiebasigner.util.ClientApiUtil;
 import com.zulwi.tiebasigner.util.DialogUtil;
-import com.zulwi.tiebasigner.util.UserCacheUtil;
+import com.zulwi.tiebasigner.util.CacheUtil;
 
 public class LoginActivity extends Activity implements OnItemSelectedListener {
 	private Spinner siteSpinner;
@@ -267,7 +267,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 		Cursor accountCursor = dbHelper.rawQuery("select accounts.*, sites.name, sites.url from accounts left join sites on accounts.sid=sites.id WHERE accounts.sid=" + siteSpinner.getSelectedItemId(), null);
 		for (accountCursor.moveToFirst(); !(accountCursor.isAfterLast()); accountCursor.moveToNext()) {
 			AccountBean accountBean = new AccountBean(accountCursor.getInt(0), accountCursor.getInt(1), accountCursor.getInt(2), accountCursor.getString(3), accountCursor.getString(4), accountCursor.getString(5), accountCursor.getString(6), accountCursor.getInt(7), accountCursor.getString(8), accountCursor.getString(9));
-			UserCacheUtil cache = new UserCacheUtil(this, accountCursor.getInt(1), accountCursor.getInt(2));
+			CacheUtil cache = new CacheUtil(this, accountCursor.getInt(1), accountCursor.getInt(2));
 			String userInfo = cache.getDataCache("user_info");
 			if (userInfo != null & !userInfo.trim().equals("")) {
 				try {
@@ -276,7 +276,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 					if (status == 0) {
 						JSONObject data = jsonObject.getJSONObject("data");
 						String baiduAccountId = data.getString("id");
-						accountBean.avatar = UserCacheUtil.getAvatarCache(baiduAccountId, this);
+						accountBean.avatar = CacheUtil.getAvatarCache(baiduAccountId, this);
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
