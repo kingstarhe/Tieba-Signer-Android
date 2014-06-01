@@ -48,23 +48,23 @@ public class MainActivity extends ActionBarActivity {
 	private BroadcastReceiver switchAccountBroadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			Intent newIntent = new Intent(MainActivity.this, MainActivity.class);
+			newIntent.putExtra("accountBean", intent.getSerializableExtra("accountBean"));
+			unregisterReceiver(switchAccountBroadcastReceiver);
+			finish();
+			startActivity(newIntent);
 			Toast.makeText(MainActivity.this, "切换成功", Toast.LENGTH_LONG).show();
-			loadActivity(intent);
 		}
 	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		loadActivity(getIntent());
-	}
-	
-	private void loadActivity(Intent intent){
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayUseLogoEnabled(false);
 		actionBar.setDisplayShowHomeEnabled(false);
 		setContentView(R.layout.activity_main);
-		accountBean = (AccountBean) intent.getSerializableExtra("accountBean");
+		accountBean = (AccountBean) getIntent().getSerializableExtra("accountBean");
 		System.out.println(accountBean.formhash);
 		fragments[0] = new FragmentBean("账号", new AccountFragment());
 		fragments[1] = new FragmentBean("记录", new LogFragment());
@@ -110,12 +110,6 @@ public class MainActivity extends ActionBarActivity {
 		IntentFilter switchAccountBroadcastReceiverIntentFilter = new IntentFilter();
 		switchAccountBroadcastReceiverIntentFilter.addAction("com.zulwi.tiebasigner.SWITCH_ACCOUNT");
 		registerReceiver(switchAccountBroadcastReceiver, switchAccountBroadcastReceiverIntentFilter);
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		unregisterReceiver(switchAccountBroadcastReceiver);
 	}
 
 	public void changeFragment(int position) {

@@ -212,10 +212,10 @@ public class EditAccountActivity extends ActionBarActivity {
 	}
 
 	private void startMainActivity(AccountBean accountBean) {
-		Intent intent = new Intent("com.zulwi.tiebasigner.SWITCH_ACCOUNT");
-		intent.putExtra("account", accountBean);
-		sendBroadcast(intent);
 		finish();
+		Intent intent = new Intent("com.zulwi.tiebasigner.SWITCH_ACCOUNT");
+		intent.putExtra("accountBean", accountBean);
+		sendBroadcast(intent);
 	}
 
 }
