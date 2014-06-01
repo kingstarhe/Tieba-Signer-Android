@@ -45,7 +45,6 @@ public class AccountUtil implements Serializable {
 		params.add(new BasicNameValuePair("password", password));
 		HttpResultBean resultBean = HttpUtil.post(siteUrl + "/plugin.php?id=zw_client_api&a=do_login", params, header);
 		cookieString = resultBean.cookieString;
-		System.out.println(resultBean.status);
 		try {
 			JSONObject json = new JSONObject(resultBean.result);
 			JSONBean jsonBean = new JSONBean(json);

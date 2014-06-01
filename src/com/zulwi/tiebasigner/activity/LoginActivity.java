@@ -103,8 +103,6 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 	private Handler handler = new Handler() {
 		@Override
 		public void handleMessage(android.os.Message msg) {
-			System.out.println("login type:" + msg.arg1);
-			System.out.println("override:" + msg.arg2);
 			super.handleMessage(msg);
 			String tips = null;
 			switch (msg.what) {
@@ -121,7 +119,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 						startMainActivity(accountBean);
 					} else if (msg.arg1 == NORMAL_LOGIN) {
 						ContentValues value = new ContentValues();
-						int sid = siteList.get(lastSelectedPosition).id;
+						int sid = (int) siteSpinner.getSelectedItemId();
 						Cursor siteCursor = dbHelper.rawQuery("select * from sites where id=" + sid, null);
 						if (siteCursor.getCount() > 0) {
 							siteCursor.moveToFirst();
@@ -146,6 +144,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 							siteCursor.close();
 							startMainActivity(accountBean);
 						} else {
+							siteCursor.close();
 							tips = "站点信息错误！";
 						}
 					}
