@@ -49,9 +49,13 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 	private EditText passwordEditor;
 	private List<SiteBean> siteList = new ArrayList<SiteBean>();
 	private List<AccountBean> accountList = new ArrayList<AccountBean>();
-	private BaseDBHelper sitesDBHelper = new BaseDBHelper(this);
+	private BaseDBHelper dbHelper = new BaseDBHelper(this);
 	private boolean autoLogin = false;
 	private AccountBean selectedAccount;
+	private final static int NEW_ACCOUNT = 0;
+	private final static int OVERRIDE_ACCOUNT = NEW_ACCOUNT + 1;
+	private final static int NORMAL_LOGIN = OVERRIDE_ACCOUNT + 1;
+	private final static int QUICK_LOGIN = NORMAL_LOGIN + 1;
 
 	private class LoginThread extends Thread {
 		private String username;
@@ -78,13 +82,13 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 				if (accountBean == null) {
 					AccountUtil accountUtil = new AccountUtil(username, password, url);
 					AccountBean account = accountUtil.doLogin();
-					handler.obtainMessage(ClientApiUtil.SUCCESSED, 0, override ? 1 : 0, account).sendToTarget();
+					handler.obtainMessage(ClientApiUtil.SUCCESSED, NORMAL_LOGIN, override ? OVERRIDE_ACCOUNT : NEW_ACCOUNT, account).sendToTarget();
 				} else {
 					ClientApiUtil client = new ClientApiUtil(accountBean);
 					JSONBean jsonBean = client.get("check_login");
 					if (jsonBean.status != 0) throw new HttpResultException(HttpResultException.AUTH_FAIL);
 					accountBean.avatar = null;
-					handler.obtainMessage(ClientApiUtil.SUCCESSED, 1, 0, accountBean).sendToTarget();
+					handler.obtainMessage(ClientApiUtil.SUCCESSED, QUICK_LOGIN, 0, accountBean).sendToTarget();
 				}
 			} catch (HttpResultException e) {
 				e.printStackTrace();
@@ -99,6 +103,8 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 	private Handler handler = new Handler() {
 		@Override
 		public void handleMessage(android.os.Message msg) {
+			System.out.println("login type:" + msg.arg1);
+			System.out.println("override:" + msg.arg2);
 			super.handleMessage(msg);
 			String tips = null;
 			switch (msg.what) {
@@ -109,33 +115,39 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 				case ClientApiUtil.SUCCESSED:
 					AccountBean accountBean = (AccountBean) msg.obj;
 					tips = "欢迎回来，" + accountBean.username + "！";
-					BaseDBHelper dbHelper = new BaseDBHelper(LoginActivity.this);
 					dbHelper.execSQL("update accounts set current=0 where current=1");
-					ContentValues value = new ContentValues();
-					int sid = siteList.get(lastSelectedPosition).id;
-					Cursor siteCursor = dbHelper.rawQuery("select * from sites where id=" + sid, null);
-					if (siteCursor.getCount() > 0) {
-						siteCursor.moveToFirst();
-						value.put("uid", accountBean.uid);
-						value.put("sid", sid);
-						value.put("username", accountBean.username);
-						value.put("email", accountBean.email);
-						value.put("cookie", accountBean.cookieString);
-						value.put("formhash", accountBean.formhash);
-						value.put("current", 1);
-						if (msg.arg1 == 1){
-							dbHelper.insert("accounts", value);
-						}else{
-							//TO-DO
-						}
-						accountBean.sid = sid;
-						accountBean.siteName = siteCursor.getString(1);
-						accountBean.siteUrl = siteCursor.getString(2);
-						siteCursor.close();
-						dbHelper.close();
+					if (msg.arg1 == QUICK_LOGIN) {
+						dbHelper.execSQL("update accounts set current=1 where id=" + accountBean.id);
 						startMainActivity(accountBean);
-					} else {
-						tips = "站点信息错误！";
+					} else if (msg.arg1 == NORMAL_LOGIN) {
+						ContentValues value = new ContentValues();
+						int sid = siteList.get(lastSelectedPosition).id;
+						Cursor siteCursor = dbHelper.rawQuery("select * from sites where id=" + sid, null);
+						if (siteCursor.getCount() > 0) {
+							siteCursor.moveToFirst();
+							value.put("uid", accountBean.uid);
+							value.put("sid", sid);
+							value.put("username", accountBean.username);
+							value.put("email", accountBean.email);
+							value.put("cookie", accountBean.cookieString);
+							value.put("formhash", accountBean.formhash);
+							value.put("current", 1);
+							switch (msg.arg2) {
+								case NEW_ACCOUNT:
+									dbHelper.insert("accounts", value);
+									break;
+								case OVERRIDE_ACCOUNT:
+									dbHelper.update("accounts", value, "sid=" + sid + " AND username=\'" + accountBean.username + "\'");
+									break;
+							}
+							accountBean.sid = sid;
+							accountBean.siteName = siteCursor.getString(1);
+							accountBean.siteUrl = siteCursor.getString(2);
+							siteCursor.close();
+							startMainActivity(accountBean);
+						} else {
+							tips = "站点信息错误！";
+						}
 					}
 					break;
 			}
@@ -197,7 +209,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 
 	public void refreshSiteList() {
 		siteList.clear();
-		Cursor siteCursor = sitesDBHelper.query("sites");
+		Cursor siteCursor = dbHelper.query("sites");
 		if (siteCursor.getCount() > 0) {
 			for (siteCursor.moveToFirst(); !(siteCursor.isAfterLast()); siteCursor.moveToNext()) {
 				siteList.add(new SiteBean(siteCursor.getInt(0), siteCursor.getString(1), siteCursor.getString(2)));
@@ -240,7 +252,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 
 	@Override
 	protected void onDestroy() {
-		sitesDBHelper.close();
+		dbHelper.close();
 		super.onDestroy();
 	}
 
@@ -252,7 +264,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 			return;
 		}
 		accountList.clear();
-		Cursor accountCursor = sitesDBHelper.rawQuery("select accounts.*, sites.name, sites.url from accounts left join sites on accounts.sid=sites.id WHERE accounts.sid=" + siteSpinner.getSelectedItemId(), null);
+		Cursor accountCursor = dbHelper.rawQuery("select accounts.*, sites.name, sites.url from accounts left join sites on accounts.sid=sites.id WHERE accounts.sid=" + siteSpinner.getSelectedItemId(), null);
 		for (accountCursor.moveToFirst(); !(accountCursor.isAfterLast()); accountCursor.moveToNext()) {
 			AccountBean accountBean = new AccountBean(accountCursor.getInt(0), accountCursor.getInt(1), accountCursor.getInt(2), accountCursor.getString(3), accountCursor.getString(4), accountCursor.getString(5), accountCursor.getString(6), accountCursor.getInt(7), accountCursor.getString(8), accountCursor.getString(9));
 			UserCacheUtil cache = new UserCacheUtil(this, accountCursor.getInt(1), accountCursor.getInt(2));
@@ -314,7 +326,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 				Toast.makeText(this, "助手账号或助手密码不能为空！", Toast.LENGTH_SHORT).show();
 				return;
 			}
-			Cursor cursor = sitesDBHelper.rawQuery("SELECT * FROM accounts WHERE sid=" + siteSpinner.getSelectedItemId() + " AND username=\'" + username + "\';", null);
+			Cursor cursor = dbHelper.rawQuery("SELECT * FROM accounts WHERE sid=" + siteSpinner.getSelectedItemId() + " AND username=\'" + username + "\';", null);
 			int count = cursor.getCount();
 			cursor.close();
 			progressDialog.show();

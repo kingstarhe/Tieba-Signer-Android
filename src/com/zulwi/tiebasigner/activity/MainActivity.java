@@ -36,23 +36,35 @@ public class MainActivity extends ActionBarActivity {
 	private AccountBean accountBean;
 	private Dialog dialog;
 
-	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+	private BroadcastReceiver finishMainBroadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Toast.makeText(MainActivity.this, intent.getStringExtra("message"), Toast.LENGTH_LONG).show();
-			unregisterReceiver(broadcastReceiver);
+			unregisterReceiver(finishMainBroadcastReceiver);
 			finish();
+		}
+	};
+
+	private BroadcastReceiver switchAccountBroadcastReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Toast.makeText(MainActivity.this, "切换成功", Toast.LENGTH_LONG).show();
+			loadActivity(intent);
 		}
 	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		loadActivity(getIntent());
+	}
+	
+	private void loadActivity(Intent intent){
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayUseLogoEnabled(false);
 		actionBar.setDisplayShowHomeEnabled(false);
 		setContentView(R.layout.activity_main);
-		accountBean = (AccountBean) getIntent().getSerializableExtra("accountBean");
+		accountBean = (AccountBean) intent.getSerializableExtra("accountBean");
 		System.out.println(accountBean.formhash);
 		fragments[0] = new FragmentBean("账号", new AccountFragment());
 		fragments[1] = new FragmentBean("记录", new LogFragment());
@@ -92,9 +104,18 @@ public class MainActivity extends ActionBarActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction("com.zulwi.tiebasigner.FINISH_MAIN");
-		registerReceiver(broadcastReceiver, intentFilter);
+		IntentFilter finishMainBroadcastReceiverIntentFilter = new IntentFilter();
+		finishMainBroadcastReceiverIntentFilter.addAction("com.zulwi.tiebasigner.FINISH_MAIN");
+		registerReceiver(finishMainBroadcastReceiver, finishMainBroadcastReceiverIntentFilter);
+		IntentFilter switchAccountBroadcastReceiverIntentFilter = new IntentFilter();
+		switchAccountBroadcastReceiverIntentFilter.addAction("com.zulwi.tiebasigner.SWITCH_ACCOUNT");
+		registerReceiver(switchAccountBroadcastReceiver, switchAccountBroadcastReceiverIntentFilter);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		unregisterReceiver(switchAccountBroadcastReceiver);
 	}
 
 	public void changeFragment(int position) {

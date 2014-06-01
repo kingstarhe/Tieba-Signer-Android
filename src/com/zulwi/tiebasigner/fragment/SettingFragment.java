@@ -73,6 +73,9 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 		switch (v.getId()) {
 			case R.id.setting_userinfo:
 				intent = new Intent(activity, EditAccountActivity.class);
+				AccountBean currentAccountBean = accountBean;
+				currentAccountBean.avatar = null;
+				intent.putExtra("currentAccountBean", currentAccountBean);
 				break;
 			case R.id.setting_siteinfo:
 				break;

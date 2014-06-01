@@ -46,6 +46,11 @@ public class AccountListAdapter extends BaseAdapter implements Serializable{
 		list.removeAll(list);
 		notifyDataSetChanged();
 	}
+	
+	public void remove(int position){
+		list.remove(position);
+		notifyDataSetChanged();
+	}
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {

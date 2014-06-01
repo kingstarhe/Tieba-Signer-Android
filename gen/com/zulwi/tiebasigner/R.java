@@ -1179,12 +1179,12 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
-        public static final int action_settings=0x7f050091;
+        public static final int action_settings=0x7f050093;
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int addSite=0x7f050049;
         public static final int addSiteName=0x7f050047;
         public static final int addSiteUrl=0x7f050048;
-        public static final int add_account=0x7f05008f;
+        public static final int add_account=0x7f050091;
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
         public static final int bind_now=0x7f050058;
@@ -1195,14 +1195,15 @@ containing a value of this type.
         public static final int collapseActionView=0x7f05000d;
         public static final int container=0x7f05003c;
         public static final int default_activity_button=0x7f050028;
-        public static final int del_list=0x7f050090;
-        public static final int del_site=0x7f050095;
+        public static final int del_account=0x7f050090;
+        public static final int del_list=0x7f050092;
+        public static final int del_site=0x7f050097;
         public static final int dialog=0x7f05000e;
         public static final int dialog_view=0x7f05008c;
         public static final int disableHome=0x7f050008;
         public static final int dropdown=0x7f05000f;
         public static final int edit_query=0x7f050030;
-        public static final int edit_site=0x7f050094;
+        public static final int edit_site=0x7f050096;
         public static final int end=0x7f050013;
         public static final int expand_activities_button=0x7f050026;
         public static final int expanded_menu=0x7f05002c;
@@ -1226,7 +1227,7 @@ containing a value of this type.
         public static final int list_item=0x7f050029;
         public static final int log_swipe_container=0x7f05005d;
         public static final int login=0x7f050044;
-        public static final int logout=0x7f050096;
+        public static final int logout=0x7f050098;
         public static final int middle=0x7f050012;
         public static final int nameEditor=0x7f050052;
         public static final int never=0x7f050009;
@@ -1270,9 +1271,9 @@ containing a value of this type.
         public static final int showHome=0x7f050004;
         public static final int showTitle=0x7f050006;
         public static final int sign_log_list=0x7f05005e;
-        public static final int sign_log_next=0x7f050093;
+        public static final int sign_log_next=0x7f050095;
         public static final int sign_log_pager=0x7f050059;
-        public static final int sign_log_pre=0x7f050092;
+        public static final int sign_log_pre=0x7f050094;
         public static final int sign_log_sign=0x7f05005a;
         public static final int signlog_button=0x7f05004e;
         public static final int site=0x7f05004a;
@@ -1284,6 +1285,7 @@ containing a value of this type.
         public static final int status=0x7f050086;
         public static final int submit_area=0x7f050039;
         public static final int swipe_container=0x7f050057;
+        public static final int switch_account=0x7f05008f;
         public static final int tabMode=0x7f050002;
         public static final int tag_name=0x7f05008a;
         public static final int tieba_name=0x7f050085;
@@ -1396,12 +1398,13 @@ containing a value of this type.
         public static final int support_simple_spinner_dropdown_item=0x7f030033;
     }
     public static final class menu {
-        public static final int edit_account=0x7f0c0000;
-        public static final int edit_sites=0x7f0c0001;
-        public static final int main=0x7f0c0002;
-        public static final int sign_log=0x7f0c0003;
-        public static final int sites_context=0x7f0c0004;
-        public static final int userinfo=0x7f0c0005;
+        public static final int account_context=0x7f0c0000;
+        public static final int edit_account=0x7f0c0001;
+        public static final int edit_sites=0x7f0c0002;
+        public static final int main=0x7f0c0003;
+        public static final int sign_log=0x7f0c0004;
+        public static final int sites_context=0x7f0c0005;
+        public static final int userinfo=0x7f0c0006;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
@@ -1513,6 +1516,7 @@ containing a value of this type.
         public static final int sites_list=0x7f0a0015;
         public static final int studio_name=0x7f0a0046;
         public static final int supported_plugin=0x7f0a0058;
+        public static final int switch_account=0x7f0a005a;
         public static final int tieba=0x7f0a002c;
         public static final int title_activity_edit_sites=0x7f0a0014;
         public static final int total_count=0x7f0a002a;
