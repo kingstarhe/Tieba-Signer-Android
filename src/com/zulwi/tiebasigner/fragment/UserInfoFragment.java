@@ -230,13 +230,11 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener, 
 									JSONObject fansInfo = fans.getJSONObject(i);
 									String userId = fansInfo.getString("id");
 									Bitmap cacheAvatar = UserCacheUtil.getAvatarCache(userId, activity);
-									if (loadedFlag == false && cacheAvatar != null) handler.obtainMessage(ClientApiUtil.LOAD_IMG, 1, i, new BaiduAccountBean(userId, cacheAvatar)).sendToTarget();
+									if (loadedFlag == false && cacheAvatar != null) handler.obtainMessage(ClientApiUtil.LOAD_IMG, 2, i, new BaiduAccountBean(userId, cacheAvatar)).sendToTarget();
 									else new loadUserAvatarThread(userId, fansInfo.getString("head_photo"), 2, i).start();
 								}
 								fansBar.setVisibility(fans.length() == 0 ? View.GONE : View.VISIBLE);
 								fansTipsTextView.setVisibility(follow.length() == 0 ? View.GONE : View.VISIBLE);
-								UserCacheUtil cache = new UserCacheUtil(activity, accountBean.sid, accountBean.uid);
-								cache.saveDataCache("userinfo", json.jsonString);
 								if (!fragment.binded) fragment.changeFragment(0);
 								fragment.binded = true;
 							} catch (JSONException ej) {
