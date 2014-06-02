@@ -133,6 +133,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 								break;
 							case OVERRIDE_ACCOUNT:
 								Cursor cursor = dbHelper.rawQuery("SELECT * FROM accounts WHERE sid=" + siteBean.id + " AND username=\'" + accountBean.username + "\'", null);
+								cursor.moveToFirst();
 								accountBean.id = cursor.getInt(0);
 								dbHelper.update("accounts", value, "id=" + accountBean.id);
 								cursor.close();

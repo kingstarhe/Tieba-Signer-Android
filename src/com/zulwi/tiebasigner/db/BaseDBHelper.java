@@ -18,7 +18,7 @@ public class BaseDBHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		this.db = db;
-		db.execSQL("CREATE TABLE IF NOT EXISTS sites(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(20) UNIQUE, url VARCHAR(60) UNIQUE)");
+		db.execSQL("CREATE TABLE IF NOT EXISTS sites(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(20) UNIQUE, url VARCHAR(60) UNIQUE, info TEXT)");
 		db.execSQL("CREATE TABLE IF NOT EXISTS accounts(id INTEGER PRIMARY KEY AUTOINCREMENT, sid INTEGER, uid INTEGER, username VARCHAR(30), email VARCHAR(60), cookie VARCHAR(1000), formhash CHAR(8), current SMALLINT(1))");
 	}
 
