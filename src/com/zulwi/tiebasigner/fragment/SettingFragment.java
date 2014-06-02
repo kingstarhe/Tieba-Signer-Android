@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.zulwi.tiebasigner.activity.AboutActivity;
 import com.zulwi.tiebasigner.activity.EditAccountActivity;
@@ -91,6 +92,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 				break;
 		}
 		if (intent != null) startActivity(intent);
+		else Toast.makeText(activity, getString(R.string.maimeng) + " 这个功能还在开发中", Toast.LENGTH_SHORT).show();
 	}
 
 	public void setAvatar(Bitmap avatar) {
