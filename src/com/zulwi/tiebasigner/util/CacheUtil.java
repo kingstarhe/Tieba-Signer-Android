@@ -14,13 +14,13 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 
+import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.db.CacheDBHelper;
 
 public class CacheUtil {
-	private int uid;
-	private int sid;
 	private Context context;
 	private Map<String, String> userCache = new HashMap<String, String>();
+	private AccountBean accountBean;
 	private final static String sdcardPath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
 	private final static String appPath = sdcardPath + "/Zulwi/TiebaSigner";
 	private final static String imgCachePath = appPath + "/cache/img";
@@ -39,12 +39,11 @@ public class CacheUtil {
 		}
 	}
 
-	public CacheUtil(Context context, int sid, int uid) {
+	public CacheUtil(Context context, AccountBean accountBean) {
 		this.context = context;
-		this.uid = uid;
-		this.sid = sid;
+		this.accountBean = accountBean;
 		CacheDBHelper dbHelper = new CacheDBHelper(this.context);
-		Cursor cursor = dbHelper.rawQuery("SELECT key, value FROM user_cache WHERE  uid=" + this.uid + " AND sid=" + this.sid, null);
+		Cursor cursor = dbHelper.rawQuery("SELECT key, value FROM user_cache WHERE  aid=" + accountBean.id, null);
 		for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
 			userCache.put(cursor.getString(0), cursor.getString(1));
 		}
@@ -58,7 +57,7 @@ public class CacheUtil {
 
 	public boolean saveDataCache(String key, String value) {
 		CacheDBHelper dbHelper = new CacheDBHelper(this.context);
-		Cursor cursor = dbHelper.rawQuery("SELECT id, value FROM user_cache WHERE  sid=" + sid + " AND uid=" + this.uid + " AND key=\'" + key + "\'", null);
+		Cursor cursor = dbHelper.rawQuery("SELECT id, value FROM user_cache WHERE  aid=" + accountBean.id + " AND key=\'" + key + "\'", null);
 		ContentValues values = new ContentValues();
 		values.put("key", key);
 		values.put("value", value);
@@ -68,8 +67,7 @@ public class CacheUtil {
 			dbHelper.execSQL("UPDATE user_cache SET value=\'" + value + "\' WHERE id=" + cursor.getInt(0));
 			cursor.close();
 		} else {
-			values.put("sid", sid);
-			values.put("uid", uid);
+			values.put("aid", accountBean.id);
 			long id = dbHelper.insert("user_cache", values);
 			if (id < 0) {
 				dbHelper.close();
@@ -82,13 +80,13 @@ public class CacheUtil {
 
 	public void deleteDataCache(String key) {
 		CacheDBHelper dbHelper = new CacheDBHelper(this.context);
-		dbHelper.execSQL("DELETE FROM user_cache WHERE key=\'" + key + "\' AND sid=" + sid + " AND uid=" + uid);
+		dbHelper.execSQL("DELETE FROM user_cache WHERE key=\'" + key + "\' AND aid=" + accountBean.id);
 		dbHelper.close();
 	}
 
 	public void deleteAllDataCache() {
 		CacheDBHelper dbHelper = new CacheDBHelper(this.context);
-		dbHelper.execSQL("DELETE FROM user_cache WHERE sid=" + sid + " AND uid=" + uid);
+		dbHelper.execSQL("DELETE FROM user_cache WHERE aid=" + accountBean.id);
 		dbHelper.close();
 	}
 

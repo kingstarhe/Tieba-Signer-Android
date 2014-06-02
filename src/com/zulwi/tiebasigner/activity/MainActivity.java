@@ -41,6 +41,7 @@ public class MainActivity extends ActionBarActivity {
 		public void onReceive(Context context, Intent intent) {
 			Toast.makeText(MainActivity.this, intent.getStringExtra("message"), Toast.LENGTH_LONG).show();
 			unregisterReceiver(finishMainBroadcastReceiver);
+			unregisterReceiver(switchAccountBroadcastReceiver);
 			finish();
 		}
 	};
@@ -50,10 +51,10 @@ public class MainActivity extends ActionBarActivity {
 		public void onReceive(Context context, Intent intent) {
 			Intent newIntent = new Intent(MainActivity.this, MainActivity.class);
 			newIntent.putExtra("accountBean", intent.getSerializableExtra("accountBean"));
+			unregisterReceiver(finishMainBroadcastReceiver);
 			unregisterReceiver(switchAccountBroadcastReceiver);
 			finish();
 			startActivity(newIntent);
-			Toast.makeText(MainActivity.this, "切换成功", Toast.LENGTH_LONG).show();
 		}
 	};
 
@@ -158,7 +159,7 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void setAccountAvatar(Bitmap avatar) {
-		accountBean.avatar = avatar;
+		accountBean.setAvatar(avatar);
 		Fragment settingFragment = fragments[3].fragment;
 		if (settingFragment.isAdded()) ((SettingFragment) settingFragment).setAvatar(avatar);
 	}

@@ -53,7 +53,7 @@ public class PluginFragment extends Fragment implements OnRefreshListener {
 			ClientApiUtil clientApiUtil = new ClientApiUtil(accountBean);
 			try {
 				JSONBean result;
-				CacheUtil cache = new CacheUtil(activity, accountBean.sid, accountBean.uid);
+				CacheUtil cache = new CacheUtil(activity, accountBean);
 				String cacheString = cache.getDataCache("plugin_info");
 				if (loadedFlag == false && cacheString != null) {
 					result = new JSONBean(new JSONObject(cache.getDataCache("plugin_info")));
@@ -103,7 +103,7 @@ public class PluginFragment extends Fragment implements OnRefreshListener {
 					} else {
 						tips = json.message;
 					}
-					CacheUtil cache = new CacheUtil(activity, accountBean.sid, accountBean.uid);
+					CacheUtil cache = new CacheUtil(activity, accountBean);
 					cache.saveDataCache("plugin_info", json.jsonString);
 					activity.showLoadingDialog(false);
 					break;

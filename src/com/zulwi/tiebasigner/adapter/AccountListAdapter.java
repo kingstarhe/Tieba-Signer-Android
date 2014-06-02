@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,15 +17,21 @@ import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.view.CircularImage;
 
 @SuppressWarnings("serial")
-public class AccountListAdapter extends BaseAdapter implements Serializable{
+public class AccountListAdapter extends BaseAdapter implements Serializable {
 	private Context context;
 	private LayoutInflater inflater;
-	public List<AccountBean> list;
+	private List<AccountBean> list;
+	private AccountBean currentAccount;
 
 	public AccountListAdapter(Context context, List<AccountBean> data) {
 		this.context = context;
 		this.inflater = LayoutInflater.from(this.context);
 		this.list = data;
+	}
+
+	public AccountListAdapter(Context context, List<AccountBean> data, AccountBean currentAccount) {
+		this(context, data);
+		this.currentAccount = currentAccount;
 	}
 
 	@Override
@@ -46,8 +53,8 @@ public class AccountListAdapter extends BaseAdapter implements Serializable{
 		list.removeAll(list);
 		notifyDataSetChanged();
 	}
-	
-	public void remove(int position){
+
+	public void remove(int position) {
 		list.remove(position);
 		notifyDataSetChanged();
 	}
@@ -66,8 +73,9 @@ public class AccountListAdapter extends BaseAdapter implements Serializable{
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 		AccountBean bean = list.get(position);
-		if (bean.avatar != null) viewHolder.accountAvatar.setImageBitmap(bean.avatar);
-		viewHolder.accountInfo.setText(bean.username);
+		Bitmap avatar = bean.getAvatar();
+		if (avatar != null) viewHolder.accountAvatar.setImageBitmap(avatar);
+		viewHolder.accountInfo.setText(bean.username + (bean.id == currentAccount.id ? " (当前)" : ""));
 		Uri url = Uri.parse(bean.siteUrl);
 		viewHolder.siteInfo.setText(bean.siteName + " - " + url.getHost() + url.getPath());
 		return convertView;

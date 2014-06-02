@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +20,7 @@ import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.view.CircularImage;
 
 @SuppressLint("DefaultLocale")
-public class AccountSpinnerAdapter extends BaseAdapter implements Filterable {
+public class AccountFilterAdapter extends BaseAdapter implements Filterable {
 	private Context context;
 	private LayoutInflater inflater;
 	public List<AccountBean> originalList;
@@ -28,7 +29,7 @@ public class AccountSpinnerAdapter extends BaseAdapter implements Filterable {
 	private final Object lock = new Object();
 	private int maxMatch = 10;
 
-	public AccountSpinnerAdapter(Context context, List<AccountBean> data) {
+	public AccountFilterAdapter(Context context, List<AccountBean> data) {
 		this.context = context;
 		this.inflater = LayoutInflater.from(this.context);
 		this.originalList = data;
@@ -68,7 +69,8 @@ public class AccountSpinnerAdapter extends BaseAdapter implements Filterable {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 		AccountBean bean = resultList.get(position);
-		if (bean.avatar != null) viewHolder.accountAvatar.setImageBitmap(bean.avatar);
+		Bitmap avatar = bean.getAvatar();
+		if (avatar != null) viewHolder.accountAvatar.setImageBitmap(avatar);
 		viewHolder.accountInfo.setText(bean.username);
 		Uri url = Uri.parse(bean.siteUrl);
 		viewHolder.siteInfo.setText(bean.siteName + " - " + url.getHost() + url.getPath());

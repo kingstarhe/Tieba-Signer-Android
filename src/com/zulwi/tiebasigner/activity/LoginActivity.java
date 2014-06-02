@@ -30,7 +30,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.zulwi.tiebasigner.R;
-import com.zulwi.tiebasigner.adapter.AccountSpinnerAdapter;
+import com.zulwi.tiebasigner.adapter.AccountFilterAdapter;
 import com.zulwi.tiebasigner.adapter.SiteListAdapter;
 import com.zulwi.tiebasigner.bean.AccountBean;
 import com.zulwi.tiebasigner.bean.JSONBean;
@@ -119,34 +119,27 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 						startMainActivity(accountBean);
 					} else if (msg.arg1 == NORMAL_LOGIN) {
 						ContentValues value = new ContentValues();
-						int sid = (int) siteSpinner.getSelectedItemId();
-						Cursor siteCursor = dbHelper.rawQuery("select * from sites where id=" + sid, null);
-						if (siteCursor.getCount() > 0) {
-							siteCursor.moveToFirst();
-							value.put("uid", accountBean.uid);
-							value.put("sid", sid);
-							value.put("username", accountBean.username);
-							value.put("email", accountBean.email);
-							value.put("cookie", accountBean.cookieString);
-							value.put("formhash", accountBean.formhash);
-							value.put("current", 1);
-							switch (msg.arg2) {
-								case NEW_ACCOUNT:
-									dbHelper.insert("accounts", value);
-									break;
-								case OVERRIDE_ACCOUNT:
-									dbHelper.update("accounts", value, "sid=" + sid + " AND username=\'" + accountBean.username + "\'");
-									break;
-							}
-							accountBean.sid = sid;
-							accountBean.siteName = siteCursor.getString(1);
-							accountBean.siteUrl = siteCursor.getString(2);
-							siteCursor.close();
-							startMainActivity(accountBean);
-						} else {
-							siteCursor.close();
-							tips = "站点信息错误！";
+						SiteBean siteBean = (SiteBean) siteSpinner.getSelectedItem();
+						value.put("uid", accountBean.uid);
+						value.put("sid", siteBean.id);
+						value.put("username", accountBean.username);
+						value.put("email", accountBean.email);
+						value.put("cookie", accountBean.cookieString);
+						value.put("formhash", accountBean.formhash);
+						value.put("current", 1);
+						switch (msg.arg2) {
+							case NEW_ACCOUNT:
+								accountBean.id = (int) dbHelper.insert("accounts", value);
+								break;
+							case OVERRIDE_ACCOUNT:
+								Cursor cursor = dbHelper.rawQuery("SELECT * FROM accounts WHERE sid=" + siteBean.id + " AND username=\'" + accountBean.username + "\'", null);
+								accountBean.id = cursor.getInt(0);
+								dbHelper.update("accounts", value, "id=" + accountBean.id);
+								cursor.close();
+								break;
 						}
+						accountBean.setSite(siteBean);
+						startMainActivity(accountBean);
 					}
 					break;
 			}
@@ -166,7 +159,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				AdapterView<AccountSpinnerAdapter> adapter = (AdapterView<AccountSpinnerAdapter>) parent;
+				AdapterView<AccountFilterAdapter> adapter = (AdapterView<AccountFilterAdapter>) parent;
 				selectedAccount = adapter.getAdapter().getItem(position);
 				usernameEditor.setText(selectedAccount.username);
 				passwordEditor.setText("****************");
@@ -220,9 +213,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 		SiteListAdapter siteSpinnerAdapter = new SiteListAdapter(this, siteList);
 		siteSpinner.setAdapter(siteSpinnerAdapter);
 		siteSpinner.setOnItemSelectedListener(this);
-		if (size == 0) {
-			Toast.makeText(this, "请先添加可供登录的助手站点", Toast.LENGTH_SHORT).show();
-		}
+		if (size == 0) Toast.makeText(this, "请先添加可供登录的助手站点", Toast.LENGTH_SHORT).show();
 	}
 
 	public void startEditSiteActivity() {
@@ -266,7 +257,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 		Cursor accountCursor = dbHelper.rawQuery("select accounts.*, sites.name, sites.url from accounts left join sites on accounts.sid=sites.id WHERE accounts.sid=" + siteSpinner.getSelectedItemId(), null);
 		for (accountCursor.moveToFirst(); !(accountCursor.isAfterLast()); accountCursor.moveToNext()) {
 			AccountBean accountBean = new AccountBean(accountCursor.getInt(0), accountCursor.getInt(1), accountCursor.getInt(2), accountCursor.getString(3), accountCursor.getString(4), accountCursor.getString(5), accountCursor.getString(6), accountCursor.getInt(7), accountCursor.getString(8), accountCursor.getString(9));
-			CacheUtil cache = new CacheUtil(this, accountCursor.getInt(1), accountCursor.getInt(2));
+			CacheUtil cache = new CacheUtil(this, accountBean);
 			String userInfo = cache.getDataCache("user_info");
 			if (userInfo != null & !userInfo.trim().equals("")) {
 				try {
@@ -275,7 +266,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 					if (status == 0) {
 						JSONObject data = jsonObject.getJSONObject("data");
 						String baiduAccountId = data.getString("id");
-						accountBean.avatar = CacheUtil.getAvatarCache(baiduAccountId, this);
+						accountBean.setAvatar(CacheUtil.getAvatarCache(baiduAccountId, this));
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -284,7 +275,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener {
 			accountList.add(accountBean);
 		}
 		accountCursor.close();
-		AccountSpinnerAdapter spinnerAdapter = new AccountSpinnerAdapter(this, accountList);
+		AccountFilterAdapter spinnerAdapter = new AccountFilterAdapter(this, accountList);
 		usernameEditor.setAdapter(spinnerAdapter);
 		lastSelectedPosition = which;
 	}

@@ -60,7 +60,7 @@ public class SignLogFragment extends Fragment implements OnRefreshListener {
 			ClientApiUtil clientApiUtil = new ClientApiUtil(accountBean);
 			try {
 				JSONBean result;
-				CacheUtil cache = new CacheUtil(activity, accountBean.sid, accountBean.uid);
+				CacheUtil cache = new CacheUtil(activity, accountBean);
 				String cacheString = cache.getDataCache("signlog");
 				if (loadedFlag == false && cacheString != null) {
 					result = new JSONBean(new JSONObject(cache.getDataCache("userinfo")));
@@ -118,7 +118,7 @@ public class SignLogFragment extends Fragment implements OnRefreshListener {
 					} else {
 						tips = json.message;
 					}
-					CacheUtil cache = new CacheUtil(activity, accountBean.sid, accountBean.uid);
+					CacheUtil cache = new CacheUtil(activity, accountBean);
 					cache.saveDataCache("sign_log", json.jsonString);
 					break;
 				default:
@@ -165,8 +165,8 @@ public class SignLogFragment extends Fragment implements OnRefreshListener {
 		tipsSwipeLayout.setRefreshing(isRefreshing);
 		logSwipeLayout.setRefreshing(isRefreshing);
 	}
-	
-	public boolean isRefreshing(){
+
+	public boolean isRefreshing() {
 		return logSwipeLayout.isRefreshing();
 	}
 

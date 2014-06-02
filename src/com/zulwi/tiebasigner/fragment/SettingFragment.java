@@ -51,7 +51,8 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 		siteNameTextView.setText(activity.getAccountBean().siteName);
 		siteUrlTextView.setText(activity.getAccountBean().siteUrl);
 		avatarCircularImage = (CircularImage) view.findViewById(R.id.setting_avatar);
-		if (accountBean.avatar != null) avatarCircularImage.setImageBitmap(accountBean.avatar);
+		Bitmap avatar = accountBean.getAvatar();
+		if (avatar != null) avatarCircularImage.setImageBitmap(avatar);
 		view.findViewById(R.id.setting_userinfo).setOnClickListener(this);
 		view.findViewById(R.id.setting_siteinfo).setOnClickListener(this);
 		view.findViewById(R.id.setting_remind).setOnClickListener(this);

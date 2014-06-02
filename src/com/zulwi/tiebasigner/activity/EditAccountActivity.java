@@ -22,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -106,7 +107,7 @@ public class EditAccountActivity extends ActionBarActivity {
 		Cursor accountCursor = dbHelper.rawQuery("select accounts.*, sites.name, sites.url from accounts left join sites on accounts.sid=sites.id;", null);
 		for (accountCursor.moveToFirst(); !(accountCursor.isAfterLast()); accountCursor.moveToNext()) {
 			AccountBean accountBean = new AccountBean(accountCursor.getInt(0), accountCursor.getInt(1), accountCursor.getInt(2), accountCursor.getString(3), accountCursor.getString(4), accountCursor.getString(5), accountCursor.getString(6), accountCursor.getInt(7), accountCursor.getString(8), accountCursor.getString(9));
-			CacheUtil cache = new CacheUtil(this, accountCursor.getInt(1), accountCursor.getInt(2));
+			CacheUtil cache = new CacheUtil(this, accountBean);
 			String userInfo = cache.getDataCache("user_info");
 			if (userInfo != null & !userInfo.trim().equals("")) {
 				try {
@@ -115,7 +116,7 @@ public class EditAccountActivity extends ActionBarActivity {
 					if (status == 0) {
 						JSONObject data = jsonObject.getJSONObject("data");
 						String baiduAccountId = data.getString("id");
-						accountBean.avatar = CacheUtil.getAvatarCache(baiduAccountId, this);
+						accountBean.setAvatar(CacheUtil.getAvatarCache(baiduAccountId, this));
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -125,9 +126,15 @@ public class EditAccountActivity extends ActionBarActivity {
 		}
 		accountCursor.close();
 		dbHelper.close();
-		AccountListAdapter accountListAdapter = new AccountListAdapter(this, accountList);
+		AccountListAdapter accountListAdapter = new AccountListAdapter(this, accountList, currentAccountBean);
 		accountListView = (ListView) findViewById(R.id.account_list);
 		accountListView.setAdapter(accountListAdapter);
+		accountListView.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				switchAccount((AccountBean) accountListView.getAdapter().getItem(position));
+			}
+		});
 		registerForContextMenu(accountListView);
 		progressDialog = DialogUtil.createLoadingDialog(this, "正在登录,请稍后...", false);
 	}
@@ -151,25 +158,22 @@ public class EditAccountActivity extends ActionBarActivity {
 		final AccountBean accountBean = (AccountBean) accountListView.getAdapter().getItem(menuInfo.position);
 		switch (item.getItemId()) {
 			case R.id.switch_account:
-				if (currentAccountBean.id == accountBean.id) {
-					Toast.makeText(EditAccountActivity.this, "已登录该账号，无需切换", Toast.LENGTH_SHORT).show();
-					return true;
-				}
-				progressDialog.show();
-				new LoginThread(accountBean).start();
+				switchAccount(accountBean);
 				break;
 			case R.id.del_account:
 				AlertDialog.Builder confirm = new AlertDialog.Builder(this);
-				confirm.setTitle("确定要删除该账号吗？该账号的所有数据将均被删除");
+				final boolean deletingCurrent = currentAccountBean.id == accountBean.id;
+				confirm.setTitle(deletingCurrent ? "请注意" : "确定要删除该账号吗？该账号所有数据将均被删除");
+				if (deletingCurrent) confirm.setMessage("您将要删除的是当前登录账号，该账号将注销登录并将其所有数据删除，是否继续?");
 				confirm.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						new CacheUtil(EditAccountActivity.this, accountBean.sid, accountBean.uid).deleteAllDataCache();
+						new CacheUtil(EditAccountActivity.this, accountBean).deleteAllDataCache();
 						BaseDBHelper dbHelper = new BaseDBHelper(EditAccountActivity.this);
 						dbHelper.execSQL("DELETE FROM accounts where id=" + accountBean.id);
 						dbHelper.close();
 						((AccountListAdapter) accountListView.getAdapter()).remove(menuInfo.position);
-						if (currentAccountBean.id == accountBean.id) startLoginActivity("请重新登录");
+						if (deletingCurrent) startLoginActivity("请重新登录");
 					}
 				}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
 					@Override
@@ -200,9 +204,18 @@ public class EditAccountActivity extends ActionBarActivity {
 
 	public void doLogout(View view) {
 		BaseDBHelper dbHelper = new BaseDBHelper(this);
-		dbHelper.execSQL("DELETE FROM accounts WHERE current=1;");
+		dbHelper.execSQL("UPDATE accounts SET current=0 WHERE current=1;");
 		dbHelper.close();
-		startLoginActivity("请重新登录");
+		startLoginActivity("注销成功");
+	}
+
+	public void switchAccount(AccountBean accountBean) {
+		if (currentAccountBean.id == accountBean.id) {
+			Toast.makeText(EditAccountActivity.this, "已登录该账号，无需切换", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		progressDialog.show();
+		new LoginThread(accountBean).start();
 	}
 
 	private void startLoginActivity(String message) {

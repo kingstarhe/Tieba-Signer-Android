@@ -47,7 +47,7 @@ public class AccountFragment extends Fragment {
 			ClientApiUtil clientApiUtil = new ClientApiUtil(accountBean);
 			try {
 				JSONBean result;
-				CacheUtil cache = new CacheUtil(activity, accountBean.sid, accountBean.uid);
+				CacheUtil cache = new CacheUtil(activity, accountBean);
 				String cacheString = cache.getDataCache("user_info");
 				if (loadedFlag == false && cacheString != null) {
 					result = new JSONBean(new JSONObject(cacheString));
@@ -90,7 +90,7 @@ public class AccountFragment extends Fragment {
 						tips = data.message;
 						finishUserInfoRefresh();
 					}
-					CacheUtil cache = new CacheUtil(activity, accountBean.sid, accountBean.uid);
+					CacheUtil cache = new CacheUtil(activity, accountBean);
 					cache.saveDataCache("user_info", data.jsonString);
 					activity.showLoadingDialog(false);
 					break;
